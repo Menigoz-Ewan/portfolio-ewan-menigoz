@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+---
+
+<Layout>
+  <Header />
+  <main class="hero min-h-[80vh]">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Bonjour 👋</h1>
+        <p class="py-6">Bienvenue sur mon portfolio.</p>
+        <button id="hello-btn" class="btn btn-primary">Cliquer</button>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import '../scripts/main.js';
+</script>

@@ -1,0 +1,89 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  actif?: string;
+}
+
+const { actif } = Astro.props;
+
+const liens = [
+  { libelle: 'Projets', href: '/projets' },
+  { libelle: 'Galerie', href: '/galerie' },
+  { libelle: 'À propos', href: '/a-propos' },
+  { libelle: 'Contact', href: '/contact' },
+];
+const legal = [
+  { libelle: 'Mentions légales', href: '/mentions-legales' },
+  { libelle: 'Usage de l’IA', href: '/usage-ia' },
+  { libelle: 'Confidentialité', href: '/mentions-legales#donnees' },
+];
+const reseaux = [
+  { libelle: 'Email', href: `mailto:${site.email}`, icone: 'mail' as const },
+  { libelle: 'LinkedIn', href: site.linkedin || '/contact', icone: 'linkedin' as const },
+  { libelle: 'Instagram', href: site.instagram || '/contact', icone: 'instagram' as const },
+];
+---
+
+<footer class="relative z-10 border-t border-sable-fonce bg-creme">
+  <div class="conteneur flex flex-col gap-8 pb-8 pt-12">
+    <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+      <a href="/" class="flex items-center gap-4 rounded" aria-label="EWME, accueil — Ewan Menigoz">
+        <Logo class="h-[30px] w-auto text-encre" />
+        <span class="flex flex-col text-small">
+          <span class="font-medium text-encre">{site.nom}</span>
+          <span class="text-texte-secondaire">{site.metier} · {site.ville}</span>
+        </span>
+      </a>
+      <nav aria-label="Pied de page">
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 text-small text-texte-secondaire">
+          {
+            liens.map((l) => (
+              <li>
+                <a
+                  href={l.href}
+                  aria-current={actif === l.libelle ? 'page' : undefined}
+                  class="transition-colors duration-(--duree-lien) hover:text-encre aria-[current=page]:text-encre"
+                >
+                  {l.libelle}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <ul class="flex gap-2">
+        {
+          reseaux.map((r) => (
+            <li>
+              <a
+                href={r.href}
+                aria-label={r.libelle}
+                class="flex size-9 items-center justify-center rounded-md border border-bordure text-encre transition-colors duration-(--duree-bouton) hover:border-encre/35 hover:bg-sable"
+              >
+                <Icon nom={r.icone} taille={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="h-px bg-sable-fonce"></div>
+    <div class="flex flex-col gap-3 text-small text-texte-secondaire md:flex-row md:justify-between">
+      <p>© 2026 {site.nom}</p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        {
+          legal.map((l) => (
+            <li>
+              <a href={l.href} class="transition-colors duration-(--duree-lien) hover:text-encre">
+                {l.libelle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>

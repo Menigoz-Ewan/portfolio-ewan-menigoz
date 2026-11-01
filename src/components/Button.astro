@@ -1,0 +1,66 @@
+---
+// Bouton du design system : 4 types (Primary, Secondary, Light, Contour clair).
+// La taille ne change jamais entre les états : au survol, seule la flèche glisse de 4 px.
+import Icon, { type NomIcone } from './Icon.astro';
+
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variante?: 'primary' | 'secondary' | 'light' | 'contour';
+  icone?: NomIcone | null;
+  telecharger?: boolean;
+  externe?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variante = 'primary',
+  icone = 'arrow-right',
+  telecharger = false,
+  externe = false,
+  class: classe = '',
+  ...attrs
+} = Astro.props;
+
+const styles = {
+  primary:
+    'bg-rouge text-white shadow-[0_4px_12px_rgb(206_26_27/0.25)] hover:bg-rouge-fonce hover:shadow-[0_6px_18px_rgb(206_26_27/0.35)] active:bg-rouge-presse active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.25)] focus-visible:outline-encre',
+  secondary:
+    'bg-sable text-encre border border-bordure hover:bg-sable-fonce hover:border-encre/35 active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.15)] active:border-encre/50 focus-visible:outline-vert',
+  light:
+    'bg-white text-encre hover:bg-sable hover:shadow-[0_6px_16px_rgb(0_0_0/0.12)] active:bg-sable-fonce active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.15)] focus-visible:outline-white',
+  contour:
+    'text-white border border-white/60 hover:bg-white/12 hover:border-white active:bg-white/20 focus-visible:outline-white',
+};
+
+const classes = [
+  'group inline-flex items-center gap-2 rounded-lg px-5 py-3 text-button whitespace-nowrap',
+  'transition-[background-color,border-color,box-shadow] duration-(--duree-bouton) ease-(--ease-sortie)',
+  'focus-visible:outline-[2.5px] focus-visible:outline-offset-2 focus-visible:rounded-lg',
+  styles[variante],
+  classe,
+].join(' ');
+
+const Balise = href ? 'a' : 'button';
+const lien = href
+  ? {
+      href,
+      ...(telecharger ? { download: '' } : {}),
+      ...(externe ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : { type };
+---
+
+<Balise class={classes} {...lien} {...attrs}>
+  <slot />
+  {
+    icone && (
+      <span class="inline-flex transition-transform duration-(--duree-bouton) ease-(--ease-sortie) group-hover:translate-x-1 motion-reduce:transform-none">
+        <Icon nom={icone} taille={16} />
+      </span>
+    )
+  }
+</Balise>

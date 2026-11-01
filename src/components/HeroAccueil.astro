@@ -1,0 +1,160 @@
+---
+// En-tête en onglet de classeur + hero de l'accueil.
+// L'onglet « Accueil » sort du panneau vert : les deux forment une seule surface.
+import { Image } from 'astro:assets';
+import filaireHero from '../assets/svg/ewme-filaire-hero.svg?raw';
+import portrait from '../assets/images/portrait-ewan.png';
+import Brand from './Brand.astro';
+import NavLink from './NavLink.astro';
+import Button from './Button.astro';
+import MenuMobile from './MenuMobile.astro';
+import PileDePolaroids from './PileDePolaroids.astro';
+import { navigation, site } from '../data/site';
+
+const svgFilaire = filaireHero
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
+
+const infos = [
+  { libelle: 'Durée', valeur: site.stage.duree },
+  { libelle: 'Période', valeur: site.stage.periode },
+  { libelle: 'Lieu', valeur: site.stage.lieu },
+];
+---
+
+<div class="relative z-20 mx-auto max-w-[1440px] px-3 pt-4 md:px-6 md:pt-8">
+  <!-- En-tête -->
+  <header class="relative flex h-16 items-center justify-between px-2 md:px-20">
+    <Brand />
+
+    <div class="hidden items-center gap-12 md:flex">
+      <nav aria-label="Navigation principale">
+        <!-- Espacements repris de la maquette : 68 px après l'onglet, 40 px entre les liens -->
+        <ul class="flex items-center gap-10 [&>li:nth-child(2)]:ml-7">
+          <li class="onglet relative flex h-16 w-[90px] items-center justify-center bg-vert">
+            <a href="/" aria-current="page" class="rounded text-ui text-creme">Accueil</a>
+          </li>
+          {
+            navigation.map((lien) => (
+              <li>
+                <NavLink href={lien.href}>{lien.libelle}</NavLink>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <Button href="/contact">Me contacter</Button>
+    </div>
+
+    <MenuMobile actif="Accueil" />
+  </header>
+
+  <!-- Panneau vert -->
+  <section
+    aria-labelledby="titre-accueil"
+    class="relative overflow-hidden rounded-[28px] bg-vert md:overflow-visible md:rounded-[40px] lg:min-h-[560px]"
+  >
+    <div aria-hidden="true" class="pointer-events-none absolute left-[430px] top-[100px] hidden h-[440px] w-[966px] text-creme opacity-[0.08] lg:block" set:html={svgFilaire} />
+
+    <div class="relative flex flex-col gap-10 px-6 py-10 md:px-20 md:pb-14 md:pt-8 lg:flex-row lg:items-start lg:justify-between">
+      <div class="flex max-w-[640px] flex-col items-start gap-4">
+        <p class="inline-flex items-center gap-2.5 rounded-full bg-white py-2 pl-2.5 pr-[18px] text-button text-encre shadow-[0_6px_16px_rgb(0_0_0/0.18)]">
+          <span class="point-pulse relative flex size-[26px] items-center justify-center" aria-hidden="true">
+            <span class="onde absolute size-2.5 rounded-full bg-vert/30"></span>
+            <span class="relative size-2.5 rounded-full bg-vert"></span>
+          </span>
+          Je recherche un stage en design UI/UX
+        </p>
+
+        <h1 id="titre-accueil" class="text-hero text-creme">
+          Je conçois des interfaces claires, <span class="text-creme/60">puis je les code.</span>
+        </h1>
+
+        <p class="text-lead text-creme">
+          Ewan Menigoz, étudiant en 2e année de BUT MMI à Montbéliard. Je cherche un stage pour concevoir et
+          intégrer des interfaces au sein d’une équipe.
+        </p>
+
+        <div class="flex flex-wrap gap-3 pt-1">
+          <Button href="/contact" variante="light">Me proposer un stage</Button>
+          <Button href="/projets" variante="contour">Voir les projets</Button>
+        </div>
+
+        <dl class="flex flex-wrap overflow-hidden rounded-xl border border-white/20 text-white">
+          {
+            infos.map((info, i) => (
+              <div class:list={['flex flex-col gap-1 py-3 pl-[18px] pr-[22px]', i > 0 && 'border-l border-white/20']}>
+                <dt class="font-mono text-[11px] font-medium uppercase tracking-[0.06em] text-white/60">{info.libelle}</dt>
+                <dd class="text-[15px] font-medium underline decoration-dotted underline-offset-4">{info.valeur}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <!-- Composition : pile de photos + étiquettes (écrans larges) -->
+      <div class="relative hidden h-[520px] w-[500px] shrink-0 lg:-mr-6 lg:-mt-4 lg:block">
+        <div aria-hidden="true" class="absolute left-[150px] top-[60px] h-[380px] w-[300px] rotate-7 rounded-2xl bg-creme/10"></div>
+        <div class="absolute left-10 top-2.5">
+          <PileDePolaroids />
+        </div>
+        <p aria-hidden="true" class="absolute left-[345px] top-[50px] z-50 rotate-6 whitespace-nowrap rounded-full bg-white px-3.5 py-2 text-ui text-encre">BUT MMI · 2e année</p>
+        <p aria-hidden="true" class="absolute left-2 top-[150px] z-50 -rotate-5 whitespace-nowrap rounded-full bg-sable px-3.5 py-2 text-ui text-encre">Figma → Astro</p>
+      </div>
+
+      <!-- Écrans étroits : un seul polaroid -->
+      <figure class="mx-auto w-[240px] rotate-3 rounded-[14px] border border-sable-fonce bg-white p-2.5 pb-3 shadow-[0_18px_36px_rgb(0_0_0/0.22)] lg:hidden">
+        <Image src={portrait} alt="Portrait d’Ewan Menigoz en noir et blanc" width={440} height={460} class="h-[230px] w-full rounded-lg object-cover" />
+        <figcaption class="mt-2.5 flex items-center justify-between">
+          <span class="text-ui text-encre">Ewan, Montbéliard</span>
+          <span class="text-label text-texte-secondaire">Moi</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <a
+      href="/contact"
+      class="pastille absolute -bottom-1.5 right-[27px] hidden size-[124px] rotate-12 flex-col items-center justify-center rounded-full bg-white text-vert shadow-[0_8px_20px_rgb(0_0_0/0.25)] transition-transform duration-(--duree-carte) ease-(--ease-sortie) hover:rotate-6 hover:scale-105 lg:flex"
+    >
+      <span class="font-display text-[28px] font-semibold leading-8">Stage</span>
+      <span class="text-ui">recherché</span>
+    </a>
+  </section>
+</div>
+
+<style>
+  /* Oreilles concaves de l'onglet (courbes de 48 × 64 px, comme dans la maquette) */
+  .onglet::before,
+  .onglet::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 48px;
+    height: 64px;
+    background: var(--color-vert);
+  }
+  /* 1 px de recouvrement pour éviter un liseré entre l'onglet et ses oreilles */
+  .onglet::before {
+    right: calc(100% - 1px);
+    clip-path: path('M0 64C24 64 24 0 48 0V64Z');
+  }
+  .onglet::after {
+    left: calc(100% - 1px);
+    clip-path: path('M48 64C24 64 24 0 0 0V64Z');
+  }
+
+  /* Point pulsé : l'onde s'agrandit puis s'efface en boucle */
+  .onde {
+    animation: pulse 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+// Logo + nom, lien vers l'accueil (nom accessible « EWME, accueil » : QUALITE A8).
+import Logo from './Logo.astro';
+import { site } from '../data/site';
+---
+
+<a href="/" class="flex items-center gap-3 rounded" aria-label="EWME, accueil — Ewan Menigoz">
+  <Logo class="h-[30px] w-auto text-encre" />
+  <span aria-hidden="true" class="h-4 w-px bg-sable-fonce"></span>
+  <span class="text-ui text-encre">{site.nom}</span>
+</a>

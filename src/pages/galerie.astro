@@ -1,0 +1,64 @@
+---
+// Galerie : visuels d'habillage (à remplacer par d'autres images pendant le développement).
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+
+import chateau from '../assets/images/affiche-chateau.png';
+import cimadeAffiche from '../assets/images/polaroid-cimade.png';
+import cimadeLogo from '../assets/images/galerie/cimade-recherches-logo.png';
+import exposition from '../assets/images/polaroid-exposition.png';
+import theatre from '../assets/images/galerie/affiche-theatre.png';
+import natureMorte from '../assets/images/galerie/nature-morte.png';
+import oeuvre from '../assets/images/galerie/oeuvre-exposee.png';
+import temple from '../assets/images/galerie/affiche-temple.png';
+
+// Ordre colonne par colonne, comme dans la maquette (4 colonnes en desktop).
+const visuels = [
+  { src: chateau, format: 'portrait', categorie: 'Illustration', titre: 'Affiche touristique · 1/3', alt: 'Affiche du château des ducs de Wurtemberg' },
+  { src: cimadeAffiche, format: 'carre', categorie: 'Identité', titre: 'La Cimade — affiche', alt: 'Affiche pour La Cimade : poing levé noir entouré de cercles rouges' },
+  { src: cimadeLogo, format: 'carre', categorie: 'Identité', titre: 'La Cimade — recherches de logo', alt: 'Planche de recherches typographiques pour le logo de La Cimade' },
+  { src: exposition, format: 'portrait', categorie: 'Photographie', titre: 'Accrochage d’exposition', alt: 'Deux grandes toiles aux motifs bleu-vert accrochées dans une salle d’exposition' },
+  { src: theatre, format: 'portrait', categorie: 'Illustration', titre: 'Affiche touristique · 2/3', alt: 'Affiche du théâtre gallo-romain de Mandeure vu du ciel' },
+  { src: natureMorte, format: 'carre', categorie: 'Photographie', titre: 'Nature morte', alt: 'Nature morte : chemise, baskets jaunes, livres et objets posés au sol' },
+  { src: oeuvre, format: 'carre', categorie: 'Photographie', titre: 'Œuvre exposée', alt: 'Tableau coloré aux formes végétales accroché à un mur blanc' },
+  { src: temple, format: 'portrait', categorie: 'Illustration', titre: 'Affiche touristique · 3/3', alt: 'Affiche du temple Saint-Martin et de son clocher' },
+];
+---
+
+<Layout
+  titre="Galerie"
+  description="Galerie d’Ewan Menigoz : affiches, recherches d’identité visuelle et photographies."
+  actif="Galerie"
+>
+  <section class="conteneur pb-14 pt-[72px]">
+    <IntroPage
+      titre="Affiches, identités et "
+      enVert="photographies."
+      chapo="Les visuels qui complètent mes projets : recherches graphiques, affiches et regards photographiques."
+    />
+  </section>
+
+  <section aria-label="Visuels" class="conteneur pb-24">
+    <ul class="columns-1 gap-6 sm:columns-2 lg:columns-4">
+      {
+        visuels.map((v) => (
+          <li class="mb-6 break-inside-avoid">
+            <figure class="rounded-xl border border-sable-fonce bg-white px-2 pt-2">
+              <Image
+                src={v.src}
+                alt={v.alt}
+                width={532}
+                class:list={['w-full rounded-lg bg-sable object-cover', v.format === 'portrait' ? 'aspect-[266/332]' : 'aspect-square']}
+              />
+              <figcaption class="flex flex-col gap-1 px-1.5 py-3">
+                <span class="text-label text-vert">{v.categorie}</span>
+                <span class="text-ui text-encre">{v.titre}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

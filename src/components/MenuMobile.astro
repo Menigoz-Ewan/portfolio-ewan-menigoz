@@ -1,0 +1,79 @@
+---
+// Menu des écrans étroits : bouton « Menu » qui ouvre un panneau sous l'en-tête.
+import Button from './Button.astro';
+import { navigation } from '../data/site';
+
+interface Props {
+  actif?: string;
+  surFondVert?: boolean;
+}
+
+const { actif, surFondVert = false } = Astro.props;
+---
+
+<div class="md:hidden" data-menu-mobile>
+  <button
+    type="button"
+    aria-expanded="false"
+    aria-controls="menu-mobile"
+    class:list={[
+      'flex h-11 items-center gap-2 rounded-lg border px-4 text-ui',
+      surFondVert ? 'border-white/60 text-white' : 'border-bordure bg-sable text-encre',
+    ]}
+    data-menu-bouton
+  >
+    <span data-menu-libelle>Menu</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none">
+      <path d="M2.5 5h11M2.5 11h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  <nav
+    id="menu-mobile"
+    aria-label="Navigation principale"
+    class="absolute inset-x-0 top-full z-30 hidden border-b border-sable-fonce bg-creme px-5 pb-6 pt-2 shadow-[0_12px_24px_rgb(22_22_22/0.08)]"
+    data-menu-panneau
+  >
+    <ul class="flex flex-col">
+      <li>
+        <a href="/" class="block border-b border-sable-fonce py-3 text-lead text-encre" aria-current={actif === 'Accueil' ? 'page' : undefined}>Accueil</a>
+      </li>
+      {
+        navigation.map((lien) => (
+          <li>
+            <a
+              href={lien.href}
+              aria-current={actif === lien.libelle ? 'page' : undefined}
+              class:list={['block border-b border-sable-fonce py-3 text-lead', actif === lien.libelle ? 'text-vert' : 'text-encre']}
+            >
+              {lien.libelle}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <Button href="/contact" class="mt-5">Me contacter</Button>
+  </nav>
+</div>
+
+<script>
+  // Ouverture / fermeture du menu, fermeture avec Échap (QUALITE A1).
+  for (const menu of document.querySelectorAll<HTMLElement>('[data-menu-mobile]')) {
+    const bouton = menu.querySelector<HTMLButtonElement>('[data-menu-bouton]')!;
+    const panneau = menu.querySelector<HTMLElement>('[data-menu-panneau]')!;
+    const libelle = menu.querySelector<HTMLElement>('[data-menu-libelle]')!;
+
+    const basculer = (ouvert: boolean) => {
+      bouton.setAttribute('aria-expanded', String(ouvert));
+      panneau.classList.toggle('hidden', !ouvert);
+      libelle.textContent = ouvert ? 'Fermer' : 'Menu';
+    };
+
+    bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && bouton.getAttribute('aria-expanded') === 'true') {
+        basculer(false);
+        bouton.focus();
+      }
+    });
+  }
+</script>

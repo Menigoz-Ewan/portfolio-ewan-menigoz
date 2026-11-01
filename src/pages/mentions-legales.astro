@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import PageDocument from '../components/PageDocument.astro';
+import SectionDocument from '../components/SectionDocument.astro';
+import { site } from '../data/site';
+
+const sections = [
+  { id: 'editeur', titre: 'Éditeur du site' },
+  { id: 'hebergement', titre: 'Hébergement' },
+  { id: 'propriete', titre: 'Propriété intellectuelle' },
+  { id: 'donnees', titre: 'Données personnelles & cookies' },
+];
+
+const editeur = [
+  { libelle: 'Éditeur', valeur: site.nom },
+  { libelle: 'Statut', valeur: 'Étudiant en BUT Métiers du Multimédia et de l’Internet (MMI)' },
+  { libelle: 'Établissement', valeur: 'IUT de Montbéliard (Université de Franche-Comté)' },
+  { libelle: 'Adresse', valeur: '4 Place Thiers, 25200 Montbéliard, France' },
+  { libelle: 'Contact', valeur: site.email },
+];
+
+// À mettre à jour avec l'hébergeur du VPS et le nom de domaine définitif (QUALITE J1).
+const hebergement = [
+  { libelle: 'Hébergeur', valeur: 'Netlify' },
+  { libelle: 'Site', valeur: 'www.netlify.com' },
+];
+---
+
+<Layout titre="Mentions légales" description="Mentions légales du portfolio d’Ewan Menigoz : éditeur, hébergement, propriété intellectuelle et données personnelles." filaire="gauche">
+  <section class="conteneur pb-12 pt-[72px]">
+    <IntroPage titre="Mentions légales" taille="h1" chapo="Portfolio étudiant d’Ewan Menigoz · portfolio-ewan-menigoz.netlify.app" />
+  </section>
+
+  <PageDocument sections={sections}>
+    <SectionDocument id="editeur" numero={1} titre="Éditeur du site">
+      <dl>
+        {
+          editeur.map((l) => (
+            <div class="flex flex-col gap-1 border-t border-sable-fonce py-3 sm:flex-row sm:gap-6">
+              <dt class="text-label sm:w-40 sm:shrink-0">{l.libelle}</dt>
+              <dd class="text-encre">{l.libelle === 'Contact' ? <a href={`mailto:${l.valeur}`} class="underline-offset-4 hover:underline">{l.valeur}</a> : l.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </SectionDocument>
+
+    <SectionDocument id="hebergement" numero={2} titre="Hébergement">
+      <dl>
+        {
+          hebergement.map((l) => (
+            <div class="flex flex-col gap-1 border-t border-sable-fonce py-3 sm:flex-row sm:gap-6">
+              <dt class="text-label sm:w-40 sm:shrink-0">{l.libelle}</dt>
+              <dd class="text-encre">{l.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </SectionDocument>
+
+    <SectionDocument id="propriete" numero={3} titre="Propriété intellectuelle">
+      <p>
+        Ce site relève de la législation française et internationale sur le droit d’auteur et la propriété
+        intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les
+        représentations iconographiques et photographiques. Toute reproduction, totale ou partielle, sur quelque support
+        que ce soit, est interdite sans autorisation expresse de l’éditeur. Les projets, maquettes, visuels et codes sources
+        présentés sont la propriété exclusive d’Ewan Menigoz, sauf mention contraire liée à des projets académiques ou
+        collectifs.
+      </p>
+    </SectionDocument>
+
+    <SectionDocument id="donnees" numero={4} titre="Données personnelles & cookies">
+      <p>
+        Ce portfolio peut utiliser des cookies de mesure d’audience ou de fonctionnement technique. Conformément au
+        Règlement Général sur la Protection des Données (RGPD), vous disposez d’un droit d’accès, de rectification et de
+        suppression des données vous concernant, en contactant l’éditeur à l’adresse indiquée ci-dessus.
+      </p>
+    </SectionDocument>
+  </PageDocument>
+</Layout>

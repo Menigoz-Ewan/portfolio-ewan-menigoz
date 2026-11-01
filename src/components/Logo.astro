@@ -1,0 +1,15 @@
+---
+// Logo typographique EWME (« E détachés », dernier E retourné en parenthèse).
+import logo from '../assets/svg/logo-ewme.svg?raw';
+
+interface Props {
+  class?: string;
+}
+
+const { class: classe = '' } = Astro.props;
+const svg = logo
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace('<svg', `<svg aria-hidden="true" focusable="false" class="${classe}"`);
+---
+
+<Fragment set:html={svg} />

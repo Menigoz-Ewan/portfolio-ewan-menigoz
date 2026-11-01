@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import PageDocument from '../components/PageDocument.astro';
+import SectionDocument from '../components/SectionDocument.astro';
+
+const sections = [
+  { id: 'pourquoi', titre: 'Pourquoi cette page' },
+  { id: 'outils', titre: 'Les outils que j’utilise' },
+  { id: 'delegation', titre: 'Ce que je délègue, ce que je garde' },
+  { id: 'regles', titre: 'Mes règles' },
+];
+---
+
+<Layout
+  titre="Ma façon de travailler avec l’IA"
+  description="Déclaration d’usage de l’IA d’Ewan Menigoz : outils utilisés, ce qui est délégué, ce qui reste de son fait, et ses règles."
+  filaire="gauche"
+>
+  <section class="conteneur pb-12 pt-[72px]">
+    <IntroPage
+      titre="Ma façon de travailler avec l’IA"
+      taille="h1"
+      chapo="Déclaration d’usage · le détail outil par outil est dans le fichier IA.md de mon dépôt GitHub"
+    />
+  </section>
+
+  <PageDocument sections={sections}>
+    <SectionDocument id="pourquoi" numero={1} titre="Pourquoi cette page">
+      <p>
+        L’IA générative fait partie de mes outils de travail, au même titre que Figma ou mon éditeur de code. Je préfère le
+        dire clairement : un recruteur doit savoir comment je travaille, et je dois pouvoir expliquer chaque choix présent
+        sur ce site.
+      </p>
+    </SectionDocument>
+
+    <SectionDocument id="outils" numero={2} titre="Les outils que j’utilise">
+      <p>
+        Claude (offre Pro) : conception et révision de la maquette Figma, planification, recherche de failles, relecture et
+        aide au développement. Ses extensions et ses skills me permettent de travailler directement dans mes fichiers.
+      </p>
+      <p>
+        Gemini : mon premier outil, utilisé surtout comme moteur de recherche conversationnel pour me documenter et
+        structurer mes projets.
+      </p>
+    </SectionDocument>
+
+    <SectionDocument id="delegation" numero={3} titre="Ce que je délègue, ce que je garde">
+      <p>
+        L’IA intervient à presque toutes les étapes : planning, propositions de pistes graphiques, recherche de failles,
+        test des parcours utilisateurs, relecture et aide au code. L’inspiration reste ma part : les références, l’intention
+        de départ et la direction artistique viennent de moi. Je trie ensuite chaque proposition : j’en garde, j’en modifie,
+        j’en rejette.
+      </p>
+    </SectionDocument>
+
+    <SectionDocument id="regles" numero={4} titre="Mes règles">
+      <p>
+        Je ne publie rien que je ne sais pas expliquer ni modifier moi-même. Chaque proposition est vérifiée : orthographe,
+        accessibilité, cohérence avec ma charte graphique. Le fichier IA.md de mon dépôt GitHub précise, pour chaque outil, à
+        quelle étape je l’ai utilisé, pour quoi faire, et ce que j’ai corrigé ou écarté.
+      </p>
+    </SectionDocument>
+  </PageDocument>
+</Layout>

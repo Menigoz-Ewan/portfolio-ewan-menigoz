@@ -1,0 +1,35 @@
+---
+// Icône SVG exportée de Figma, insérée en ligne pour hériter de la couleur du texte (currentColor).
+const icones = import.meta.glob<string>('../assets/svg/icon-*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+export type NomIcone =
+  | 'arrow-right'
+  | 'arrow-up-right'
+  | 'download'
+  | 'mail'
+  | 'linkedin'
+  | 'instagram'
+  | 'design'
+  | 'code'
+  | 'graph'
+  | 'formation'
+  | 'experience';
+
+interface Props {
+  nom: NomIcone;
+  taille?: number;
+  class?: string;
+}
+
+const { nom, taille = 16, class: classe = '' } = Astro.props;
+const brut = icones[`../assets/svg/icon-${nom}.svg`] ?? '';
+const svg = brut
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace('<svg', `<svg width="${taille}" height="${taille}" aria-hidden="true" focusable="false" class="${classe}"`);
+---
+
+<Fragment set:html={svg} />

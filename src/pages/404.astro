@@ -1,0 +1,18 @@
+---
+// Page 404 personnalisée (QUALITE R7) : même charte que le reste du site.
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import Button from '../components/Button.astro';
+---
+
+<Layout titre="Page introuvable" description="Cette page n’existe pas ou a été déplacée.">
+  <section class="conteneur flex min-h-[60vh] flex-col justify-center gap-8 py-24">
+    <p class="text-label text-vert">Erreur 404</p>
+    <IntroPage titre="Tu t’es égaré ! " enVert="Cette page n’existe pas." chapo="Le lien est peut-être cassé, ou la page a été déplacée.">
+      <div class="flex flex-wrap gap-3 pt-2">
+        <Button href="/">Retour à l’accueil</Button>
+        <Button href="/projets" variante="secondary">Voir les projets</Button>
+      </div>
+    </IntroPage>
+  </section>
+</Layout>

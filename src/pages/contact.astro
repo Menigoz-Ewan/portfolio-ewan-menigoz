@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+
+const liens = [
+  { libelle: 'Email', valeur: site.email, href: `mailto:${site.email}`, icone: 'arrow-up-right' as const },
+  { libelle: 'LinkedIn', valeur: 'Voir le profil', href: site.linkedin, icone: 'arrow-up-right' as const, externe: true },
+  { libelle: 'CV', valeur: 'Télécharger (PDF)', href: site.cv, icone: 'download' as const, telecharger: true },
+  { libelle: 'Lieu', valeur: 'Montbéliard, Doubs' },
+];
+
+const aide = [
+  'Les dates et la durée envisagées',
+  'Les missions : UI, UX, intégration front-end…',
+  'L’équipe et les outils que vous utilisez',
+];
+
+// Bordure à 75 % du gris secondaire : contraste ≥ 3:1 sur le crème (QUALITE A10).
+const champ =
+  'w-full rounded-md border border-texte-secondaire/75 bg-creme px-3 py-2.5 text-small text-encre placeholder:text-texte-secondaire transition-colors focus:border-vert focus:outline-2 focus:outline-offset-1 focus:outline-vert aria-[invalid=true]:border-rouge';
+---
+
+<Layout
+  titre="Contact"
+  description="Contacter Ewan Menigoz pour un stage en design UI/UX ou en front-end : formulaire, email ou LinkedIn."
+  actif="Contact"
+  pageContact
+>
+  <div class="conteneur flex flex-col gap-12 pb-24 pt-20 lg:flex-row lg:items-start lg:justify-between">
+    <!-- Informations -->
+    <section aria-labelledby="titre-contact" class="flex flex-col gap-4 lg:w-[486px]">
+      <h1 id="titre-contact" class="text-h1">Parlons de votre <span class="text-vert">stage.</span></h1>
+      <p class="text-body text-texte-secondaire">
+        Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par email ou sur LinkedIn.
+      </p>
+
+      <dl class="flex flex-col pt-4">
+        {
+          liens.map((l) => (
+            <div class="flex items-center justify-between gap-4 border-t border-sable-fonce py-3.5">
+              <dt class="text-label text-texte-secondaire">{l.libelle}</dt>
+              <dd class="text-ui text-encre">
+                {l.href ? (
+                  <a
+                    href={l.href}
+                    class="flex items-center gap-2 rounded transition-colors hover:text-vert"
+                    {...(l.telecharger ? { download: '' } : {})}
+                    {...(l.externe ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    {l.valeur}
+                    <Icon nom={l.icone!} />
+                  </a>
+                ) : l.icone ? (
+                  <span class="flex items-center gap-2 text-texte-secondaire">
+                    {l.valeur} <span class="text-small">(lien à venir)</span>
+                  </span>
+                ) : (
+                  l.valeur
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="flex flex-col gap-2.5 rounded-xl border border-vert/18 bg-vert/6 p-5">
+        <h2 class="text-label text-vert">Pour une proposition de stage</h2>
+        <ul class="flex flex-col gap-2.5">
+          {
+            aide.map((a) => (
+              <li class="flex items-center gap-2.5 text-small">
+                <span aria-hidden="true" class="size-1.5 shrink-0 rounded-full bg-vert" />
+                {a}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Formulaire (PocketBase) -->
+    <section aria-label="Formulaire de contact" class="w-full lg:w-[588px]">
+      <form
+        class="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-sable-fonce bg-white p-6 md:p-8"
+        novalidate
+        data-formulaire
+        data-pocketbase={site.pocketbase}
+      >
+        <span aria-hidden="true" class="absolute inset-x-0 top-0 h-1 bg-vert"></span>
+
+        <div class="grid gap-5 sm:grid-cols-2 sm:gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="nom" class="text-ui">Nom</label>
+            <input id="nom" name="nom" type="text" autocomplete="name" required placeholder="Prénom Nom" class={champ} aria-describedby="erreur-nom" />
+            <p id="erreur-nom" class="hidden text-small text-rouge" data-erreur>Indiquez votre nom.</p>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="email" class="text-ui">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="vous@entreprise.fr" class={champ} aria-describedby="erreur-email" />
+            <p id="erreur-email" class="hidden text-small text-rouge" data-erreur>Indiquez une adresse email valide.</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="objet" class="text-ui">Objet</label>
+          <input id="objet" name="objet" type="text" required placeholder="Proposition de stage" class={champ} aria-describedby="erreur-objet" />
+          <p id="erreur-objet" class="hidden text-small text-rouge" data-erreur>Indiquez l’objet de votre message.</p>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="message" class="text-ui">Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Votre message…" class:list={[champ, 'h-32 resize-y']} aria-describedby="erreur-message"></textarea>
+          <p id="erreur-message" class="hidden text-small text-rouge" data-erreur>Écrivez votre message.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <p class="text-small text-texte-secondaire">Tous les champs sont requis.</p>
+          <Button type="submit">Envoyer</Button>
+        </div>
+        <p class="text-small text-texte-secondaire">
+          Vos données servent uniquement à vous répondre. Détails dans les <a href="/mentions-legales#donnees" class="underline hover:text-encre">mentions légales</a>.
+        </p>
+        <p role="status" aria-live="polite" class="hidden rounded-lg px-4 py-3 text-small" data-statut></p>
+      </form>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // Validation accessible (erreurs liées au champ) puis envoi vers PocketBase (collection « messages »).
+  const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]')!;
+  const statut = formulaire.querySelector<HTMLElement>('[data-statut]')!;
+  const champs = [...formulaire.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')];
+
+  const afficherStatut = (texte: string, succes: boolean) => {
+    statut.textContent = texte;
+    statut.classList.remove('hidden', 'bg-vert/10', 'text-vert', 'bg-rouge/10', 'text-rouge');
+    statut.classList.add(...(succes ? ['bg-vert/10', 'text-vert'] : ['bg-rouge/10', 'text-rouge']));
+  };
+
+  const verifier = (champ: HTMLInputElement | HTMLTextAreaElement) => {
+    const valide = champ.checkValidity() && champ.value.trim() !== '';
+    champ.setAttribute('aria-invalid', String(!valide));
+    document.getElementById(`erreur-${champ.id}`)?.classList.toggle('hidden', valide);
+    return valide;
+  };
+
+  for (const champ of champs) champ.addEventListener('blur', () => verifier(champ));
+
+  formulaire.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const invalides = champs.filter((c) => !verifier(c));
+    if (invalides.length) {
+      invalides[0].focus();
+      return;
+    }
+
+    const url = formulaire.dataset.pocketbase;
+    if (!url) {
+      afficherStatut('Le formulaire n’est pas encore relié. Écrivez-moi directement par email, merci !', false);
+      return;
+    }
+
+    try {
+      const reponse = await fetch(`${url}/api/collections/messages/records`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(formulaire))),
+      });
+      if (!reponse.ok) throw new Error(String(reponse.status));
+      formulaire.reset();
+      afficherStatut('Merci, votre message est bien envoyé. Je vous réponds rapidement.', true);
+    } catch {
+      afficherStatut('L’envoi n’a pas fonctionné. Réessayez ou écrivez-moi par email.', false);
+    }
+  });
+</script>

@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import HorsEcran from '../components/HorsEcran.astro';
+import atelier from '../assets/images/apropos-atelier.png';
+import { site } from '../data/site';
+
+const chiffres = [
+  { libelle: 'BUT MMI', valeur: '2e année' },
+  { libelle: 'Spécialité', valeur: 'Création numérique' },
+  { libelle: 'Doubs (25)', valeur: 'Montbéliard' },
+  { libelle: 'Recherché', valeur: 'Stage UI/UX' },
+];
+
+const formation = [
+  { date: 'Aujourd’hui', titre: 'BUT MMI — 2e année', texte: 'Spécialité Création numérique, Montbéliard.' },
+  { date: '2024', titre: 'Baccalauréat général', texte: 'Spécialités Cinéma-audiovisuel et HGGSP.' },
+];
+const experience = [
+  {
+    date: 'Dates à compléter',
+    titre: 'Employé polyvalent — Beck Technologies',
+    texte: 'Respect d’un cahier des charges, préparation et expédition de commandes.',
+  },
+];
+---
+
+<Layout
+  titre="À propos"
+  description="Ewan Menigoz, étudiant en BUT MMI à Montbéliard : parcours, formation, expérience et centres d’intérêt."
+  actif="À propos"
+  filaire="gauche"
+>
+  <!-- Introduction -->
+  <section class="conteneur flex flex-col gap-6 pb-10 pt-16 lg:flex-row lg:items-end lg:justify-between">
+    <IntroPage titre="Rigueur technique, " enVert="soin visuel." />
+    <div class="flex max-w-[384px] flex-col items-start gap-4">
+      <p class="text-body text-texte-secondaire">
+        Je conçois une interface, puis je l’intègre : c’est ce va-et-vient entre design et code qui m’intéresse.
+      </p>
+      <Button href={site.cv} variante="secondary" icone="download" telecharger>Télécharger mon CV</Button>
+    </div>
+  </section>
+
+  <!-- Photo + chiffres clés -->
+  <section aria-label="En bref" class="conteneur pb-[72px]">
+    <Image
+      src={atelier}
+      alt="Ewan Menigoz au travail devant son ordinateur portable"
+      width={2400}
+      loading="eager"
+      class="h-[220px] w-full rounded-[20px] object-cover md:h-[300px]"
+    />
+    <dl class="relative -mt-[50px] grid grid-cols-2 gap-3 px-3 md:gap-6 md:px-6 lg:grid-cols-4">
+      {
+        chiffres.map((c) => (
+          <div class="flex h-[120px] flex-col justify-end gap-1.5 rounded-[14px] border border-sable-fonce bg-white p-5 shadow-[0_8px_20px_rgb(23_23_23/0.06)]">
+            <dt class="text-label text-texte-secondaire">{c.libelle}</dt>
+            <dd class="text-h3 text-encre">{c.valeur}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Parcours : formation et expérience professionnelle bien distinctes -->
+  <section aria-labelledby="titre-parcours" class="conteneur flex flex-col gap-7 pb-20">
+    <h2 id="titre-parcours" class="text-h2">Mon parcours</h2>
+    <div class="grid gap-12 lg:grid-cols-2">
+      {
+        [
+          { titre: 'Formation', sousTitre: 'Parcours scolaire', icone: 'formation' as const, ligne: 'border-vert', date: 'text-vert', etapes: formation },
+          { titre: 'Expérience professionnelle', sousTitre: 'Emplois et stages', icone: 'experience' as const, ligne: 'border-encre', date: 'text-texte-secondaire', etapes: experience },
+        ].map((col) => (
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <span class="rounded-[10px] bg-sable p-[9px] text-encre">
+                <Icon nom={col.icone} taille={20} />
+              </span>
+              <div class="flex flex-col gap-0.5">
+                <h3 class="text-h3">{col.titre}</h3>
+                <p class="text-small text-texte-secondaire">{col.sousTitre}</p>
+              </div>
+            </div>
+            <ol class:list={['flex flex-col gap-3 border-l-2 pl-[22px]', col.ligne]}>
+              {col.etapes.map((e) => (
+                <li class="flex flex-col gap-2.5 rounded-2xl border border-sable-fonce bg-white px-6 pb-7 pt-6">
+                  <p class:list={['text-label', col.date]}>{e.date}</p>
+                  <h4 class="text-h3">{e.titre}</h4>
+                  <p class="text-small text-texte-secondaire">{e.texte}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Hors écran -->
+  <section aria-labelledby="titre-regard" class="conteneur flex flex-col gap-4 pb-24">
+    <div class="flex flex-wrap items-end justify-between gap-2">
+      <h2 id="titre-regard" class="text-h2">Ce qui nourrit mon regard</h2>
+      <p class="hidden text-small text-texte-secondaire md:block">Survolez ou touchez une carte</p>
+      <p class="text-small text-texte-secondaire md:hidden">Glissez pour parcourir · touchez pour agrandir</p>
+    </div>
+    <HorsEcran />
+  </section>
+
+  <!-- Renvoi vers la page sur l'IA -->
+  <section aria-labelledby="titre-ia" class="conteneur pb-[72px] pt-12">
+    <div class="flex flex-col items-start gap-4 rounded-2xl border border-sable-fonce bg-white p-7">
+      <div class="flex items-center gap-3">
+        <span class="rounded bg-vert px-2 py-1 text-label text-white">IA</span>
+        <h2 id="titre-ia" class="text-h3">Et l’IA dans tout ça ?</h2>
+      </div>
+      <p class="text-body text-texte-secondaire">
+        J’utilise l’IA comme un outil de travail, à presque toutes les étapes sauf l’inspiration : planning, recherche de
+        failles, test des parcours, relecture. Les choix et la validation restent les miens, et je détaille tout sur une
+        page dédiée.
+      </p>
+      <Button href="/usage-ia" variante="secondary">Ma façon de travailler avec l’IA</Button>
+    </div>
+  </section>
+</Layout>

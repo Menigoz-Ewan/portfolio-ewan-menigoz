@@ -1,0 +1,123 @@
+---
+// « Ce qui nourrit mon regard » : cartes polaroid.
+// Desktop : la carte survolée, focalisée au clavier ou touchée s'agrandit, les autres s'estompent.
+// Mobile : bande défilante au doigt, aimantée carte par carte (scroll-snap), avec pagination.
+import { Image } from 'astro:assets';
+import photographie from '../assets/images/hors-ecran/photographie.png';
+import musique from '../assets/images/hors-ecran/musique.png';
+import cinema from '../assets/images/hors-ecran/cinema.png';
+import jeuxVideo from '../assets/images/hors-ecran/jeux-video.png';
+import mangas from '../assets/images/hors-ecran/mangas.png';
+import architecture from '../assets/images/hors-ecran/architecture.png';
+import nature from '../assets/images/hors-ecran/nature.png';
+import dessin from '../assets/images/hors-ecran/dessin.png';
+import mode from '../assets/images/hors-ecran/mode.png';
+
+const cartes = [
+  { titre: 'Photographie', src: photographie, alt: 'Appareil photo argentique posé sur une table', rot: 2 },
+  { titre: 'Musique', src: musique, alt: 'Instruments de musique dans une pièce sombre', rot: -1.5 },
+  { titre: 'Cinéma', src: cinema, alt: 'Ancien projecteur de cinéma à bobines', rot: 1 },
+  { titre: 'Jeux vidéo', src: jeuxVideo, alt: 'Manette de jeu vidéo rouge', rot: -2 },
+  { titre: 'Mangas', src: mangas, alt: 'Étagère remplie de mangas', rot: 1.5 },
+  { titre: 'Architecture', src: architecture, alt: 'Façade d’immeuble moderne vue en contre-plongée', rot: -1 },
+  { titre: 'Nature', src: nature, alt: 'Sous-bois en automne', rot: 2 },
+  { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert', rot: -1.5 },
+  { titre: 'Mode', src: mode, alt: 'Vêtements colorés sur un portant', rot: 1 },
+];
+---
+
+<div data-hors-ecran>
+  <ul
+    class="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 py-6 [scrollbar-width:none] md:mx-0 md:h-[220px] md:snap-none md:items-center md:justify-between md:gap-0 md:overflow-visible md:px-0 md:py-0"
+    data-bande
+  >
+    {
+      cartes.map((c) => (
+        <li class="snap-center" style={`--rot: ${c.rot}deg`}>
+          <button
+            type="button"
+            aria-pressed="false"
+            class="carte flex w-[160px] flex-col items-center gap-1 rounded-md border border-sable-fonce bg-white p-1.5 pb-2 md:w-[112px] md:p-[5px] md:pb-1"
+          >
+            <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[3px] object-cover" />
+            <span class="text-small text-texte-secondaire">{c.titre}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="flex justify-center gap-1.5 md:hidden" aria-hidden="true" data-pagination>
+    {cartes.map((_, i) => <span class:list={['point h-1.5 rounded-full transition-all duration-(--duree-carte)', i === 0 ? 'w-[18px] bg-vert' : 'w-1.5 bg-bordure']} />)}
+  </div>
+</div>
+
+<style>
+  .carte {
+    transform: rotate(var(--rot));
+    transition:
+      transform var(--duree-carte, 250ms) var(--ease-sortie),
+      opacity var(--duree-carte, 250ms) var(--ease-sortie),
+      border-color var(--duree-carte, 250ms),
+      box-shadow var(--duree-carte, 250ms);
+  }
+  .carte[aria-pressed='true'] {
+    position: relative;
+    z-index: 10;
+    transform: rotate(0deg) scale(1.25) translateY(-6px);
+    border-color: var(--color-vert);
+    box-shadow: 0 14px 28px rgb(23 23 23 / 0.14);
+  }
+  .carte[aria-pressed='true'] span {
+    color: var(--color-encre);
+  }
+  @media (max-width: 767px) {
+    .carte[aria-pressed='true'] {
+      transform: rotate(0deg) scale(1.08);
+    }
+  }
+</style>
+
+<script>
+  for (const bloc of document.querySelectorAll<HTMLElement>('[data-hors-ecran]')) {
+    const cartes = [...bloc.querySelectorAll<HTMLButtonElement>('.carte')];
+    const bande = bloc.querySelector<HTMLElement>('[data-bande]')!;
+    const points = [...bloc.querySelectorAll<HTMLElement>('[data-pagination] .point')];
+    const survolPossible = window.matchMedia('(hover: hover)').matches;
+
+    // Met une carte en avant ; les autres s'estompent selon leur distance (comme dans la maquette).
+    const focaliser = (index: number | null) => {
+      cartes.forEach((carte, i) => {
+        carte.setAttribute('aria-pressed', String(i === index));
+        carte.style.opacity = index === null ? '' : String(Math.max(0.55, 1 - 0.08 * Math.abs(i - index)));
+      });
+    };
+
+    cartes.forEach((carte, i) => {
+      if (survolPossible) {
+        carte.addEventListener('mouseenter', () => focaliser(i));
+        carte.addEventListener('mouseleave', () => focaliser(null));
+      }
+      carte.addEventListener('focus', () => focaliser(i));
+      carte.addEventListener('blur', () => focaliser(null));
+      // Toucher ou clic : agrandit la carte, un second appui la referme.
+      carte.addEventListener('click', () => focaliser(carte.getAttribute('aria-pressed') === 'true' ? null : i));
+    });
+
+    // Pagination de la bande mobile
+    bande.addEventListener(
+      'scroll',
+      () => {
+        // offsetWidth ignore la rotation des cartes (getBoundingClientRect l'inclurait)
+        const largeur = cartes[0].offsetWidth + 12;
+        const actif = Math.min(points.length - 1, Math.round(bande.scrollLeft / largeur));
+        points.forEach((p, i) => {
+          p.classList.toggle('w-[18px]', i === actif);
+          p.classList.toggle('bg-vert', i === actif);
+          p.classList.toggle('w-1.5', i !== actif);
+          p.classList.toggle('bg-bordure', i !== actif);
+        });
+      },
+      { passive: true },
+    );
+  }
+</script>

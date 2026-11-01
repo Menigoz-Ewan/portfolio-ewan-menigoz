@@ -1,12 +1,36 @@
 ---
 import '../styles/global.css';
+import filaire from '../assets/svg/ewme-filaire-large.svg?raw';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
 
 interface Props {
-  title?: string;
+  titre: string;
   description?: string;
+  /** Lien actif de la navigation (« Projets », « Galerie », « À propos »…) */
+  actif?: string;
+  /** false sur l'accueil, qui intègre son propre en-tête en onglet */
+  enTete?: boolean;
+  pageContact?: boolean;
+  /** Position du grand EWME filaire décoratif en bas de page */
+  filaire?: 'gauche' | 'droite';
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title = 'Ewan Menigoz — Portfolio', description = 'Portfolio de Ewan Menigoz' } = Astro.props;
+const {
+  titre,
+  description = site.description,
+  actif,
+  enTete = true,
+  pageContact = false,
+  filaire: coteFilaire = 'droite',
+  jsonLd,
+} = Astro.props;
+
+const titreComplet = titre === site.nom ? `${site.nom} — ${site.metier}` : `${titre} · ${site.nom}`;
+const canonique = new URL(Astro.url.pathname, Astro.site);
+const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
 ---
 
 <!doctype html>
@@ -14,11 +38,55 @@ const { title = 'Ewan Menigoz — Portfolio', description = 'Portfolio de Ewan M
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titreComplet}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#1e4d3b" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:site_name" content={site.nom} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
-  <body class="min-h-screen bg-base-100 text-base-content">
-    <slot />
+  <body class="min-h-screen">
+    <a
+      href="#contenu"
+      class="sr-only z-50 rounded-lg bg-vert px-4 py-3 text-ui text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    >
+      Aller au contenu
+    </a>
+
+    <div class="fond-trame relative overflow-x-clip">
+      <!-- Décor : halos, EWME filaire et coordonnées (purement décoratif) -->
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+        <div class="halo -left-[370px] -top-[290px] size-[900px]"></div>
+        <div class="halo -right-[320px] top-[80px] size-[800px]"></div>
+        <div
+          class:list={[
+            'absolute bottom-[200px] h-[640px] w-[1405px] text-encre opacity-[0.07]',
+            coteFilaire === 'gauche' ? '-left-[385px]' : 'left-[415px]',
+          ]}
+          set:html={svgFilaire}
+        />
+        <p
+          class="absolute left-[54px] top-[672px] hidden origin-top-left -rotate-90 text-label text-encre opacity-30 xl:block"
+          style="translate: 0 308px;"
+        >
+          EWME · 47.51° N — 6.80° E · Montbéliard
+        </p>
+      </div>
+
+      {enTete && <Header actif={actif} pageContact={pageContact} />}
+
+      <main id="contenu" class="relative z-10">
+        <slot />
+      </main>
+
+      <Footer actif={actif} />
+    </div>
   </body>
 </html>

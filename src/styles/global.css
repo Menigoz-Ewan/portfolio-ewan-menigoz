@@ -1,4 +1,196 @@
-@import "tailwindcss";
+/* Polices auto-hébergées (WOFF2, sous-ensemble latin, font-display: swap) */
+@import '@fontsource-variable/league-spartan';
+@import '@fontsource-variable/dm-sans/opsz.css';
+@import '@fontsource-variable/geist-mono';
+
+@import 'tailwindcss';
+
+/* Thème daisyUI construit à partir des variables Figma « EWME — Couleurs » */
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+  themes: false;
+}
+@plugin "daisyui/theme" {
+  name: 'ewme';
+  default: true;
+  color-scheme: light;
+  --color-base-100: #faf7f2;
+  --color-base-200: #f1ece4;
+  --color-base-300: #e8e2d8;
+  --color-base-content: #161616;
+  --color-primary: #ce1a1b;
+  --color-primary-content: #ffffff;
+  --color-secondary: #1e4d3b;
+  --color-secondary-content: #ffffff;
+  --color-accent: #14284b;
+  --color-accent-content: #ffffff;
+  --color-neutral: #161616;
+  --color-neutral-content: #faf7f2;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+}
+
+/* Jetons de design : mêmes noms que les variables Figma */
+@theme {
+  --color-encre: #161616;
+  --color-texte-secondaire: #6b655d;
+  --color-vert: #1e4d3b;
+  --color-vert-fonce: #15382b;
+  --color-rouge: #ce1a1b;
+  --color-rouge-fonce: #a21718;
+  --color-rouge-presse: #8e1415;
+  --color-creme: #faf7f2;
+  --color-sable: #f1ece4;
+  --color-sable-fonce: #e8e2d8;
+  --color-bordure: #d9d2c6;
+  --color-lavande: #a898ee;
+
+  --font-display: 'League Spartan Variable', 'League Spartan', system-ui, sans-serif;
+  --font-sans: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, monospace;
+
+  /* Durées et courbes de la spécification « motion » */
+  --ease-sortie: cubic-bezier(0.22, 1, 0.36, 1);
+  --duree-appui: 80ms;
+  --duree-bouton: 180ms;
+  --duree-lien: 220ms;
+  --duree-carte: 250ms;
+}
+
+/* Styles de texte de la maquette (V2/Hero, V2/Display, V2/H1…) */
+@utility text-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.75rem, 1.6rem + 3.6vw, 4.5rem);
+  line-height: 1.03;
+  letter-spacing: -0.005em;
+}
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.375rem, 1.8rem + 1.8vw, 3.5rem);
+  line-height: 1.07;
+}
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.875rem, 1.55rem + 1vw, 2.5rem);
+  line-height: 1.1;
+}
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.38rem + 0.4vw, 1.75rem);
+  line-height: 1.15;
+}
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+@utility text-lead {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+@utility text-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: 0.005em;
+}
+@utility text-small {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+}
+@utility text-ui {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+}
+@utility text-button {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+}
+@utility text-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Conteneur de la grille : 1200 px de contenu, marges latérales de 120 px en desktop */
+@utility conteneur {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 8.33vw, 7.5rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-creme);
+    color: var(--color-encre);
+    font-family: var(--font-sans);
+    font-variation-settings: 'opsz' 14;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Focus toujours visible au clavier (QUALITE A3) */
+  :focus-visible {
+    outline: 2.5px solid var(--color-vert);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/*
+ * Fond/Trame : grille de 48 px à 5 % + repères d'impression verts tous les 192 px.
+ * Tout est en CSS (dégradés + SVG en ligne), aucune image téléchargée (QUALITE P6).
+ */
+.fond-trame {
+  background-color: var(--color-creme);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192'%3E%3Cpath d='M91 96h10M96 91v10' stroke='%231E4D3B' stroke-opacity='.3' stroke-width='1.25'/%3E%3C/svg%3E"),
+    linear-gradient(to right, rgb(22 22 22 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(22 22 22 / 0.05) 1px, transparent 1px);
+  background-size:
+    192px 192px,
+    48px 48px,
+    48px 48px;
+}
+
+/* Halos verts flous du décor */
+.halo {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgb(30 77 59 / 0.13) 0%, rgb(30 77 59 / 0) 70%);
 }

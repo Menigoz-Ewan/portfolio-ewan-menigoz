@@ -1,0 +1,27 @@
+---
+// Lien de navigation : le soulignement vert s'étire de 4 à 16 px au survol (220 ms).
+interface Props {
+  href: string;
+  actif?: boolean;
+}
+
+const { href, actif = false } = Astro.props;
+---
+
+<a
+  href={href}
+  aria-current={actif ? 'page' : undefined}
+  class:list={[
+    'group flex flex-col items-center gap-1.5 pt-2 text-ui transition-colors duration-(--duree-lien) ease-(--ease-sortie)',
+    actif ? 'text-encre' : 'text-texte-secondaire hover:text-encre',
+  ]}
+>
+  <slot />
+  <span
+    aria-hidden="true"
+    class:list={[
+      'h-0.5 bg-vert transition-[width,opacity] duration-(--duree-lien) ease-(--ease-sortie)',
+      actif ? 'w-4 opacity-100' : 'w-1 opacity-0 group-hover:w-4 group-hover:opacity-100',
+    ]}
+  ></span>
+</a>

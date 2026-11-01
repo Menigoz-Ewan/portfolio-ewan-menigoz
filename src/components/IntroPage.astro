@@ -1,0 +1,20 @@
+---
+// Introduction des pages intérieures : grand titre (une partie en vert) + chapô.
+interface Props {
+  titre: string;
+  enVert?: string;
+  chapo?: string;
+  taille?: 'display' | 'h1';
+  class?: string;
+}
+
+const { titre, enVert, chapo, taille = 'display', class: classe = '' } = Astro.props;
+---
+
+<div class:list={['flex max-w-[690px] flex-col gap-4', classe]}>
+  <h1 class:list={[taille === 'display' ? 'text-display' : 'text-h1', 'text-encre']}>
+    {titre}{enVert && <span class="text-vert">{enVert}</span>}
+  </h1>
+  {chapo && <p class:list={[taille === 'display' ? 'text-lead' : 'text-body', 'text-texte-secondaire']}>{chapo}</p>}
+  <slot />
+</div>

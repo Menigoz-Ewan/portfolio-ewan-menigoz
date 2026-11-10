@@ -7,7 +7,7 @@ import { site } from '../data/site';
 
 const liens = [
   { libelle: 'Email', valeur: site.email, href: `mailto:${site.email}`, icone: 'arrow-up-right' as const },
-  { libelle: 'LinkedIn', valeur: 'Voir le profil', href: site.linkedin, icone: 'arrow-up-right' as const, externe: true },
+  { libelle: 'LinkedIn', valeur: 'Voir le profil', href: 'https://www.linkedin.com/in/ewan-menigoz-3b10a7385/', icone: 'arrow-up-right' as const, externe: true },
   { libelle: 'CV', valeur: 'Télécharger (PDF)', href: site.cv, icone: 'download' as const, telecharger: true },
   { libelle: 'Lieu', valeur: 'Montbéliard, Doubs' },
 ];
@@ -30,7 +30,7 @@ const champ =
 >
   <IntroPage
     slot="panneau"
-    titre="Parlons de votre stage."
+    titre="Un projet, un stage ? Parlons-en."
     chapo="Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par email ou sur LinkedIn."
   />
 
@@ -105,7 +105,7 @@ const champ =
         </div>
         <div class="flex flex-col gap-1.5">
           <label for="objet" class="text-ui">Objet</label>
-          <input id="objet" name="objet" type="text" required placeholder="Proposition de stage" class={champ} aria-describedby="erreur-objet" />
+          <input id="objet" name="objet" type="text" required placeholder="Proposition de stage, Refonte charte graphique..." class={champ} aria-describedby="erreur-objet" />
           <p id="erreur-objet" class="hidden text-small text-rouge" data-erreur>Indiquez l’objet de votre message.</p>
         </div>
         <div class="flex flex-col gap-1.5">

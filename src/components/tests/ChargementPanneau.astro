@@ -1,0 +1,188 @@
+---
+// TEST — Écran de chargement « Le panneau vert » (pages /chargement1 et /chargement1-projets).
+// Le panneau du header remplit l'écran pendant le chargement, avec son onglet « Chargement… » au centre.
+// À la fin, le panneau se rétracte jusqu'à la taille exacte du panneau de la page, l'onglet glisse
+// sous le lien actif, puis le contenu du panneau apparaît élément par élément.
+// Même code pour toutes les pages : les tailles sont mesurées sur la page elle-même.
+import Logo from '../Logo.astro';
+---
+
+<div data-chargement class="chg" role="status" aria-live="polite">
+  <div class="chg-fond fond-trame"></div>
+  <div class="chg-panneau"></div>
+  <div class="chg-onglet"><span class="chg-onglet-texte">Chargement…</span></div>
+  <div class="chg-centre">
+    <Logo class="h-[88px] w-auto text-creme lg:h-[120px]" />
+    <p class="text-label text-creme/75">Ewan Menigoz · Designer UI/UX</p>
+    <div class="chg-points" aria-hidden="true"><span></span><span></span><span></span></div>
+  </div>
+  <span class="sr-only">Chargement du portfolio</span>
+</div>
+
+<style>
+  .chg {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+  }
+  .chg-fond {
+    position: absolute;
+    inset: 0;
+  }
+  .chg-panneau {
+    position: absolute;
+    inset: 96px 24px 20px;
+    background: var(--color-vert);
+    border-radius: 40px;
+  }
+  .chg-onglet {
+    position: absolute;
+    top: 32px;
+    left: calc(50% - 90px);
+    width: 180px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-vert);
+  }
+  /* Mêmes « oreilles » que l'onglet du header (HeaderPanneau.astro) */
+  .chg-onglet::before,
+  .chg-onglet::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 34px;
+    height: 64px;
+    background: inherit;
+  }
+  .chg-onglet::before {
+    right: calc(100% - 1px);
+    clip-path: path('M0 64C17 64 17 0 34 0V64Z');
+  }
+  .chg-onglet::after {
+    left: calc(100% - 1px);
+    clip-path: path('M34 64C17 64 17 0 0 0V64Z');
+  }
+  .chg-onglet-texte {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--color-creme);
+    white-space: nowrap;
+  }
+  .chg-centre {
+    position: absolute;
+    inset: 96px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  .chg-points {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .chg-points span {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--color-creme);
+    animation: chg-point 1s ease-in-out infinite;
+  }
+  .chg-points span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .chg-points span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes chg-point {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-4px);
+    }
+  }
+  @media (max-width: 1023px) {
+    .chg-panneau,
+    .chg-centre {
+      inset: 80px 12px 20px;
+      border-radius: 28px;
+    }
+    .chg-onglet {
+      top: 16px;
+    }
+  }
+</style>
+
+<script>
+  import { EASE, reduit, preparer, unitesAReveler, masquer, reveler, progression } from './commun';
+
+  const ecran = document.querySelector<HTMLElement>('[data-chargement]');
+  const cible = document.getElementById('contenu');
+
+  if (ecran && cible) {
+    if (reduit()) ecran.remove();
+    else lancer(ecran, cible);
+  }
+
+  async function lancer(ecran: HTMLElement, cible: HTMLElement) {
+    const deverrouiller = preparer(ecran);
+    const panneau = ecran.querySelector<HTMLElement>('.chg-panneau')!;
+    const onglet = ecran.querySelector<HTMLElement>('.chg-onglet')!;
+    const texte = ecran.querySelector<HTMLElement>('.chg-onglet-texte')!;
+    const centre = ecran.querySelector<HTMLElement>('.chg-centre')!;
+    const fond = ecran.querySelector<HTMLElement>('.chg-fond')!;
+    const unites = unitesAReveler();
+    masquer(unites);
+
+    await progression(1600);
+
+    // 1 · Le logo et le texte de l'onglet s'effacent
+    await Promise.all([
+      centre.animate([{ opacity: 1 }, { opacity: 0, transform: 'scale(0.96)' }], { duration: 260, easing: EASE, fill: 'forwards' }).finished,
+      texte.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' }).finished,
+    ]);
+
+    // 2 · Le panneau se rétracte jusqu'au panneau de la page, l'onglet glisse sous le lien actif
+    const depart = panneau.getBoundingClientRect();
+    const arrivee = cible.getBoundingClientRect();
+    const rayon = getComputedStyle(cible).borderTopLeftRadius;
+    const rect = (r: DOMRect) => ({ top: `${r.top}px`, left: `${r.left}px`, width: `${r.width}px`, height: `${r.height}px` });
+    panneau.style.inset = 'auto';
+    const options = { duration: 720, easing: EASE, fill: 'forwards' as const };
+    const animations = [
+      panneau.animate([{ ...rect(depart), borderRadius: rayon }, { ...rect(arrivee), borderRadius: rayon }], options),
+      fond.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: 'ease-out', fill: 'forwards' }),
+    ];
+    const ongletPage = document.querySelector<HTMLElement>('header .onglet');
+    const departOnglet = onglet.getBoundingClientRect();
+    if (ongletPage && ongletPage.offsetParent) {
+      const o = ongletPage.getBoundingClientRect();
+      animations.push(
+        onglet.animate(
+          [
+            { left: `${departOnglet.left}px`, top: `${departOnglet.top}px`, width: `${departOnglet.width}px` },
+            { left: `${o.left}px`, top: `${o.top}px`, width: `${o.width}px` },
+          ],
+          options,
+        ),
+      );
+    } else {
+      // Page sans onglet (Contact, Mentions…) ou écran étroit : l'onglet rentre dans le panneau
+      animations.push(onglet.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(64px)' }], options));
+    }
+    await Promise.all(animations.map((a) => a.finished));
+
+    // 3 · Le vrai panneau est exactement dessous : on retire l'écran et le contenu apparaît
+    ecran.remove();
+    deverrouiller();
+    reveler(unites);
+  }
+</script>

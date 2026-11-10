@@ -1,0 +1,145 @@
+---
+// TEST — Écran de chargement « Les parenthèses » (page /chargement2).
+// Le E et le Ǝ du logo partent collés, puis s'ouvrent comme des parenthèses.
+// Le W et le M apparaissent entre eux et tournent en boucle, comme un indicateur de chargement.
+// À la fin, le WM s'arrête droit, les E se referment : le logo est complet, puis la page s'ouvre.
+---
+
+<div data-chargement class="chg fond-trame" role="status" aria-live="polite">
+  <div class="chg-centre">
+    <div class="chg-logo" aria-hidden="true">
+      <svg class="chg-e" viewBox="0 0 61.36 163.64" fill="currentColor">
+        <path d="M61.3636 0V13.0909H13.0909V75.2727H61.3636V88.3636H13.0909V150.545H61.3636V163.636H0V0H61.3636Z"></path>
+      </svg>
+      <svg class="chg-wm" viewBox="97.36 0 196.82 163.64" fill="currentColor">
+        <path d="M110.452 0H97.3613V163.636H110.452L138.27 129.273L164.452 163.636H177.543V0H164.452V139.909L138.27 105.955L110.452 140.164V0Z"></path>
+        <path d="M227.091 163.636H214V0H227.091L254.909 34.3636L281.091 0H294.182V163.636H281.091V23.7273L254.909 57.6818L227.091 23.4725V163.636Z"></path>
+      </svg>
+      <svg class="chg-e2" viewBox="330.18 0 61.37 163.64" fill="currentColor">
+        <path d="M330.182 0V13.0909H378.454V75.2727H330.182V88.3636H378.454V150.545H330.182V163.636H391.545V0H330.182Z"></path>
+      </svg>
+    </div>
+    <div class="chg-textes">
+      <p class="font-display text-[28px] font-semibold leading-8 text-encre">Ewan Menigoz</p>
+      <p class="text-label text-vert">Portfolio · Design UI/UX</p>
+    </div>
+  </div>
+  <span class="sr-only">Chargement du portfolio</span>
+</div>
+
+<style>
+  .chg {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chg-centre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+  /* Logo à 140 px de haut (96 px sur mobile) : 1 unité du dessin = --u px */
+  .chg-logo {
+    --u: calc(140px / 163.64);
+    position: relative;
+    width: calc(391.55 * var(--u));
+    height: calc(163.64 * var(--u));
+    color: var(--color-encre);
+  }
+  @media (max-width: 640px) {
+    .chg-logo {
+      --u: calc(96px / 163.64);
+    }
+  }
+  .chg-logo svg {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    overflow: visible;
+  }
+  .chg-e {
+    left: 0;
+    width: calc(61.36 * var(--u));
+  }
+  .chg-wm {
+    left: calc(97.36 * var(--u));
+    width: calc(196.82 * var(--u));
+    color: var(--color-vert);
+  }
+  .chg-e2 {
+    left: calc(330.18 * var(--u));
+    width: calc(61.37 * var(--u));
+  }
+  .chg-textes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+
+<script>
+  import { EASE, reduit, preparer, unitesAReveler, masquer, reveler, progression, tourner, attendre } from './commun';
+
+  const ecran = document.querySelector<HTMLElement>('[data-chargement]');
+  if (ecran) {
+    if (reduit()) ecran.remove();
+    else lancer(ecran);
+  }
+
+  async function lancer(ecran: HTMLElement) {
+    const deverrouiller = preparer(ecran);
+    const logo = ecran.querySelector<HTMLElement>('.chg-logo')!;
+    const e = ecran.querySelector<SVGElement>('.chg-e')!;
+    const wm = ecran.querySelector<SVGElement>('.chg-wm')!;
+    const e2 = ecran.querySelector<SVGElement>('.chg-e2')!;
+    const textes = ecran.querySelector<HTMLElement>('.chg-textes')!;
+    const unites = unitesAReveler();
+    masquer(unites);
+
+    // Distances en unités du dessin, converties en pixels
+    const u = logo.getBoundingClientRect().height / 163.64;
+    const ferme = 132 * u; // les deux E collés au centre
+    const ouvert = 64 * u; // écartement pendant le chargement
+    const opts = { easing: EASE, fill: 'forwards' as const };
+
+    // Départ : E et Ǝ collés, WM invisible
+    e.style.transform = `translateX(${ferme}px)`;
+    e2.style.transform = `translateX(${-ferme}px)`;
+    wm.style.opacity = '0';
+    textes.style.opacity = '0';
+
+    const chargement = progression(1900);
+
+    // 1 · Les parenthèses s'ouvrent, le WM apparaît et se met à tourner
+    await attendre(150);
+    await Promise.all([
+      e.animate([{ transform: `translateX(${ferme}px)` }, { transform: `translateX(${-ouvert}px)` }], { ...opts, duration: 620 }).finished,
+      e2.animate([{ transform: `translateX(${-ferme}px)` }, { transform: `translateX(${ouvert}px)` }], { ...opts, duration: 620 }).finished,
+      wm.animate([{ opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1 }], { ...opts, duration: 520, delay: 160 }).finished,
+      textes.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { ...opts, duration: 500, delay: 300 }).finished,
+    ]);
+    const rotation = tourner(wm);
+
+    // 2 · Fin du chargement : le WM finit son tour et s'arrête droit, les parenthèses se referment
+    await chargement;
+    await rotation.arreter();
+    await Promise.all([
+      e.animate([{ transform: `translateX(${-ouvert}px)` }, { transform: 'none' }], { ...opts, duration: 460 }).finished,
+      e2.animate([{ transform: `translateX(${ouvert}px)` }, { transform: 'none' }], { ...opts, duration: 460 }).finished,
+      wm.animate([{ color: '#1e4d3b' }, { color: '#161616' }], { ...opts, duration: 460 }).finished,
+    ]);
+    await attendre(260);
+
+    // 3 · Le logo s'efface vers le haut, l'écran disparaît et la page apparaît
+    logo.parentElement!.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-24px) scale(0.92)' }], { ...opts, duration: 380 });
+    await ecran.animate([{ opacity: 1 }, { opacity: 0 }], { ...opts, duration: 420, delay: 120 }).finished;
+    ecran.remove();
+    deverrouiller();
+    reveler(unites);
+  }
+</script>

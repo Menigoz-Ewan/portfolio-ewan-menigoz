@@ -1,0 +1,198 @@
+---
+// TEST — Écran de chargement « Les repères de coupe » (page /chargement3).
+// Le WM du logo tourne en boucle entre les deux E, un compteur va de 000 à 100,
+// et les quatre repères de coupe verts partent des coins de l'écran pour se resserrer autour du logo.
+// À 100, le WM s'arrête droit, puis les repères s'écartent pour « cadrer » la page qui apparaît.
+---
+
+<div data-chargement class="chg fond-trame" role="status" aria-live="polite">
+  <span class="chg-repere hg" aria-hidden="true"></span>
+  <span class="chg-repere hd" aria-hidden="true"></span>
+  <span class="chg-repere bg" aria-hidden="true"></span>
+  <span class="chg-repere bd" aria-hidden="true"></span>
+
+  <div class="chg-centre">
+    <div class="chg-logo" aria-hidden="true">
+      <svg class="chg-e" viewBox="0 0 61.36 163.64" fill="currentColor">
+        <path d="M61.3636 0V13.0909H13.0909V75.2727H61.3636V88.3636H13.0909V150.545H61.3636V163.636H0V0H61.3636Z"></path>
+      </svg>
+      <svg class="chg-wm" viewBox="97.36 0 196.82 163.64" fill="currentColor">
+        <path d="M110.452 0H97.3613V163.636H110.452L138.27 129.273L164.452 163.636H177.543V0H164.452V139.909L138.27 105.955L110.452 140.164V0Z"></path>
+        <path d="M227.091 163.636H214V0H227.091L254.909 34.3636L281.091 0H294.182V163.636H281.091V23.7273L254.909 57.6818L227.091 23.4725V163.636Z"></path>
+      </svg>
+      <svg class="chg-e2" viewBox="330.18 0 61.37 163.64" fill="currentColor">
+        <path d="M330.182 0V13.0909H378.454V75.2727H330.182V88.3636H378.454V150.545H330.182V163.636H391.545V0H330.182Z"></path>
+      </svg>
+    </div>
+    <p class="chg-compteur" aria-hidden="true">000</p>
+    <p class="text-label text-texte-secondaire">Mise en page du portfolio</p>
+  </div>
+  <span class="sr-only">Chargement du portfolio</span>
+</div>
+
+<style>
+  .chg {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chg-centre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .chg-logo {
+    --u: calc(96px / 163.64);
+    position: relative;
+    width: calc(391.55 * var(--u));
+    height: calc(163.64 * var(--u));
+    margin-bottom: 18px;
+    color: var(--color-encre);
+  }
+  .chg-logo svg {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    overflow: visible;
+  }
+  .chg-e {
+    left: 0;
+    width: calc(61.36 * var(--u));
+  }
+  /* Le WM tourne : on écarte un peu les E pendant le chargement pour qu'il ne les touche pas */
+  .chg-wm {
+    left: calc(97.36 * var(--u));
+    width: calc(196.82 * var(--u));
+  }
+  .chg-e2 {
+    left: calc(330.18 * var(--u));
+    width: calc(61.37 * var(--u));
+  }
+  .chg-compteur {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--color-vert);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Repère de coupe : un angle droit de 48 px, trait vert de 3 px */
+  .chg-repere {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border: 0 solid var(--color-vert);
+  }
+  .chg-repere.hg {
+    border-top-width: 3px;
+    border-left-width: 3px;
+  }
+  .chg-repere.hd {
+    border-top-width: 3px;
+    border-right-width: 3px;
+  }
+  .chg-repere.bg {
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+  }
+  .chg-repere.bd {
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+  }
+</style>
+
+<script>
+  import { EASE, reduit, preparer, unitesAReveler, masquer, reveler, progression, tourner, attendre } from './commun';
+
+  const ecran = document.querySelector<HTMLElement>('[data-chargement]');
+  if (ecran) {
+    if (reduit()) ecran.remove();
+    else lancer(ecran);
+  }
+
+  type Cadre = { x: number; y: number; w: number; h: number };
+
+  async function lancer(ecran: HTMLElement) {
+    const deverrouiller = preparer(ecran);
+    const centre = ecran.querySelector<HTMLElement>('.chg-centre')!;
+    const logo = ecran.querySelector<HTMLElement>('.chg-logo')!;
+    const e = ecran.querySelector<SVGElement>('.chg-e')!;
+    const e2 = ecran.querySelector<SVGElement>('.chg-e2')!;
+    const wm = ecran.querySelector<SVGElement>('.chg-wm')!;
+    const compteur = ecran.querySelector<HTMLElement>('.chg-compteur')!;
+    const reperes = {
+      hg: ecran.querySelector<HTMLElement>('.hg')!,
+      hd: ecran.querySelector<HTMLElement>('.hd')!,
+      bg: ecran.querySelector<HTMLElement>('.bg')!,
+      bd: ecran.querySelector<HTMLElement>('.bd')!,
+    };
+    const unites = unitesAReveler();
+    masquer(unites);
+
+    // Cadre de départ (coins de l'écran) et d'arrivée (autour du logo et du compteur)
+    const marge = window.innerWidth >= 1024 ? 40 : 16;
+    const ecranCadre: Cadre = { x: marge, y: marge, w: window.innerWidth - 2 * marge, h: window.innerHeight - 2 * marge };
+    const r = centre.getBoundingClientRect();
+    const serre: Cadre = { x: r.left - 56, y: r.top - 48, w: r.width + 112, h: r.height + 96 };
+    const placer = (c: Cadre) => {
+      const L = 48;
+      Object.assign(reperes.hg.style, { left: `${c.x}px`, top: `${c.y}px` });
+      Object.assign(reperes.hd.style, { left: `${c.x + c.w - L}px`, top: `${c.y}px` });
+      Object.assign(reperes.bg.style, { left: `${c.x}px`, top: `${c.y + c.h - L}px` });
+      Object.assign(reperes.bd.style, { left: `${c.x + c.w - L}px`, top: `${c.y + c.h - L}px` });
+    };
+    const melange = (a: Cadre, b: Cadre, t: number): Cadre => ({
+      x: a.x + (b.x - a.x) * t,
+      y: a.y + (b.y - a.y) * t,
+      w: a.w + (b.w - a.w) * t,
+      h: a.h + (b.h - a.h) * t,
+    });
+    placer(ecranCadre);
+
+    // E légèrement écartés pour laisser tourner le WM
+    const u = logo.getBoundingClientRect().height / 163.64;
+    const ecart = 64 * u;
+    e.style.transform = `translateX(${-ecart}px)`;
+    e2.style.transform = `translateX(${ecart}px)`;
+    const rotation = tourner(wm);
+
+    // 1 · Chargement : compteur + repères qui se resserrent au rythme de la progression
+    await progression(2000, (p) => {
+      compteur.textContent = String(Math.round(p)).padStart(3, '0');
+      const t = p / 100;
+      placer(melange(ecranCadre, serre, t * t * (3 - 2 * t)));
+    });
+
+    // 2 · À 100 : le WM finit son tour, les E se recollent, le logo est complet
+    await rotation.arreter();
+    const opts = { easing: EASE, fill: 'forwards' as const };
+    await Promise.all([
+      e.animate([{ transform: `translateX(${-ecart}px)` }, { transform: 'none' }], { ...opts, duration: 420 }).finished,
+      e2.animate([{ transform: `translateX(${ecart}px)` }, { transform: 'none' }], { ...opts, duration: 420 }).finished,
+    ]);
+    await attendre(280);
+
+    // 3 · Les repères s'écartent au-delà de l'écran, le contenu s'efface, la page apparaît
+    const loin: Cadre = { x: -80, y: -80, w: window.innerWidth + 160, h: window.innerHeight + 160 };
+    centre.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(0.94)' }], { ...opts, duration: 320 });
+    const debut = performance.now();
+    await new Promise<void>((fin) => {
+      const image = (t: number) => {
+        const x = Math.min(1, (t - debut) / 520);
+        placer(melange(serre, loin, 1 - Math.pow(1 - x, 3)));
+        if (x < 1) requestAnimationFrame(image);
+        else fin();
+      };
+      requestAnimationFrame(image);
+    });
+    await ecran.animate([{ opacity: 1 }, { opacity: 0 }], { ...opts, duration: 380, delay: 80 }).finished;
+    ecran.remove();
+    deverrouiller();
+    reveler(unites);
+  }
+</script>

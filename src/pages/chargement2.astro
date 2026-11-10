@@ -1,0 +1,163 @@
+---
+// PAGE DE TEST (écran de chargement) : copie de la page d'accueil + l'écran « Les parenthèses ».
+// Aucun lien ne mène ici. À supprimer une fois la variante choisie.
+import ChargementParentheses from '../components/tests/ChargementParentheses.astro';
+import Layout from '../layouts/Layout.astro';
+import HeroAccueil from '../components/HeroAccueil.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import decoEwme from '../assets/svg/deco-ewme.svg?raw';
+import { projets, lienProjet } from '../data/projets';
+import { site } from '../data/site';
+
+const selection = projets.filter((p) => p.accueil);
+
+const domaines = [
+  {
+    icone: 'design' as const,
+    titre: 'Design d’interface',
+    texte: 'UI/UX, prototypage et design system : des parcours clairs, testés avant d’être codés.',
+    outils: ['Figma', 'Notion', 'Gemini'],
+  },
+  {
+    icone: 'code' as const,
+    titre: 'Développement front-end',
+    texte: 'Intégration responsive et accessible, fidèle à la maquette validée.',
+    outils: ['Astro', 'Tailwind CSS', 'DaisyUI', 'CSS', 'Observable Plot'],
+  },
+  {
+    icone: 'graph' as const,
+    titre: 'Graphisme',
+    texte: 'Identité visuelle et illustration vectorielle, du print au web.',
+    outils: ['Affinity Designer'],
+  },
+];
+
+const etapes = [
+  {
+    phase: 'Comprendre',
+    titre: 'Cerner le besoin',
+    texte: 'Qui va utiliser l’interface, et pour quoi faire ? J’analyse le contexte et les parcours avant de dessiner quoi que ce soit.',
+    outils: 'Outils · Notion · Gemini',
+  },
+  {
+    phase: 'Concevoir',
+    titre: 'Maquetter et prototyper',
+    texte: 'Wireframes, maquettes puis prototypes interactifs dans Figma, ajustés à chaque retour jusqu’à la bonne solution.',
+    outils: 'Outils · Figma · Affinity',
+  },
+  {
+    phase: 'Intégrer',
+    titre: 'Coder l’interface',
+    texte: 'Je transforme la maquette en composants responsives et accessibles, au plus près du design validé.',
+    outils: 'Outils · Astro · Tailwind · DaisyUI',
+  },
+];
+
+const svgDeco = decoEwme
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
+
+const personne = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.nom,
+  jobTitle: site.metier,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: site.ville, addressCountry: 'FR' },
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'IUT de Montbéliard (Université de Franche-Comté)' },
+};
+---
+
+<Layout titre={site.nom} active="accueil" variantePanneau="libre" filaire="droite" jsonLd={personne}>
+  <HeroAccueil slot="panneau" />
+  <ChargementParentheses slot="panneau" />
+
+  <!-- Compétences : panneau fixe, compétences et outils regroupés par domaine -->
+  <section aria-labelledby="titre-competences" class="conteneur pb-6 pt-7">
+    <h2 id="titre-competences" class="sr-only">Ce que je sais faire</h2>
+    <ul class="grid overflow-hidden rounded-3xl border border-sable-fonce bg-white md:grid-cols-3">
+      {
+        domaines.map((d, i) => (
+          <li class:list={['flex flex-col gap-3 p-8', i > 0 && 'border-t border-sable-fonce md:border-l md:border-t-0']}>
+            <span class="self-start rounded-xl bg-vert/8 p-2.5 text-vert">
+              <Icon nom={d.icone} taille={22} />
+            </span>
+            <h3 class="text-h3">{d.titre}</h3>
+            <p class="text-small text-texte-secondaire">{d.texte}</p>
+            <ul class="flex flex-wrap gap-1.5" aria-label={`Outils : ${d.titre}`}>
+              {d.outils.map((o) => (
+                <li class="rounded-full bg-sable px-2.5 py-[5px] text-ui">{o}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Sélection de projets -->
+  <section aria-labelledby="titre-projets" class="conteneur flex flex-col gap-9 pb-24 pt-11">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="titre-projets" class="text-h1">Trois projets, trois domaines</h2>
+      <Button href="/projets" variante="secondary">Tous les projets</Button>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        selection.map((p) => (
+          <ProjectCard titre={p.titre} etiquette={p.accueil!.etiquette} resume={p.accueil!.resume} vignette={p.vignette} href={lienProjet(p)} />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Méthode de travail : panneau blanc arrondi qui fait écho au panneau vert du hero -->
+  <section aria-labelledby="titre-methode" class="mx-auto max-w-[1440px] px-3 pb-24 pt-8 md:px-6">
+    <div class="flex flex-col gap-10 rounded-[28px] border border-sable-fonce bg-white px-6 py-12 md:rounded-[40px] md:px-24 md:py-[72px]">
+      <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+        <h2 id="titre-methode" class="text-h1">Ma méthode de travail</h2>
+        <p class="max-w-[420px] text-body text-texte-secondaire">
+          Je suis la même démarche sur chaque projet : comprendre, concevoir, puis intégrer moi-même ce que j’ai dessiné.
+        </p>
+      </div>
+      <ol class="grid gap-6 lg:grid-cols-3">
+        {
+          etapes.map((e, i) => (
+            <li class="flex flex-col gap-3 rounded-2xl border border-sable-fonce bg-creme p-7">
+              <p class="flex items-center gap-2.5">
+                <span class="rounded bg-vert px-2 py-1 text-label text-white">{String(i + 1).padStart(2, '0')}</span>
+                <span class="text-label text-vert">{e.phase}</span>
+              </p>
+              <h3 class="text-h3">{e.titre}</h3>
+              <p class="text-small text-texte-secondaire">{e.texte}</p>
+              <hr class="border-sable-fonce" />
+              <p class="text-label text-texte-secondaire">{e.outils}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Appel au contact -->
+  <section aria-labelledby="titre-contact" class="conteneur pb-24">
+    <div class="relative flex flex-col gap-8 overflow-hidden rounded-[20px] bg-vert-fonce p-8 md:p-14 lg:flex-row lg:items-center lg:justify-between">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-[30px] left-[640px] hidden h-[280px] w-[615px] lg:block" set:html={svgDeco} />
+      <div class="relative flex flex-col gap-2.5 text-white">
+        <h2 id="titre-contact" class="text-h1">Un stage UI/UX à pourvoir ?</h2>
+        <p class="text-lead">Parlons de votre équipe et de vos projets.</p>
+      </div>
+      <div class="relative flex flex-wrap gap-3">
+        <Button href="/contact" variante="light">Me contacter</Button>
+        {
+          site.linkedin ? (
+            <Button href={site.linkedin} variante="contour" externe>LinkedIn</Button>
+          ) : (
+            <Button href="/contact" variante="contour">LinkedIn</Button>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

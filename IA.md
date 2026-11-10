@@ -57,3 +57,5 @@
 | Maquette V3/V4 *(à dater)* | *(à compléter)* | *(à compléter)* |
 
 | Phase de code *(à venir)* | *(à compléter pour chaque partie : carrousels, formulaire, routes dynamiques des projets…)* | *(à compléter)* |
+
+| Header à onglet et nouveau logo (10/11) | Appliquer la nouvelle maquette dans le code : logo EWME à espacement régulier et favicons, composant HeaderPanneau (panneau vert + onglet sous le lien actif, dessiné en CSS), transition de l’onglet avec les View Transitions, menu mobile sous 1024 px, contenus des pages déplacés dans le panneau, mentions légales (hébergeur à compléter) ; vérifications en 1440/390 px et Lighthouse. | *(à compléter)* |

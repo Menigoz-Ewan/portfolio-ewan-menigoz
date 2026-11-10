@@ -64,3 +64,24 @@ Le terme “Premium Tech” n’existe pas vraiment, ou du moins, de qualifie pa
 
 **Décidé**
 - *(à compléter)*
+
+
+---
+
+## Semaine du 9 au 15 novembre 2026
+
+**Fait**
+- **10/11 · Nouveau logo dans le code.** Logo EWME à espacement régulier entre toutes les lettres, composant unique `Logo.astro` en currentColor ; favicons régénérés (SVG, PNG 32 et 180) sur fond crème.
+- **10/11 · Nouveau header.** Toutes les pages commencent par la barre de navigation et un grand panneau vert ; sur les pages du menu, un onglet sort du panneau sous le lien actif. Les titres et intros des pages sont déplacés dans le panneau.
+- **10/11 · Mentions légales.** L'adresse Netlify est retirée ; l'hébergeur du VPS et le nom de domaine restent à compléter.
+- **10/11 · Vérifications.** Toutes les pages contrôlées en 1440 px et 390 px. Lighthouse (mobile) : performance 98–99, accessibilité 100, bonnes pratiques 100, SEO 100.
+
+**Ce qui a coincé**
+- La maquette ne dessine pas le mobile : il a fallu décider d'un comportement (menu « Menu » sous 1024 px, panneau sans onglet, coins de 28 px).
+- Les quatre liens espacés de 72 px plus le bouton ne tiennent pas sous environ 1050 px : d'où le seuil de 1024 px pour le menu, avec des marges réduites entre 1024 et 1280 px.
+- Lighthouse signalait un saut de niveau de titre sur la page Projets (h1 puis h3) : ajout d'un h2 invisible.
+
+**Décidé**
+- Onglet dessiné en CSS (un rectangle + deux « oreilles » courbes), plutôt qu'un SVG recalculé pour chaque page.
+- Glissement de l'onglet avec les View Transitions natives du navigateur (sans routeur JavaScript), 250 ms, coupé avec « réduire les animations ».
+- Coins du panneau : ceux de la maquette Figma (arc de cercle de 40 px), donc un simple border-radius.

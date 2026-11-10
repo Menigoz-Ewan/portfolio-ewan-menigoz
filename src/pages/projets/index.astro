@@ -39,7 +39,9 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
     </div>
   </section>
 
-  <section aria-label="Liste des projets" class="conteneur pb-24">
+  <section aria-labelledby="titre-liste" class="conteneur pb-24">
+    <!-- Titre invisible : garde l'ordre des titres h1 → h2 → h3 (QUALITE A12) -->
+    <h2 id="titre-liste" class="sr-only">Liste des projets</h2>
     <p class="sr-only" aria-live="polite" data-filtres-annonce></p>
     <ul class="grid gap-9 md:grid-cols-2 lg:grid-cols-3">
       {

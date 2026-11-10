@@ -85,3 +85,7 @@ Le terme “Premium Tech” n’existe pas vraiment, ou du moins, de qualifie pa
 - Onglet dessiné en CSS (un rectangle + deux « oreilles » courbes), plutôt qu'un SVG recalculé pour chaque page.
 - Glissement de l'onglet avec les View Transitions natives du navigateur (sans routeur JavaScript), 250 ms, coupé avec « réduire les animations ».
 - Coins du panneau : ceux de la maquette Figma (arc de cercle de 40 px), donc un simple border-radius.
+
+- **10/11 · Statut « stage » du hero.** Retour reçu : l'étiquette blanche « Je recherche un stage en design UI/UX » (avec le point pulsé) et la pastille ronde « Stage recherché » faisaient « IA ». Plusieurs variantes testées dans Figma (section « Tests — statut stage (F + H) ») ; choix de la combinaison F + H : un onglet crème découpé dans le bas du panneau (le négatif de l'onglet du menu) qui donne les infos du stage, et une note au crayon « écrivez-moi ! » avec une flèche dessinée vers le bouton « Me proposer un stage ».
+  - Ce qui a coincé : entre 1024 et 1280 px, les deux boutons passent sur deux lignes et la note recouvrait « Voir les projets » → note affichée à partir de 1280 px, et place réservée sous les boutons pour l'onglet. Le bloc header + hero mesurait 708 px au lieu de 676 (marge basse trop grande sous la pile de photos) → corrigé.
+  - Décidé : la phrase de l'onglet est construite à partir des données du stage (pas en dur) ; la trame du fond est prolongée dans l'onglet ; en mobile, la même phrase devient une ligne de texte sous les boutons ; police Caveat ajoutée en Bold seulement.

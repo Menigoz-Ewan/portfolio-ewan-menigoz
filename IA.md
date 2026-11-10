@@ -59,3 +59,5 @@
 | Phase de code *(à venir)* | *(à compléter pour chaque partie : carrousels, formulaire, routes dynamiques des projets…)* | *(à compléter)* |
 
 | Header à onglet et nouveau logo (10/11) | Appliquer la nouvelle maquette dans le code : logo EWME à espacement régulier et favicons, composant HeaderPanneau (panneau vert + onglet sous le lien actif, dessiné en CSS), transition de l’onglet avec les View Transitions, menu mobile sous 1024 px, contenus des pages déplacés dans le panneau, mentions légales (hébergeur à compléter) ; vérifications en 1440/390 px et Lighthouse. | *(à compléter)* |
+
+| Statut « stage » du hero, variante F + H (10/11) | Retirer l’étiquette « Je recherche un stage… » et la pastille « Stage recherché » ; coder l’onglet crème découpé dans le bas du panneau (masque CSS, trame alignée, texte construit depuis les données) et la note au crayon « écrivez-moi ! » (police Caveat, flèche SVG animée) ; corriger la hauteur du hero (676 px) ; vérifications en 1440/1280/1024/390 px et Lighthouse avant/après. | *(à compléter)* |

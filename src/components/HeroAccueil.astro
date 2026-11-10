@@ -21,7 +21,8 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
 
   <!-- lg:pb-6 : la pile de photos (520 px) s'arrête 24 px avant le bas du panneau, qui fait donc 560 px (bloc de 676 px) -->
   <div class="relative flex flex-col gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-20 lg:pb-6 lg:pt-8">
-    <div class="flex max-w-[640px] flex-col items-start gap-4">
+    <!-- lg:pb-14 : réserve la place de l'onglet crème (40 px) + 40 px d'air sous les boutons, même quand ils passent sur deux lignes -->
+    <div class="flex max-w-[640px] flex-col items-start gap-4 lg:pb-14">
       <h1 class="text-hero text-creme">
         Je conçois des interfaces claires, <span class="text-creme/60">puis je les code.</span>
       </h1>
@@ -35,8 +36,12 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
         <!-- Conteneur relatif : la note se place sous le bouton sans pousser la mise en page -->
         <div class="relative">
           <Button href="/contact" variante="light">Me proposer un stage</Button>
-          <!-- Note au crayon (décorative : le bouton dit déjà la même chose) -->
-          <div aria-hidden="true" class="note pointer-events-none absolute left-0 top-0 hidden lg:block">
+          <!--
+            Note au crayon (décorative : le bouton dit déjà la même chose).
+            Affichée à partir de 1280 px : entre 1024 et 1280 px, les deux boutons passent sur deux lignes
+            et la note recouvrirait « Voir les projets ».
+          -->
+          <div aria-hidden="true" class="note pointer-events-none absolute left-0 top-0 hidden xl:block">
             <svg class="note-fleche absolute left-[122px] top-12 text-creme" width="45" height="33" viewBox="0 0 45 33" fill="none">
               <path
                 d="M44.06 31.88C26.06 31.88 10.06 21.88 4.06 1.88M13.06 8.88L4.06 1.88L1.06 12.88"

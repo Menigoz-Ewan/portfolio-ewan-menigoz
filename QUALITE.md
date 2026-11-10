@@ -24,13 +24,13 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | A5 | La pile de photos animée peut être mise en pause | Une animation automatique de plus de 5 secondes doit pouvoir être arrêtée (WCAG 2.2.2) | Vérifier la présence d'un bouton pause accessible au clavier | ⬜ | 
 |
-| A6 | `prefers-reduced-motion` est respecté | La pile de photos, les translations au scroll et les cartes animées | Activer « réduire les animations » dans Windows, recharger le site | ⬜ | |
+| A6 | `prefers-reduced-motion` est respecté | La pile de photos, les translations au scroll, les cartes animées et la note manuscrite de l'accueil (flèche qui se dessine, texte en fondu) | Activer « réduire les animations » dans Windows, recharger le site | ⬜ | |
 
 | A7 | Chaque image porteuse de sens a un `alt` descriptif ; les images décoratives ont `alt=""` | Photos en polaroid, visuels OpenSigne, affiches touristiques, galerie, logo | WAVE + relecture manuelle de chaque `alt` | ⬜ | |
 
 | A8 | Le logo SVG a un nom accessible | Il sert de lien vers l'accueil | NVDA : le lien doit être annoncé « EWME, accueil » | ⬜ | |
 
-| A9 | Contrastes de texte ≥ 4,5 : 1 | Gris #6B655D sur crème et sable, rouge sur crème, blanc sur rouge | Calcul fait dans la charte (5,4 / 4,9 / 5,2 / 5,5) ; à recontrôler sur le site avec axe | 🟨 | |
+| A9 | Contrastes de texte ≥ 4,5 : 1 | Gris #6B655D sur crème et sable, rouge sur crème, blanc sur rouge, vert #1E4D3B sur crème (onglet « stage recherché » de l'accueil) | Calcul fait dans la charte (5,4 / 4,9 / 5,2 / 5,5 ; vert sur crème 9 : 1) ; à recontrôler sur le site avec axe | 🟨 | |
 
 | A10 | Contraste des bordures de champs ≥ 3 : 1 | La couleur « bordure » #D9D2C6 n'atteint que 1,4 : 1 sur le crème : elle ne doit pas servir à délimiter les champs | Contrôle des champs du formulaire ; si besoin, bordure en gris #6B655D (5,4 : 1) | ⬜ | |
 
@@ -56,7 +56,7 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | P4 | Pas de décalage de mise en page (CLS < 0,1) | Images et polaroids chargés tardivement | `width` et `height` sur toutes les images ; Lighthouse | ⬜ | |
 
-| P5 | Polices auto-hébergées en WOFF2, sous-ensemble latin, `font-display: swap`, graisses limitées | Trois familles (League Spartan, DM Sans, Geist Mono) | Onglet Réseau : nombre et poids des fichiers de police | ⬜ | |
+| P5 | Polices auto-hébergées en WOFF2, sous-ensemble latin, `font-display: swap`, graisses limitées | Quatre familles : League Spartan, DM Sans, Geist Mono, et Caveat Bold seulement (sous-ensemble latin, 50 Ko) pour la note manuscrite de l'accueil, téléchargée uniquement en desktop car la note est masquée sous 1280 px | Onglet Réseau : nombre et poids des fichiers de police | ⬜ | |
 
 | P6 | La grille de fond ne coûte rien | Composant « Fond/Trame » | Vérifier qu'elle est faite en CSS, sans image | ⬜ | |
 

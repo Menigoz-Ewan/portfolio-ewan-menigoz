@@ -6,15 +6,21 @@ import filaireHero from '../assets/svg/ewme-filaire-hero.svg?raw';
 import portrait from '../assets/images/portrait-ewan.png';
 import Button from './Button.astro';
 import PileDePolaroids from './PileDePolaroids.astro';
+import { site } from '../data/site';
+
 const svgFilaire = filaireHero
   .replace(/\s(width|height)="[^"]*"/g, '')
   .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
+
+// Phrase du statut de stage, construite à partir des données (pas en dur).
+const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.periode} · ${site.stage.lieu}`;
 ---
 
 <div class="relative lg:min-h-[560px]">
   <div aria-hidden="true" class="pointer-events-none absolute left-[430px] top-[100px] hidden h-[440px] w-[966px] text-creme opacity-[0.08] lg:block" set:html={svgFilaire} />
 
-  <div class="relative flex flex-col gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-20 lg:pb-14 lg:pt-8">
+  <!-- lg:pb-6 : la pile de photos (520 px) s'arrête 24 px avant le bas du panneau, qui fait donc 560 px (bloc de 676 px) -->
+  <div class="relative flex flex-col gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-20 lg:pb-6 lg:pt-8">
     <div class="flex max-w-[640px] flex-col items-start gap-4">
       <h1 class="text-hero text-creme">
         Je conçois des interfaces claires, <span class="text-creme/60">puis je les code.</span>
@@ -29,6 +35,9 @@ const svgFilaire = filaireHero
         <Button href="/contact" variante="light">Me proposer un stage</Button>
         <Button href="/projets" variante="contour">Voir les projets</Button>
       </div>
+
+      <!-- Écrans étroits : le statut devient une simple ligne de texte sous les boutons -->
+      <p class="pt-2 font-mono text-xs font-medium uppercase tracking-[0.08em] text-creme/80 lg:hidden">{statutStage}</p>
     </div>
 
     <!-- Composition : pile de photos + étiquettes (écrans larges) -->
@@ -51,4 +60,54 @@ const svgFilaire = filaireHero
     </figure>
   </div>
 
+  <!--
+    Onglet crème découpé dans le bas du panneau (≥ 1024 px) : le négatif de l'onglet du menu.
+    Corps aligné sur le texte du hero (80 px) : l'élément commence 24 px plus tôt, à cause de l'oreille gauche.
+  -->
+  <p class="onglet-bas absolute bottom-0 left-14 hidden h-10 whitespace-nowrap px-11 font-mono text-xs font-medium uppercase leading-10 tracking-[0.08em] text-vert lg:block" data-onglet-bas>
+    {statutStage}
+  </p>
 </div>
+
+<style>
+  /*
+   * Forme de l'onglet : un seul élément, découpé par un masque à trois couches.
+   * - oreille gauche (24 × 40) collée en bas à gauche ;
+   * - rectangle central (toute la largeur moins les oreilles, 1 px de recouvrement de chaque côté) ;
+   * - oreille droite (24 × 40) collée en bas à droite.
+   * Les oreilles sont les mêmes courbes que celles de l'onglet du menu, retournées : l'onglet monte depuis le bas.
+   */
+  .onglet-bas {
+    background-color: var(--color-creme);
+    --oreille-g: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 40'%3E%3Cpath d='M0 40C12 40 12 0 24 0V40Z'/%3E%3C/svg%3E");
+    --oreille-d: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 40'%3E%3Cpath d='M0 0C12 0 12 40 24 40H0Z'/%3E%3C/svg%3E");
+    mask:
+      var(--oreille-g) left bottom / 24px 40px no-repeat,
+      linear-gradient(#000 0 0) center / calc(100% - 46px) 100% no-repeat,
+      var(--oreille-d) right bottom / 24px 40px no-repeat;
+  }
+  /* Quand le script a calculé le décalage, l'onglet reçoit la même trame que le fond de page */
+  .onglet-bas.trame-alignee {
+    background-image: var(--trame-images);
+    background-size: var(--trame-tailles);
+  }
+</style>
+
+<script>
+  // Aligne la trame de l'onglet sur celle du fond de page : on décale son arrière-plan
+  // de la distance qui sépare l'onglet du coin haut-gauche du fond (.fond-trame).
+  const onglet = document.querySelector<HTMLElement>('[data-onglet-bas]');
+  const fond = document.querySelector<HTMLElement>('.fond-trame');
+
+  if (onglet && fond) {
+    const aligner = () => {
+      const o = onglet.getBoundingClientRect();
+      const f = fond.getBoundingClientRect();
+      onglet.style.backgroundPosition = `${f.left - o.left}px ${f.top - o.top}px`;
+      onglet.classList.add('trame-alignee');
+    };
+    aligner();
+    // Recalcul si la mise en page bouge (redimensionnement, chargement des polices…)
+    new ResizeObserver(aligner).observe(document.body);
+  }
+</script>

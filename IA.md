@@ -12,6 +12,27 @@
 
 ---
 
+## Comment j'en suis arrivé là
+
+### Ce qui s'est passé
+
+1. **Début du projet.** J'ai fait une première maquette à partir de mon inspiration et de celle de Gemini. Mes prompts étaient mauvais : j'avais une inspiration personnelle, mais trop vague et avec peu de sens. Résultat : une charte graphique incomplète, incohérente et dénuée de sens.
+2. **Soutenance maquette.** Beaucoup de remarques négatives : éléments trop gros, manque de sens, logo, couleurs, typographie… Les professeurs nous ont aussi dit de ne pas hésiter à utiliser l'IA.
+3. **Après la soutenance.** Je me suis penché sur l'IA : comment prompter efficacement, quelle IA convient le mieux, quels outils utiliser. J'ai choisi Claude, avec l'abonnement Pro.
+4. **Prise en main de Claude.** Je me suis documenté sur son fonctionnement, puis j'ai trouvé et installé des plugins et des skills.
+5. **Refonte de la maquette.** J'ai demandé à Claude de prendre en compte les retours de la soutenance : comment trouver une meilleure charte graphique, ce qui fonctionne pour ce type de site, ce qu'attendent les cibles, l'esthétique qui fonctionne bien et les informations à ne pas oublier.
+6. **Passage au développement.** Une fois la nouvelle maquette validée, j'ai demandé à l'IA la meilleure façon de passer au code : comment utiliser les plugins dans un projet VS Code et comment optimiser le code. J'ai d'abord indiqué ce que j'avais en tête, surtout pour le back-end (PocketBase, hébergement, animations…).
+7. **Première version.** J'ai indiqué ce que j'avais travaillé en cours, puis j'ai demandé une première version.
+
+### Les retouches
+
+- **Le travail de l'IA ne me convainquait pas : ce n'était pas mon style.** Je lui ai donc apporté mes propres références : photos de mes dessins, de mes projets…
+- **V2 de la maquette :** c'était mieux, avec quelques ajustements à retravailler.
+
+Ensuite, le travail a continué étape par étape jusqu'à aujourd'hui : chaque étape est détaillée dans les tableaux ci-dessous.
+
+---
+
 ## Outils utilisés
 
 | Outil | Version / offre | Période |

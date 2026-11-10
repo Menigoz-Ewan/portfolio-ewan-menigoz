@@ -6,17 +6,9 @@ import filaireHero from '../assets/svg/ewme-filaire-hero.svg?raw';
 import portrait from '../assets/images/portrait-ewan.png';
 import Button from './Button.astro';
 import PileDePolaroids from './PileDePolaroids.astro';
-import { site } from '../data/site';
-
 const svgFilaire = filaireHero
   .replace(/\s(width|height)="[^"]*"/g, '')
   .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
-
-const infos = [
-  { libelle: 'Durée', valeur: site.stage.duree },
-  { libelle: 'Période', valeur: site.stage.periode },
-  { libelle: 'Lieu', valeur: site.stage.lieu },
-];
 ---
 
 <div class="relative lg:min-h-[560px]">
@@ -24,14 +16,6 @@ const infos = [
 
   <div class="relative flex flex-col gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-20 lg:pb-14 lg:pt-8">
     <div class="flex max-w-[640px] flex-col items-start gap-4">
-      <p class="inline-flex items-center gap-2.5 rounded-full bg-white py-2 pl-2.5 pr-[18px] text-button text-encre shadow-[0_6px_16px_rgb(0_0_0/0.18)]">
-        <span class="relative flex size-[26px] items-center justify-center" aria-hidden="true">
-          <span class="onde absolute size-2.5 rounded-full bg-vert/30"></span>
-          <span class="relative size-2.5 rounded-full bg-vert"></span>
-        </span>
-        Je recherche un stage en design UI/UX
-      </p>
-
       <h1 class="text-hero text-creme">
         Je conçois des interfaces claires, <span class="text-creme/60">puis je les code.</span>
       </h1>
@@ -45,17 +29,6 @@ const infos = [
         <Button href="/contact" variante="light">Me proposer un stage</Button>
         <Button href="/projets" variante="contour">Voir les projets</Button>
       </div>
-
-      <dl class="flex flex-wrap overflow-hidden rounded-xl border border-white/20 text-white">
-        {
-          infos.map((info, i) => (
-            <div class:list={['flex flex-col gap-1 py-3 pl-[18px] pr-[22px]', i > 0 && 'border-l border-white/20']}>
-              <dt class="font-mono text-[11px] font-medium uppercase tracking-[0.06em] text-white/60">{info.libelle}</dt>
-              <dd class="text-[15px] font-medium underline decoration-dotted underline-offset-4">{info.valeur}</dd>
-            </div>
-          ))
-        }
-      </dl>
     </div>
 
     <!-- Composition : pile de photos + étiquettes (écrans larges) -->
@@ -78,28 +51,4 @@ const infos = [
     </figure>
   </div>
 
-  <a
-    href="/contact"
-    class="absolute -bottom-1.5 right-[27px] hidden size-[124px] rotate-12 flex-col items-center justify-center rounded-full bg-white text-vert shadow-[0_8px_20px_rgb(0_0_0/0.25)] transition-transform duration-(--duree-carte) ease-(--ease-sortie) hover:rotate-6 hover:scale-105 lg:flex"
-  >
-    <span class="font-display text-[28px] font-semibold leading-8">Stage</span>
-    <span class="text-ui">recherché</span>
-  </a>
 </div>
-
-<style>
-  /* Point pulsé : l'onde s'agrandit puis s'efface en boucle */
-  .onde {
-    animation: pulse 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  }
-  @keyframes pulse {
-    from {
-      transform: scale(1);
-      opacity: 1;
-    }
-    to {
-      transform: scale(2.6);
-      opacity: 0;
-    }
-  }
-</style>

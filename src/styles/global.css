@@ -2,6 +2,8 @@
 @import '@fontsource-variable/league-spartan';
 @import '@fontsource-variable/dm-sans/opsz.css';
 @import '@fontsource-variable/geist-mono';
+/* Note manuscrite de l'accueil : Caveat Bold seulement, sous-ensemble latin */
+@import '@fontsource/caveat/latin-700.css';
 
 @import 'tailwindcss';
 
@@ -47,6 +49,7 @@
   --font-display: 'League Spartan Variable', 'League Spartan', system-ui, sans-serif;
   --font-sans: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, monospace;
+  --font-note: 'Caveat', cursive;
 
   /* Durées et courbes de la spécification « motion » */
   --ease-sortie: cubic-bezier(0.22, 1, 0.36, 1);

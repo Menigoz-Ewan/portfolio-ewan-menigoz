@@ -32,7 +32,25 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
       </p>
 
       <div class="flex flex-wrap gap-3 pt-1">
-        <Button href="/contact" variante="light">Me proposer un stage</Button>
+        <!-- Conteneur relatif : la note se place sous le bouton sans pousser la mise en page -->
+        <div class="relative">
+          <Button href="/contact" variante="light">Me proposer un stage</Button>
+          <!-- Note au crayon (décorative : le bouton dit déjà la même chose) -->
+          <div aria-hidden="true" class="note pointer-events-none absolute left-0 top-0 hidden lg:block">
+            <svg class="note-fleche absolute left-[122px] top-12 text-creme" width="45" height="33" viewBox="0 0 45 33" fill="none">
+              <path
+                d="M44.06 31.88C26.06 31.88 10.06 21.88 4.06 1.88M13.06 8.88L4.06 1.88L1.06 12.88"
+                pathLength="1"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+            <p class="note-texte absolute left-[170px] top-[72px] -rotate-4 whitespace-nowrap font-note text-[30px] font-bold leading-[38px] text-creme">
+              écrivez-moi !
+            </p>
+          </div>
+        </div>
         <Button href="/projets" variante="contour">Voir les projets</Button>
       </div>
 
@@ -86,6 +104,39 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
       linear-gradient(#000 0 0) center / calc(100% - 46px) 100% no-repeat,
       var(--oreille-d) right bottom / 24px 40px no-repeat;
   }
+  /*
+   * Note au crayon : la flèche « se dessine » (le trait apparaît le long du chemin),
+   * puis le texte apparaît en fondu. pathLength="1" ramène la longueur du chemin à 1,
+   * ce qui permet d'animer stroke-dashoffset de 1 (trait caché) à 0 (trait complet).
+   */
+  .note-fleche path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: dessiner 500ms ease-out 400ms forwards;
+  }
+  .note-texte {
+    opacity: 0;
+    animation: apparaitre 300ms ease-out 900ms forwards;
+  }
+  @keyframes dessiner {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes apparaitre {
+    to {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .note-fleche path,
+    .note-texte {
+      animation: none;
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
   /* Quand le script a calculé le décalage, l'onglet reçoit la même trame que le fond de page */
   .onglet-bas.trame-alignee {
     background-image: var(--trame-images);

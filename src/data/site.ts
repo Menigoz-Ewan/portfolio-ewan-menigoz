@@ -21,8 +21,12 @@ export const site = {
   },
 };
 
-export const navigation = [
-  { libelle: 'Projets', href: '/projets' },
-  { libelle: 'Galerie', href: '/galerie' },
-  { libelle: 'À propos', href: '/a-propos' },
+/** Identifiant de page : sert à placer l'onglet du header et à marquer le lien actif */
+export type PageId = 'accueil' | 'projets' | 'galerie' | 'a-propos' | 'contact';
+
+export const navigation: { id: PageId; libelle: string; href: string }[] = [
+  { id: 'accueil', libelle: 'Accueil', href: '/' },
+  { id: 'projets', libelle: 'Projets', href: '/projets' },
+  { id: 'galerie', libelle: 'Galerie', href: '/galerie' },
+  { id: 'a-propos', libelle: 'À propos', href: '/a-propos' },
 ];

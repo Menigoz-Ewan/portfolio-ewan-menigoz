@@ -17,13 +17,11 @@ const sections = [
   description="Déclaration d’usage de l’IA d’Ewan Menigoz : outils utilisés, ce qui est délégué, ce qui reste de son fait, et ses règles."
   filaire="gauche"
 >
-  <section class="conteneur pb-12 pt-[72px]">
-    <IntroPage
-      titre="Ma façon de travailler avec l’IA"
-      taille="h1"
-      chapo="Déclaration d’usage · le détail outil par outil est dans le fichier IA.md de mon dépôt GitHub"
-    />
-  </section>
+  <IntroPage
+    slot="panneau"
+    titre="Ma façon de travailler avec l’IA"
+    chapo="Déclaration d’usage · le détail outil par outil est dans le fichier IA.md de mon dépôt GitHub"
+  />
 
   <PageDocument sections={sections}>
     <SectionDocument id="pourquoi" numero={1} titre="Pourquoi cette page">

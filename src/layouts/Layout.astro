@@ -1,18 +1,17 @@
 ---
 import '../styles/global.css';
 import filaire from '../assets/svg/ewme-filaire-large.svg?raw';
-import Header from '../components/Header.astro';
+import HeaderPanneau from '../components/HeaderPanneau.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { site, type PageId } from '../data/site';
 
 interface Props {
   titre: string;
   description?: string;
-  /** Lien actif de la navigation (« Projets », « Galerie », « À propos »…) */
-  actif?: string;
-  /** false sur l'accueil, qui intègre son propre en-tête en onglet */
-  enTete?: boolean;
-  pageContact?: boolean;
+  /** Page active : place l'onglet du header (null = pas d'onglet) et marque le lien du pied de page */
+  active?: PageId | null;
+  /** « libre » sur l'accueil, dont le hero gère ses propres marges dans le panneau */
+  variantePanneau?: 'page' | 'libre';
   /** Position du grand EWME filaire décoratif en bas de page */
   filaire?: 'gauche' | 'droite';
   jsonLd?: Record<string, unknown>;
@@ -21,9 +20,8 @@ interface Props {
 const {
   titre,
   description = site.description,
-  actif,
-  enTete = true,
-  pageContact = false,
+  active = null,
+  variantePanneau = 'page',
   filaire: coteFilaire = 'droite',
   jsonLd,
 } = Astro.props;
@@ -82,13 +80,15 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
         </p>
       </div>
 
-      {enTete && <Header actif={actif} pageContact={pageContact} />}
+      <HeaderPanneau active={active} variante={variantePanneau}>
+        <slot name="panneau" />
+      </HeaderPanneau>
 
-      <main id="contenu" class="relative z-10">
+      <main class="relative z-10">
         <slot />
       </main>
 
-      <Footer actif={actif} />
+      <Footer active={active} />
     </div>
   </body>
 </html>

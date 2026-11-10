@@ -67,8 +67,8 @@ const personne = {
 };
 ---
 
-<Layout titre={site.nom} enTete={false} filaire="droite" jsonLd={personne}>
-  <HeroAccueil />
+<Layout titre={site.nom} active="accueil" variantePanneau="libre" filaire="droite" jsonLd={personne}>
+  <HeroAccueil slot="panneau" />
 
   <!-- Compétences : panneau fixe, compétences et outils regroupés par domaine -->
   <section aria-labelledby="titre-competences" class="conteneur pb-6 pt-7">

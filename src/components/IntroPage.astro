@@ -1,20 +1,18 @@
 ---
-// Introduction des pages intérieures : grand titre (une partie en vert) + chapô.
+// Titre + intro des pages intérieures, posés dans le panneau vert du header.
+// League Spartan SemiBold 56/60 crème (une ligne en desktop, comme la maquette),
+// intro DM Sans 18/28 crème à 80 %, 680 px de large au maximum.
 interface Props {
   titre: string;
-  enVert?: string;
   chapo?: string;
-  taille?: 'display' | 'h1';
   class?: string;
 }
 
-const { titre, enVert, chapo, taille = 'display', class: classe = '' } = Astro.props;
+const { titre, chapo, class: classe = '' } = Astro.props;
 ---
 
-<div class:list={['flex max-w-[690px] flex-col gap-4', classe]}>
-  <h1 class:list={[taille === 'display' ? 'text-display' : 'text-h1', 'text-encre']}>
-    {titre}{enVert && <span class="text-vert">{enVert}</span>}
-  </h1>
-  {chapo && <p class:list={[taille === 'display' ? 'text-lead' : 'text-body', 'text-texte-secondaire']}>{chapo}</p>}
+<div class:list={['flex flex-col items-start gap-6', classe]}>
+  <h1 class="max-w-[960px] text-display text-creme">{titre}</h1>
+  {chapo && <p class="max-w-[680px] text-lead text-creme/80">{chapo}</p>}
   <slot />
 </div>

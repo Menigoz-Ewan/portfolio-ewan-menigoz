@@ -11,16 +11,17 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
 <Layout
   titre="Projets"
   description="Cas d’étude d’Ewan Menigoz : web app, data-visualisation, affiches et identité visuelle. Chaque projet part d’un besoin concret."
-  actif="Projets"
+  active="projets"
   filaire="gauche"
 >
-  <section class="conteneur flex flex-col gap-8 pb-14 pt-[72px]">
-    <IntroPage
-      titre="Des problèmes, "
-      enVert="mes solutions."
-      chapo="Apprendre la LSF, rendre des données lisibles, valoriser un patrimoine, refondre une identité : chaque projet part d’un besoin concret et aboutit à un livrable — web app, data-visualisation, affiches ou charte."
-    />
+  <IntroPage
+    slot="panneau"
+    titre="Des problèmes, mes solutions."
+    chapo="Apprendre la LSF, rendre des données lisibles, valoriser un patrimoine, refondre une identité : chaque projet part d’un besoin concret et aboutit à un livrable — web app, data-visualisation, affiches ou charte."
+  />
 
+  <!-- Filtres : sous le panneau, sur le fond crème -->
+  <section aria-label="Filtres" class="conteneur py-8">
     <div role="group" aria-label="Filtrer les projets" class="flex flex-wrap gap-2" data-filtres>
       {
         categories.map((c) => (

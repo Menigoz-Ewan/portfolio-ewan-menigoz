@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
 import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
@@ -25,18 +26,18 @@ const champ =
 <Layout
   titre="Contact"
   description="Contacter Ewan Menigoz pour un stage en design UI/UX ou en front-end : formulaire, email ou LinkedIn."
-  actif="Contact"
-  pageContact
+  active="contact"
 >
-  <div class="conteneur flex flex-col gap-12 pb-24 pt-20 lg:flex-row lg:items-start lg:justify-between">
-    <!-- Informations -->
-    <section aria-labelledby="titre-contact" class="flex flex-col gap-4 lg:w-[486px]">
-      <h1 id="titre-contact" class="text-h1">Parlons de votre <span class="text-vert">stage.</span></h1>
-      <p class="text-body text-texte-secondaire">
-        Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par email ou sur LinkedIn.
-      </p>
+  <IntroPage
+    slot="panneau"
+    titre="Parlons de votre stage."
+    chapo="Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par email ou sur LinkedIn."
+  />
 
-      <dl class="flex flex-col pt-4">
+  <div class="conteneur flex flex-col gap-12 pb-24 pt-12 lg:flex-row lg:items-start lg:justify-between">
+    <!-- Informations -->
+    <section aria-label="Coordonnées" class="flex flex-col gap-4 lg:w-[486px]">
+      <dl class="flex flex-col">
         {
           liens.map((l) => (
             <div class="flex items-center justify-between gap-4 border-t border-sable-fonce py-3.5">

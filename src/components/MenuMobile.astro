@@ -1,25 +1,21 @@
 ---
-// Menu des écrans étroits : bouton « Menu » qui ouvre un panneau sous l'en-tête.
+// Menu des écrans de moins de 1024 px : bouton « Menu » qui ouvre un panneau sous la barre.
 import Button from './Button.astro';
-import { navigation } from '../data/site';
+import { navigation, type PageId } from '../data/site';
 
 interface Props {
-  actif?: string;
-  surFondVert?: boolean;
+  active?: PageId | null;
 }
 
-const { actif, surFondVert = false } = Astro.props;
+const { active = null } = Astro.props;
 ---
 
-<div class="md:hidden" data-menu-mobile>
+<div class="lg:hidden" data-menu-mobile>
   <button
     type="button"
     aria-expanded="false"
     aria-controls="menu-mobile"
-    class:list={[
-      'flex h-11 items-center gap-2 rounded-lg border px-4 text-ui',
-      surFondVert ? 'border-white/60 text-white' : 'border-bordure bg-sable text-encre',
-    ]}
+    class="flex h-11 items-center gap-2 rounded-lg border border-bordure bg-sable px-4 text-ui text-encre"
     data-menu-bouton
   >
     <span data-menu-libelle>Menu</span>
@@ -30,22 +26,23 @@ const { actif, surFondVert = false } = Astro.props;
   <nav
     id="menu-mobile"
     aria-label="Navigation principale"
-    class="absolute inset-x-0 top-full z-30 hidden border-b border-sable-fonce bg-creme px-5 pb-6 pt-2 shadow-[0_12px_24px_rgb(22_22_22/0.08)]"
+    class="absolute inset-x-0 top-full z-30 mt-2 hidden rounded-2xl border border-sable-fonce bg-creme px-5 pb-6 pt-2 shadow-[0_12px_24px_rgb(22_22_22/0.12)]"
     data-menu-panneau
   >
     <ul class="flex flex-col">
-      <li>
-        <a href="/" class="block border-b border-sable-fonce py-3 text-lead text-encre" aria-current={actif === 'Accueil' ? 'page' : undefined}>Accueil</a>
-      </li>
       {
         navigation.map((lien) => (
           <li>
             <a
               href={lien.href}
-              aria-current={actif === lien.libelle ? 'page' : undefined}
-              class:list={['block border-b border-sable-fonce py-3 text-lead', actif === lien.libelle ? 'text-vert' : 'text-encre']}
+              aria-current={active === lien.id ? 'page' : undefined}
+              class:list={[
+                'flex items-center justify-between border-b border-sable-fonce py-3 text-lead',
+                active === lien.id ? 'font-medium text-vert' : 'text-encre',
+              ]}
             >
               {lien.libelle}
+              {active === lien.id && <span aria-hidden="true" class="size-2 rounded-full bg-vert" />}
             </a>
           </li>
         ))

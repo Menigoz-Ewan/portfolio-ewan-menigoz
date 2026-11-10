@@ -29,17 +29,15 @@ const visuels = [
 <Layout
   titre="Galerie"
   description="Galerie d’Ewan Menigoz : affiches, recherches d’identité visuelle et photographies."
-  actif="Galerie"
+  active="galerie"
 >
-  <section class="conteneur pb-14 pt-[72px]">
-    <IntroPage
-      titre="Affiches, identités et "
-      enVert="photographies."
-      chapo="Les visuels qui complètent mes projets : recherches graphiques, affiches et regards photographiques."
-    />
-  </section>
+  <IntroPage
+    slot="panneau"
+    titre="Affiches, identités et photographies."
+    chapo="Les visuels qui complètent mes projets : recherches graphiques, affiches et regards photographiques."
+  />
 
-  <section aria-label="Visuels" class="conteneur pb-24">
+  <section aria-label="Visuels" class="conteneur pb-24 pt-8">
     <ul class="columns-1 gap-6 sm:columns-2 lg:columns-4">
       {
         visuels.map((v) => (

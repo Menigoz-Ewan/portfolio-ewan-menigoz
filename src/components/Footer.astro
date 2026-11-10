@@ -1,19 +1,19 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { site, type PageId } from '../data/site';
 
 interface Props {
-  actif?: string;
+  active?: PageId | null;
 }
 
-const { actif } = Astro.props;
+const { active = null } = Astro.props;
 
-const liens = [
-  { libelle: 'Projets', href: '/projets' },
-  { libelle: 'Galerie', href: '/galerie' },
-  { libelle: 'À propos', href: '/a-propos' },
-  { libelle: 'Contact', href: '/contact' },
+const liens: { id: PageId; libelle: string; href: string }[] = [
+  { id: 'projets', libelle: 'Projets', href: '/projets' },
+  { id: 'galerie', libelle: 'Galerie', href: '/galerie' },
+  { id: 'a-propos', libelle: 'À propos', href: '/a-propos' },
+  { id: 'contact', libelle: 'Contact', href: '/contact' },
 ];
 const legal = [
   { libelle: 'Mentions légales', href: '/mentions-legales' },
@@ -44,7 +44,7 @@ const reseaux = [
               <li>
                 <a
                   href={l.href}
-                  aria-current={actif === l.libelle ? 'page' : undefined}
+                  aria-current={active === l.id ? "page" : undefined}
                   class="transition-colors duration-(--duree-lien) hover:text-encre aria-[current=page]:text-encre"
                 >
                   {l.libelle}

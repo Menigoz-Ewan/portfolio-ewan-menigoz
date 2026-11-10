@@ -31,19 +31,16 @@ const experience = [
 <Layout
   titre="À propos"
   description="Ewan Menigoz, étudiant en BUT MMI à Montbéliard : parcours, formation, expérience et centres d’intérêt."
-  actif="À propos"
+  active="a-propos"
   filaire="gauche"
 >
-  <!-- Introduction -->
-  <section class="conteneur flex flex-col gap-6 pb-10 pt-16 lg:flex-row lg:items-end lg:justify-between">
-    <IntroPage titre="Rigueur technique, " enVert="soin visuel." />
-    <div class="flex max-w-[384px] flex-col items-start gap-4">
-      <p class="text-body text-texte-secondaire">
-        Je conçois une interface, puis je l’intègre : c’est ce va-et-vient entre design et code qui m’intéresse.
-      </p>
-      <Button href={site.cv} variante="secondary" icone="download" telecharger>Télécharger mon CV</Button>
-    </div>
-  </section>
+  <IntroPage
+    slot="panneau"
+    titre="Rigueur technique, soin visuel."
+    chapo="Je conçois une interface, puis je l’intègre : c’est ce va-et-vient entre design et code qui m’intéresse."
+  >
+    <Button href={site.cv} variante="secondary" icone="download" telecharger class="mt-1 self-start">Télécharger mon CV</Button>
+  </IntroPage>
 
   <!-- Photo + chiffres clés -->
   <section aria-label="En bref" class="conteneur pb-[72px]">

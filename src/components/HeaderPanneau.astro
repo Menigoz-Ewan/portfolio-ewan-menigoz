@@ -1,0 +1,94 @@
+---
+// Bloc commun à toutes les pages : barre de navigation + grand panneau vert.
+// Sur les pages du menu, un onglet sort du haut du panneau, sous le lien actif.
+// Les liens ont une position fixe : seul l'onglet change de place d'une page à l'autre.
+import Brand from './Brand.astro';
+import NavLink from './NavLink.astro';
+import Button from './Button.astro';
+import MenuMobile from './MenuMobile.astro';
+import { navigation, type PageId } from '../data/site';
+
+interface Props {
+  /** Page dont le lien porte l'onglet ; null = panneau sans onglet (Contact, Mentions, Usage de l'IA, 404) */
+  active?: PageId | null;
+  /** « page » ajoute les marges internes des pages intérieures ; « libre » laisse la page gérer (accueil) */
+  variante?: 'page' | 'libre';
+}
+
+const { active = null, variante = 'page' } = Astro.props;
+---
+
+<div class="relative z-20 mx-auto max-w-[1440px] px-3 pb-5 pt-4 lg:px-6 lg:pt-8">
+  <!-- Barre de navigation : 64 px de haut, liens centrés à 64 px du haut de la page -->
+  <header class="relative flex h-16 items-center justify-between px-2 lg:px-6 xl:px-20">
+    <Brand />
+
+    <div class="hidden items-center gap-16 lg:flex">
+      <nav aria-label="Navigation principale">
+        <ul class="flex items-center gap-[72px]">
+          {
+            navigation.map((lien) => (
+              <li class="relative flex h-16 items-center">
+                {lien.id === active && <span class="onglet" aria-hidden="true" />}
+                <NavLink href={lien.href} actif={lien.id === active} surOnglet={lien.id === active}>
+                  {lien.libelle}
+                </NavLink>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <Button href="/contact">Me contacter</Button>
+    </div>
+
+    <MenuMobile active={active} />
+  </header>
+
+  <!--
+    Panneau vert : coins arrondis de 40 px (28 px sous 1024 px).
+    C'est la cible du lien « Aller au contenu » : il contient le titre (h1) de la page.
+  -->
+  <section
+    id="contenu"
+    tabindex="-1"
+    aria-label="Présentation de la page"
+    class:list={[
+      'relative rounded-[28px] bg-vert outline-none lg:rounded-[40px]',
+      variante === 'page' && 'min-h-[244px] px-6 pb-10 pt-10 lg:px-20 lg:pb-14 lg:pt-[72px]',
+    ]}
+  >
+    <slot />
+  </section>
+</div>
+
+<style>
+  /*
+   * Onglet : un rectangle vert de 64 px de haut, 18 px plus large que le lien de chaque côté,
+   * collé au panneau (le bas de la barre = le haut du panneau).
+   * Deux « oreilles » de 34 px le raccordent au panneau par une courbe en S.
+   */
+  .onglet {
+    position: absolute;
+    inset: 0 -18px;
+    background: var(--color-vert);
+    view-transition-name: onglet;
+  }
+  .onglet::before,
+  .onglet::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 34px;
+    height: 64px;
+    background: inherit;
+  }
+  /* 1 px de recouvrement pour éviter un liseré entre l'onglet et ses oreilles */
+  .onglet::before {
+    right: calc(100% - 1px);
+    clip-path: path('M0 64C17 64 17 0 34 0V64Z');
+  }
+  .onglet::after {
+    left: calc(100% - 1px);
+    clip-path: path('M34 64C17 64 17 0 0 0V64Z');
+  }
+</style>

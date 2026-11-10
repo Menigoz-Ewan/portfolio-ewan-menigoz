@@ -187,6 +187,26 @@
     48px 48px;
 }
 
+/*
+ * Transitions entre pages (View Transitions natives, sans routeur JavaScript).
+ * L'onglet porte le nom « onglet » : le navigateur le fait glisser de l'ancien lien actif
+ * vers le nouveau. Chrome, Edge et Safari animent ; Firefox change simplement de page.
+ */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 250ms;
+  animation-timing-function: ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
 /* Halos verts flous du décor */
 .halo {
   position: absolute;

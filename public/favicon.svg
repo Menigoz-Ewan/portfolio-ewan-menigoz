@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="24" fill="#570df8"/><text x="64" y="84" font-family="sans-serif" font-size="56" font-weight="700" text-anchor="middle" fill="#fff">EM</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#FAF7F2"/>
+  <g transform="translate(46 168) scale(1.0714)" fill="#161616">
+    <path d="M61.3636 0V13.0909H13.0909V75.2727H61.3636V88.3636H13.0909V150.545H61.3636V163.636H0V0H61.3636Z"/>
+    <path d="M110.452 0H97.3613V163.636H110.452L138.27 129.273L164.452 163.636H177.543V0H164.452V139.909L138.27 105.955L110.452 140.164V0Z"/>
+    <path d="M227.091 163.636H214V0H227.091L254.909 34.3636L281.091 0H294.182V163.636H281.091V23.7273L254.909 57.6818L227.091 23.4725V163.636Z"/>
+    <path d="M330.182 0V13.0909H378.454V75.2727H330.182V88.3636H378.454V150.545H330.182V163.636H391.545V0H330.182Z"/>
+  </g>
+</svg>

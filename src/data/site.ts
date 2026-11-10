@@ -12,6 +12,13 @@ export const site = {
   instagram: '',
   // Déposer le CV dans public/ sous ce nom.
   cv: '/cv-ewan-menigoz.pdf',
+  // Nom de domaine et hébergeur du VPS (mentions légales, QUALITE J1) : à compléter.
+  domaine: '[À COMPLÉTER]',
+  hebergeur: {
+    nom: '[À COMPLÉTER]',
+    adresse: '[À COMPLÉTER]',
+    site: '[À COMPLÉTER]',
+  },
   // Adresse de l'instance PocketBase (variable d'environnement PUBLIC_POCKETBASE_URL).
   pocketbase: import.meta.env.PUBLIC_POCKETBASE_URL ?? '',
   stage: {

@@ -20,15 +20,16 @@ const editeur = [
   { libelle: 'Contact', valeur: site.email },
 ];
 
-// À mettre à jour avec l'hébergeur du VPS et le nom de domaine définitif (QUALITE J1).
+// Hébergeur du VPS : valeurs à renseigner dans src/data/site.ts (QUALITE J1).
 const hebergement = [
-  { libelle: 'Hébergeur', valeur: 'Netlify' },
-  { libelle: 'Site', valeur: 'www.netlify.com' },
+  { libelle: 'Hébergeur', valeur: site.hebergeur.nom },
+  { libelle: 'Adresse', valeur: site.hebergeur.adresse },
+  { libelle: 'Site', valeur: site.hebergeur.site },
 ];
 ---
 
 <Layout titre="Mentions légales" description="Mentions légales du portfolio d’Ewan Menigoz : éditeur, hébergement, propriété intellectuelle et données personnelles." filaire="gauche">
-  <IntroPage slot="panneau" titre="Mentions légales" chapo="Portfolio étudiant d’Ewan Menigoz · portfolio-ewan-menigoz.netlify.app" />
+  <IntroPage slot="panneau" titre="Mentions légales" chapo={`Portfolio étudiant d’Ewan Menigoz · ${site.domaine}`} />
 
   <PageDocument sections={sections}>
     <SectionDocument id="editeur" numero={1} titre="Éditeur du site">

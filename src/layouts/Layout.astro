@@ -3,6 +3,7 @@ import '../styles/global.css';
 import filaire from '../assets/svg/ewme-filaire-large.svg?raw';
 import HeaderPanneau from '../components/HeaderPanneau.astro';
 import Footer from '../components/Footer.astro';
+import EcranChargement from '../components/EcranChargement.astro';
 import { site, type PageId } from '../data/site';
 
 interface Props {
@@ -51,8 +52,22 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
     <meta property="og:url" content={canonique} />
     <meta property="og:site_name" content={site.nom} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <!--
+      Écran de chargement : décidé avant le premier affichage pour éviter tout flash.
+      Affiché seulement à la première page de la session, et jamais si l'utilisateur
+      a demandé moins d'animations. Sans stockage disponible (navigation privée stricte), pas d'écran.
+    -->
+    <script is:inline>
+      try {
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('ewme-chargement-vu')) {
+          sessionStorage.setItem('ewme-chargement-vu', '1');
+          document.documentElement.setAttribute('data-chargement', '');
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body class="min-h-screen">
+    <EcranChargement />
     <a
       href="#contenu"
       class="sr-only z-50 rounded-lg bg-vert px-4 py-3 text-ui text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"

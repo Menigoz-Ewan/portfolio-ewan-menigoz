@@ -123,6 +123,11 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
     opacity: 0;
     animation: apparaitre 300ms ease-out 900ms forwards;
   }
+  /* Pendant l'écran de chargement, la note attend : elle se dessine une fois la page révélée */
+  :global(html[data-chargement]) .note-fleche path,
+  :global(html[data-chargement]) .note-texte {
+    animation-play-state: paused;
+  }
   @keyframes dessiner {
     to {
       stroke-dashoffset: 0;

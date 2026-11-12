@@ -3,9 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import IntroPage from '../../components/IntroPage.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import Button from '../../components/Button.astro';
-import { projets, categories, lienProjet } from '../../data/projets';
+import { projets, categories, lienProjet, type Categorie } from '../../data/projets';
 
-const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter((p) => p.categorie === id).length);
+const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter((p) => p.categories.includes(id as Categorie)).length);
 ---
 
 <Layout
@@ -46,13 +46,14 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
     <ul class="grid gap-9 md:grid-cols-2 lg:grid-cols-3">
       {
         projets.map((p) => (
-          <li data-categorie={p.categorie}>
+          <li data-categories={p.categories.join(' ')}>
             <ProjectCard titre={p.titre} etiquette={p.etiquette} resume={p.resume} vignette={p.vignette} href={lienProjet(p)} class="h-full" />
           </li>
         ))
       }
-      <li class="md:col-span-2" data-cta>
-        <div class="flex h-full flex-col justify-center gap-8 rounded-2xl bg-vert p-8 md:min-h-[356px] md:flex-row md:items-center md:justify-between md:px-12">
+      <!-- Toute la largeur de la grille : passe toujours sur sa propre ligne, sous les projets -->
+      <li class="md:col-span-2 lg:col-span-3" data-cta>
+        <div class="flex h-full flex-col justify-center gap-8 rounded-2xl bg-vert p-8 md:min-h-[356px] md:flex-row lg:min-h-[396px] md:items-center md:justify-between md:px-12">
           <div class="flex max-w-[420px] flex-col gap-3 text-white">
             <h2 class="text-h1">Et si le prochain était le vôtre ?</h2>
             <p class="text-body">Je cherche un stage en design UI/UX ou en front-end.</p>
@@ -92,7 +93,7 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
 <script>
   // Filtrage côté client : masque les projets d'une autre catégorie et annonce le résultat.
   const boutons = document.querySelectorAll<HTMLButtonElement>('[data-filtre]');
-  const projets = document.querySelectorAll<HTMLElement>('[data-categorie]');
+  const projets = document.querySelectorAll<HTMLElement>('[data-categories]');
   const annonce = document.querySelector<HTMLElement>('[data-filtres-annonce]');
 
   for (const bouton of boutons) {
@@ -101,7 +102,7 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
       for (const b of boutons) b.setAttribute('aria-pressed', String(b === bouton));
       let visibles = 0;
       for (const p of projets) {
-        const visible = filtre === 'tous' || p.dataset.categorie === filtre;
+        const visible = filtre === 'tous' || (p.dataset.categories ?? '').split(' ').includes(filtre ?? '');
         p.hidden = !visible;
         if (visible) visibles++;
       }

@@ -1,11 +1,15 @@
 ---
-// TEST — Écran de chargement « Les parenthèses » (page /chargement2).
+// Écran de chargement « Les parenthèses », affiché une seule fois : à l'arrivée sur le site.
 // Le E et le Ǝ du logo partent collés, puis s'ouvrent comme des parenthèses.
 // Le W et le M apparaissent entre eux et tournent en boucle, comme un indicateur de chargement.
 // À la fin, le WM s'arrête droit, les E se referment : le logo est complet, puis la page s'ouvre.
+//
+// Le script en ligne du <head> (Layout.astro) pose html[data-chargement] avant le premier affichage
+// quand l'écran doit apparaître : première page de la session et animations autorisées.
+// Sans cet attribut, l'écran reste masqué (aucun flash sur les pages suivantes).
 ---
 
-<div data-chargement class="chg fond-trame" role="status" aria-live="polite">
+<div data-ecran-chargement class="chg fond-trame" role="status" aria-live="polite">
   <div class="chg-centre">
     <div class="chg-logo" aria-hidden="true">
       <svg class="chg-e" viewBox="0 0 61.36 163.64" fill="currentColor">
@@ -28,13 +32,17 @@
 </div>
 
 <style>
+  /* Masqué par défaut : visible seulement si le <head> a posé html[data-chargement] */
   .chg {
     position: fixed;
     inset: 0;
     z-index: 100;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
+  }
+  :global(html[data-chargement]) .chg {
+    display: flex;
   }
   .chg-centre {
     display: flex;
@@ -61,38 +69,43 @@
     height: 100%;
     overflow: visible;
   }
+  /* Position de départ (E et Ǝ collés au centre, WM et textes invisibles) dès le premier affichage */
   .chg-e {
     left: 0;
     width: calc(61.36 * var(--u));
+    transform: translateX(calc(132 * var(--u)));
   }
   .chg-wm {
     left: calc(97.36 * var(--u));
     width: calc(196.82 * var(--u));
     color: var(--color-vert);
+    opacity: 0;
   }
   .chg-e2 {
     left: calc(330.18 * var(--u));
     width: calc(61.37 * var(--u));
+    transform: translateX(calc(-132 * var(--u)));
   }
   .chg-textes {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    opacity: 0;
   }
 </style>
 
 <script>
-  import { EASE, reduit, preparer, unitesAReveler, masquer, reveler, progression, tourner, attendre } from './commun';
+  import { EASE, preparer, unitesAReveler, masquer, reveler, finDuChargement, tourner, attendre } from '../scripts/chargement';
 
-  const ecran = document.querySelector<HTMLElement>('[data-chargement]');
+  const ecran = document.querySelector<HTMLElement>('[data-ecran-chargement]');
   if (ecran) {
-    if (reduit()) ecran.remove();
-    else lancer(ecran);
+    if (document.documentElement.hasAttribute('data-chargement')) lancer(ecran);
+    else ecran.remove();
   }
 
   async function lancer(ecran: HTMLElement) {
-    const deverrouiller = preparer(ecran);
+    const deverrouiller = preparer();
     const logo = ecran.querySelector<HTMLElement>('.chg-logo')!;
     const e = ecran.querySelector<SVGElement>('.chg-e')!;
     const wm = ecran.querySelector<SVGElement>('.chg-wm')!;
@@ -107,13 +120,7 @@
     const ouvert = 64 * u; // écartement pendant le chargement
     const opts = { easing: EASE, fill: 'forwards' as const };
 
-    // Départ : E et Ǝ collés, WM invisible
-    e.style.transform = `translateX(${ferme}px)`;
-    e2.style.transform = `translateX(${-ferme}px)`;
-    wm.style.opacity = '0';
-    textes.style.opacity = '0';
-
-    const chargement = progression(1900);
+    const chargement = finDuChargement(1900);
 
     // 1 · Les parenthèses s'ouvrent, le WM apparaît et se met à tourner
     await attendre(150);
@@ -139,6 +146,7 @@
     logo.parentElement!.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-24px) scale(0.92)' }], { ...opts, duration: 380 });
     await ecran.animate([{ opacity: 1 }, { opacity: 0 }], { ...opts, duration: 420, delay: 120 }).finished;
     ecran.remove();
+    document.documentElement.removeAttribute('data-chargement');
     deverrouiller();
     reveler(unites);
   }

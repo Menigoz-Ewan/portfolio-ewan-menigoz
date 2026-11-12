@@ -5,7 +5,7 @@ import vignetteOpenSigne from '../assets/images/vignette-opensigne.png';
 import vignetteAffiches from '../assets/images/affiche-chateau.png';
 import vignetteDatasets from '../assets/images/vignette-datasets.png';
 import vignetteTiktak from '../assets/images/vignette-tiktak.png';
-import vignetteCimade from '../assets/images/vignette-cimade.png';
+import vignetteCimade from '../assets/images/cimade/07-card-362x228@2x.png';
 
 import osEnjeu from '../assets/images/opensigne/enjeu-societal.png';
 import osCharte from '../assets/images/opensigne/charte-graphique.png';
@@ -33,15 +33,20 @@ import tiktakEnregistrement from '../assets/images/tiktak/04_enregistrement_588x
 import tiktakPanier from '../assets/images/tiktak/05_panier_588x420@2x.png';
 import tiktakAccueil from '../assets/images/tiktak/06_accueil_690x460@2x.png';
 
+import cimadeIterations from '../assets/images/cimade/01-iterations-logo-362x490@2x.png';
+import cimadeUnivers from '../assets/images/cimade/02-univers-graphique-362x490@2x.png';
+import cimadeFlyer from '../assets/images/cimade/03-flyer-362x490@2x.png';
+import cimadeMoodboard from '../assets/images/cimade/04-moodboard-combat-588x420@2x.png';
+import cimadeCroquis from '../assets/images/cimade/05-croquis-588x420@2x.png';
+import cimadeTestVisibilite from '../assets/images/cimade/06-test-visibilite-690x460@2x.png';
+
+const A_COMPLETER = 'Figma, Canva (mise en page)';
+
 export type Categorie = 'web' | 'graphisme' | 'identite';
 
 export interface Visuel {
   src: ImageMetadata;
   alt: string;
-  /** Légende visible sous l'image (facultative) */
-  legende?: string;
-  /** Image affichée en entier dans son cadre, sans recadrage (logo sur fond blanc, par exemple) */
-  entiere?: boolean;
 }
 
 /** Lien affiché dans le hero de l'étude de cas (site en ligne, dossier PDF…) */
@@ -347,7 +352,7 @@ export const projets: Projet[] = [
         'Modéliser et interroger une base de données (MCD, MPD, requêtes SQL).',
         'Mettre en ligne une application Astro sur un serveur, en HTTPS.',
       ],
-      suivant: 'opensigne',
+      suivant: 'la-cimade',
     },
   },
   {
@@ -366,14 +371,82 @@ export const projets: Projet[] = [
     },
   },
   {
-    slug: 'identite-la-cimade',
-    titre: 'Identité visuelle La Cimade',
+    slug: 'la-cimade',
+    titre: 'La Cimade',
     categorie: 'identite',
-    etiquette: 'Identité · Cas fictif',
-    resume: 'Refonte de l’identité d’une association humanitaire, du diagnostic à la charte.',
+    etiquette: 'Identité visuelle · Branding',
+    resume:
+      'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
     vignette: {
       src: vignetteCimade,
-      alt: 'Refonte du logo de La Cimade : poing levé intégré au C',
+      alt: 'Logo de La Cimade dont le « i » est remplacé par un poing levé noir veiné de rouge.',
+    },
+    etude: {
+      etiquettes: ['Identité visuelle · Branding', 'Projet étudiant'],
+      accroche:
+        'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
+      lien: { href: '/projets/la-cimade-refonte-identite.pdf', libelle: 'Consulter le dossier (PDF)' },
+      fiche: {
+        role: 'Designer graphique (projet individuel)',
+        contexte: 'Projet étudiant fictif · BUT MMI 1re année',
+        outils: A_COMPLETER,
+        livrables: 'logo et 3 variantes, charte graphique de 28 pages, affiche A3, flyer, header web',
+      },
+      visuelPrincipal: [
+        {
+          src: cimadeIterations,
+          alt: 'Plusieurs versions vectorielles du logo, avec racines ou poing levé à la place du « i ».',
+        },
+        {
+          src: cimadeUnivers,
+          alt: 'Univers graphique de La Cimade : le poing levé noir veiné de rouge, entouré de cercles rouges et de rectangles et d’ovales noirs.',
+        },
+        {
+          src: cimadeFlyer,
+          alt: 'Flyer de La Cimade avec le logo, la mention « Association Humanitaire » et l’appel « Rejoignez-nous ».',
+        },
+      ],
+      contexte: {
+        titre: 'Une association historique, une image à réveiller.',
+        texte:
+          'Fondée en 1939, La Cimade défend les droits des personnes exilées, réfugiées et en situation de précarité administrative. Son logo actuel, fin et très horizontal, perd en lisibilité sur les petits formats numériques. L’objectif : proposer une identité plus accessible et plus percutante, qui inspire immédiatement confiance. Projet réalisé dans un cadre pédagogique, sans commande de l’association.',
+        contraintes: [
+          'Audit de l’existant',
+          '2 axes créatifs + 1 anti-axe',
+          'Logo + 3 variantes',
+          'Charte de 28 pages',
+          '3 déclinaisons',
+        ],
+      },
+      defi: {
+        enonce:
+          'Concilier la crédibilité d’une institution et l’énergie d’un mouvement militant, sans tomber dans le misérabilisme.',
+        visuels: [
+          {
+            src: cimadeMoodboard,
+            alt: 'Moodboard autour du combat : manifestations, poings levés, mégaphone et colombe, en noir, blanc et rouge.',
+          },
+          {
+            src: cimadeCroquis,
+            alt: 'Planche de croquis au crayon explorant étoiles, cœurs, mains serrées, racines et poings levés.',
+          },
+        ],
+      },
+      solution: {
+        titre: 'Un poing levé qui devient le « i » de Cimade.',
+        texte:
+          'Plutôt que de choisir entre la solidarité et le combat, j’ai fusionné ces deux axes en une idée : la solidarité active. Le poing levé prend la place du « i » et devient un symbole capable de vivre seul, même en très petit format. Une typographie arrondie apporte la chaleur de l’accueil, tandis que le duo noir et rouge, hérité de l’ancien logo, garde la force militante. Un univers de cercles, rectangles et ovales prolonge l’identité sur l’affiche, le flyer et le site.',
+        visuel: {
+          src: cimadeTestVisibilite,
+          alt: 'Test de lisibilité du logo de La Cimade et de ses variantes, du grand au très petit format.',
+        },
+      },
+      bilan: [
+        'Analyser avant de dessiner : audit du logo existant et comparaison avec Amnesty, le Secours populaire et Emmaüs.',
+        'Faire émerger un symbole fort en itérant du croquis papier jusqu’au vectoriel.',
+        'Structurer une charte complète : variantes, tests de lisibilité, usages interdits, couleurs et typographies.',
+      ],
+      suivant: 'opensigne',
     },
   },
 ];

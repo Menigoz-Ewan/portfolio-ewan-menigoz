@@ -3,6 +3,7 @@
 import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
 import { projets, projetsAvecEtude, type Projet } from '../../data/projets';
 
 export function getStaticPaths() {
@@ -43,6 +44,14 @@ const fiche = [
         </ul>
         <h1 class="text-display text-creme">{projet.titre}</h1>
         <p class="text-lead text-creme/80">{etude.accroche}</p>
+        {
+          etude.lien && (
+            <Button href={etude.lien.href} variante="light" icone="arrow-up-right" externe class="self-start">
+              {etude.lien.libelle}
+              <span class="sr-only">{' (nouvel onglet)'}</span>
+            </Button>
+          )
+        }
       </div>
     <aside aria-labelledby="fiche-projet" class="w-full shrink-0 rounded-2xl border border-sable-fonce bg-white px-6 pb-2 pt-5 lg:w-[384px]">
       <h2 id="fiche-projet" class="text-label text-vert">Fiche projet</h2>
@@ -68,7 +77,10 @@ const fiche = [
           src={etude.visuelPrincipal[0].src}
           alt={etude.visuelPrincipal[0].alt}
           width={2400}
-          class="h-[240px] w-full rounded-[20px] bg-white object-cover md:h-[560px]"
+          class:list={[
+            'h-[240px] w-full rounded-[20px] bg-white md:h-[560px]',
+            etude.visuelPrincipal[0].entiere ? 'object-contain' : 'object-cover',
+          ]}
           loading="eager"
         />
       ) : (
@@ -112,17 +124,28 @@ const fiche = [
     </div>
     <div class="grid gap-6 md:grid-cols-2">
       {
-        etude.defi.visuels.map((v) => (
-          <Image
-            src={v.src}
-            alt={v.alt}
-            width={1200}
-            class:list={[
-              'h-[260px] w-full rounded-2xl md:h-[420px]',
-              etude.defi.fondLavande ? 'bg-lavande object-contain' : 'bg-white object-cover',
-            ]}
-          />
-        ))
+        etude.defi.visuels.map((v) => {
+          const image = (
+            <Image
+              src={v.src}
+              alt={v.alt}
+              width={1200}
+              class:list={[
+                'h-[260px] w-full rounded-2xl md:h-[420px]',
+                etude.defi.fondLavande ? 'bg-lavande object-contain' : 'bg-white object-cover',
+              ]}
+            />
+          );
+          // Légende facultative : sans légende, l'image reste seule, comme sur les autres projets
+          return v.legende ? (
+            <figure class="flex flex-col gap-3">
+              {image}
+              <figcaption class="text-small text-texte-secondaire">{v.legende}</figcaption>
+            </figure>
+          ) : (
+            image
+          );
+        })
       }
     </div>
   </section>

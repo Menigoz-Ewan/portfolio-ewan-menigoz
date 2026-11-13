@@ -44,6 +44,8 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | A15 | Contrastes des deux thèmes (clair par défaut, sombre en option) | Le thème clair reste l’identité du site ; le sombre est un choix du visiteur, mémorisé entre les pages | Mesuré le 13/11 dans le navigateur, couleurs calculées du site. Clair : texte 16,9:1 sur le fond, 18,1:1 sur les cartes ; gris secondaire 5,4 (fond), 5,8 (carte), 4,9 (sable) ; vert 9,0 (fond), 9,6 (carte), 7,9 (étiquette). Sombre : texte 15,8 (fond), 14,3 (carte) ; gris secondaire 7,1 / 6,5 / 6,1 ; vert éclairci #8FC2A8 9,2 / 8,3 / 7,9 ; crème sur panneau vert 9,0 dans les deux thèmes. Contour du bouton thème : 1,4 (clair) et 2,1 (sombre), sous 3:1 mais l’icône (16,9 et 15,8) suffit à repérer le bouton. Bouton atteint au clavier (Tab), focus visible, bascule à l’Espace ; pas de rotation de l’icône avec « réduire les animations » | ✅ | |
 
+| A16 | Menu à onglets fantômes : lisible, utilisable au clavier | Contour en pointillé derrière chaque lien inactif, rempli au survol et au focus | Mesuré le 13/11 : texte des liens 16,9:1 (clair) et 15,8:1 (sombre) sur le fond ; 15,4:1 sur le remplissage sable au survol (clair), 12,9:1 sur le remplissage crème 8 % (sombre). Au clavier (Tab), le fantôme se remplit et le contour de focus vert reste visible. Chaque lien occupe toute sa case (152 × 64 px, 128 px entre 1024 et 1280 px). Positions contrôlées contre la maquette Figma à 1440 px, et en 1280 et 1024 px | ✅ | |
+
 ## 2. Sobriété et performance
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |

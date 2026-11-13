@@ -21,18 +21,23 @@ const { active = null, variante = 'page' } = Astro.props;
 
 <div class="relative z-20 mx-auto max-w-[1440px] px-3 pb-5 pt-4 lg:px-6 lg:pt-8">
   <!-- Barre de navigation : 64 px de haut, liens centrés à 64 px du haut de la page -->
-  <header class="relative flex h-16 items-center justify-between px-2 lg:px-6 xl:px-20">
+  <!-- Entre 1024 et 1280 px, pas de marge intérieure : le menu et les boutons tiennent juste -->
+  <header class="relative flex h-16 items-center justify-between px-2 lg:px-0 xl:px-20">
     <Brand />
 
-    <!-- Menu, bouton thème (52 px après le menu) puis « Me contacter » (16 px après), comme dans la maquette -->
+    <!--
+      Menu (maquette) : une case de 152 px par lien, texte et onglet centrés dedans ; les fantômes de 140 px
+      laissent donc 12 px entre eux. Puis le bouton thème (12 px après) et « Me contacter » (16 px après).
+      Entre 1024 et 1280 px, cases de 128 px pour que tout tienne (non dessiné dans la maquette).
+    -->
     <div class="hidden items-center lg:flex">
       <nav aria-label="Navigation principale">
-        <ul class="flex items-center gap-[72px]">
+        <ul class="flex items-center">
           {
             navigation.map((lien) => (
-              <li class="relative flex h-16 items-center">
+              <li class="relative flex h-16 w-32 items-center justify-center xl:w-[152px]">
                 {lien.id === active && <span class="onglet" aria-hidden="true" />}
-                <NavLink href={lien.href} actif={lien.id === active} surOnglet={lien.id === active}>
+                <NavLink href={lien.href} actif={lien.id === active}>
                   {lien.libelle}
                 </NavLink>
               </li>
@@ -40,7 +45,7 @@ const { active = null, variante = 'page' } = Astro.props;
           }
         </ul>
       </nav>
-      <BoutonTheme class="ml-[52px] mr-4" />
+      <BoutonTheme class="ml-3 mr-4" />
       <Button href="/contact">Me contacter</Button>
     </div>
 
@@ -56,7 +61,7 @@ const { active = null, variante = 'page' } = Astro.props;
     tabindex="-1"
     aria-label="Présentation de la page"
     class:list={[
-      'relative rounded-[28px] bg-vert outline-none lg:rounded-[40px]',
+      'relative z-[2] rounded-[28px] bg-vert outline-none lg:rounded-[40px]', // z 2 : devant les pieds des fantômes du menu
       variante === 'page' && 'min-h-[244px] px-6 pb-10 pt-10 lg:px-20 lg:pb-14 lg:pt-[72px]',
     ]}
   >
@@ -66,13 +71,18 @@ const { active = null, variante = 'page' } = Astro.props;
 
 <style>
   /*
-   * Onglet : un rectangle vert de 64 px de haut, 18 px plus large que le lien de chaque côté,
-   * collé au panneau (le bas de la barre = le haut du panneau).
-   * Deux « oreilles » de 34 px le raccordent au panneau par une courbe en S.
+   * Onglet actif (maquette) : 154 × 64 px au total, centré sur le lien.
+   * Un dessus de 86 px, collé au panneau (le bas de la barre = le haut du panneau),
+   * et deux « oreilles » de 34 px qui le raccordent au panneau par une courbe en S.
    */
   .onglet {
     position: absolute;
-    inset: 0 -18px;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 86px;
+    translate: -50% 0;
+    z-index: 2; /* devant les fantômes voisins (remplissage et trait), comme le panneau dans la maquette */
     background: var(--color-vert);
     view-transition-name: onglet;
   }

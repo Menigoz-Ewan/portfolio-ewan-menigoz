@@ -27,25 +27,25 @@ const reseaux = [
 ];
 ---
 
-<footer class="relative z-10 border-t border-sable-fonce bg-creme">
+<footer class="relative z-10 border-t border-trait bg-fond">
   <div class="conteneur flex flex-col gap-8 pb-8 pt-12">
     <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
       <a href="/" class="flex items-center gap-4 rounded">
-        <Logo lien class="h-[30px] w-auto text-encre" />
+        <Logo lien class="h-[30px] w-auto text-principal" />
         <span class="flex flex-col text-small">
-          <span class="font-medium text-encre">{site.nom}</span>
-          <span class="text-texte-secondaire">{site.metier} · {site.ville}</span>
+          <span class="font-medium text-principal">{site.nom}</span>
+          <span class="text-secondaire">{site.metier} · {site.ville}</span>
         </span>
       </a>
       <nav aria-label="Pied de page">
-        <ul class="flex flex-wrap gap-x-6 gap-y-2 text-small text-texte-secondaire">
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 text-small text-secondaire">
           {
             liens.map((l) => (
               <li>
                 <a
                   href={l.href}
                   aria-current={active === l.id ? "page" : undefined}
-                  class="transition-colors duration-(--duree-lien) hover:text-encre aria-[current=page]:text-encre"
+                  class="transition-colors duration-(--duree-lien) hover:text-principal aria-[current=page]:text-principal"
                 >
                   {l.libelle}
                 </a>
@@ -61,7 +61,7 @@ const reseaux = [
               <a
                 href={r.href}
                 aria-label={r.libelle}
-                class="flex size-9 items-center justify-center rounded-md border border-bordure text-encre transition-colors duration-(--duree-bouton) hover:border-encre/35 hover:bg-sable"
+                class="flex size-9 items-center justify-center rounded-md border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:border-principal/35 hover:bg-surface"
               >
                 <Icon nom={r.icone} taille={18} />
               </a>
@@ -70,14 +70,14 @@ const reseaux = [
         }
       </ul>
     </div>
-    <div class="h-px bg-sable-fonce"></div>
-    <div class="flex flex-col gap-3 text-small text-texte-secondaire md:flex-row md:justify-between">
+    <div class="h-px bg-trait"></div>
+    <div class="flex flex-col gap-3 text-small text-secondaire md:flex-row md:justify-between">
       <p>© 2026 {site.nom}</p>
       <ul class="flex flex-wrap gap-x-6 gap-y-2">
         {
           legal.map((l) => (
             <li>
-              <a href={l.href} class="transition-colors duration-(--duree-lien) hover:text-encre">
+              <a href={l.href} class="transition-colors duration-(--duree-lien) hover:text-principal">
                 {l.libelle}
               </a>
             </li>

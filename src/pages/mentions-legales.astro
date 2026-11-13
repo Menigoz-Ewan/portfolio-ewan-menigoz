@@ -36,9 +36,9 @@ const hebergement = [
       <dl>
         {
           editeur.map((l) => (
-            <div class="flex flex-col gap-1 border-t border-sable-fonce py-3 sm:flex-row sm:gap-6">
+            <div class="flex flex-col gap-1 border-t border-trait py-3 sm:flex-row sm:gap-6">
               <dt class="text-label sm:w-40 sm:shrink-0">{l.libelle}</dt>
-              <dd class="text-encre">{l.libelle === 'Contact' ? <a href={`mailto:${l.valeur}`} class="underline-offset-4 hover:underline">{l.valeur}</a> : l.valeur}</dd>
+              <dd class="text-principal">{l.libelle === 'Contact' ? <a href={`mailto:${l.valeur}`} class="underline-offset-4 hover:underline">{l.valeur}</a> : l.valeur}</dd>
             </div>
           ))
         }
@@ -49,9 +49,9 @@ const hebergement = [
       <dl>
         {
           hebergement.map((l) => (
-            <div class="flex flex-col gap-1 border-t border-sable-fonce py-3 sm:flex-row sm:gap-6">
+            <div class="flex flex-col gap-1 border-t border-trait py-3 sm:flex-row sm:gap-6">
               <dt class="text-label sm:w-40 sm:shrink-0">{l.libelle}</dt>
-              <dd class="text-encre">{l.valeur}</dd>
+              <dd class="text-principal">{l.valeur}</dd>
             </div>
           ))
         }

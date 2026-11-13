@@ -11,20 +11,20 @@ const { sections } = Astro.props;
 <div class="conteneur flex flex-col gap-6 pb-24 lg:flex-row lg:items-start">
   <nav
     aria-label="Sommaire"
-    class="flex flex-col gap-1 rounded-2xl border border-sable-fonce bg-white p-5 lg:sticky lg:top-6 lg:w-[282px] lg:shrink-0"
+    class="flex flex-col gap-1 rounded-2xl border border-trait bg-carte p-5 lg:sticky lg:top-6 lg:w-[282px] lg:shrink-0"
     data-sommaire
   >
-    <p class="text-label text-texte-secondaire">Sommaire</p>
+    <p class="text-label text-secondaire">Sommaire</p>
     <ol>
       {
         sections.map((s, i) => (
           <li>
             <a
               href={`#${s.id}`}
-              class="lien-sommaire flex items-center gap-2.5 border-l-2 border-transparent py-2 pl-2.5 text-ui text-texte-secondaire transition-colors hover:text-encre"
+              class="lien-sommaire flex items-center gap-2.5 border-l-2 border-transparent py-2 pl-2.5 text-ui text-secondaire transition-colors hover:text-principal"
               aria-current={i === 0 ? 'true' : undefined}
             >
-              <span class="text-label text-vert">{String(i + 1).padStart(2, '0')}</span>
+              <span class="text-label text-vert-texte">{String(i + 1).padStart(2, '0')}</span>
               {s.titre}
             </a>
           </li>
@@ -39,8 +39,8 @@ const { sections } = Astro.props;
 
 <style>
   .lien-sommaire[aria-current='true'] {
-    border-color: var(--color-vert);
-    color: var(--color-encre);
+    border-color: var(--color-vert-texte);
+    color: var(--color-principal);
   }
 </style>
 

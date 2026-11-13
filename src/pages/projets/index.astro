@@ -68,17 +68,17 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
 <style>
   /* États du composant « Filtre » : Default, Hover, Actif */
   .filtre {
-    background: #fff;
-    border-color: var(--color-bordure);
-    color: rgb(22 22 22 / 0.8);
+    background: var(--color-carte);
+    border-color: var(--color-trait-fort);
+    color: color-mix(in srgb, var(--color-principal) 80%, transparent);
   }
   .filtre span:last-child {
-    color: var(--color-texte-secondaire);
+    color: var(--color-secondaire);
   }
   .filtre:hover {
-    background: var(--color-sable);
-    border-color: rgb(22 22 22 / 0.35);
-    color: var(--color-encre);
+    background: var(--color-surface);
+    border-color: color-mix(in srgb, var(--color-principal) 35%, transparent);
+    color: var(--color-principal);
   }
   .filtre[aria-pressed='true'] {
     background: var(--color-vert);

@@ -54,9 +54,9 @@ const experience = [
     <dl class="relative -mt-[50px] grid grid-cols-2 gap-3 px-3 md:gap-6 md:px-6 lg:grid-cols-4">
       {
         chiffres.map((c) => (
-          <div class="flex h-[120px] flex-col justify-end gap-1.5 rounded-[14px] border border-sable-fonce bg-white p-5 shadow-[0_8px_20px_rgb(23_23_23/0.06)]">
-            <dt class="text-label text-texte-secondaire">{c.libelle}</dt>
-            <dd class="text-h3 text-encre">{c.valeur}</dd>
+          <div class="flex h-[120px] flex-col justify-end gap-1.5 rounded-[14px] border border-trait bg-carte p-5 shadow-[0_8px_20px_rgb(23_23_23/0.06)]">
+            <dt class="text-label text-secondaire">{c.libelle}</dt>
+            <dd class="text-h3 text-principal">{c.valeur}</dd>
           </div>
         ))
       }
@@ -69,25 +69,25 @@ const experience = [
     <div class="grid gap-12 lg:grid-cols-2">
       {
         [
-          { titre: 'Formation', sousTitre: 'Parcours scolaire', icone: 'formation' as const, ligne: 'border-vert', date: 'text-vert', etapes: formation },
-          { titre: 'Expérience professionnelle', sousTitre: 'Emplois et stages', icone: 'experience' as const, ligne: 'border-encre', date: 'text-texte-secondaire', etapes: experience },
+          { titre: 'Formation', sousTitre: 'Parcours scolaire', icone: 'formation' as const, ligne: 'border-vert-texte', date: 'text-vert-texte', etapes: formation },
+          { titre: 'Expérience professionnelle', sousTitre: 'Emplois et stages', icone: 'experience' as const, ligne: 'border-principal', date: 'text-secondaire', etapes: experience },
         ].map((col) => (
           <div class="flex flex-col gap-4">
             <div class="flex items-center gap-3">
-              <span class="rounded-[10px] bg-sable p-[9px] text-encre">
+              <span class="rounded-[10px] bg-surface p-[9px] text-principal">
                 <Icon nom={col.icone} taille={20} />
               </span>
               <div class="flex flex-col gap-0.5">
                 <h3 class="text-h3">{col.titre}</h3>
-                <p class="text-small text-texte-secondaire">{col.sousTitre}</p>
+                <p class="text-small text-secondaire">{col.sousTitre}</p>
               </div>
             </div>
             <ol class:list={['flex flex-col gap-3 border-l-2 pl-[22px]', col.ligne]}>
               {col.etapes.map((e) => (
-                <li class="flex flex-col gap-2.5 rounded-2xl border border-sable-fonce bg-white px-6 pb-7 pt-6">
+                <li class="flex flex-col gap-2.5 rounded-2xl border border-trait bg-carte px-6 pb-7 pt-6">
                   <p class:list={['text-label', col.date]}>{e.date}</p>
                   <h4 class="text-h3">{e.titre}</h4>
-                  <p class="text-small text-texte-secondaire">{e.texte}</p>
+                  <p class="text-small text-secondaire">{e.texte}</p>
                 </li>
               ))}
             </ol>
@@ -101,20 +101,20 @@ const experience = [
   <section aria-labelledby="titre-regard" class="conteneur flex flex-col gap-4 pb-24">
     <div class="flex flex-wrap items-end justify-between gap-2">
       <h2 id="titre-regard" class="text-h2">Ce qui nourrit mon regard</h2>
-      <p class="hidden text-small text-texte-secondaire md:block">Survolez ou touchez une carte</p>
-      <p class="text-small text-texte-secondaire md:hidden">Glissez pour parcourir · touchez pour agrandir</p>
+      <p class="hidden text-small text-secondaire md:block">Survolez ou touchez une carte</p>
+      <p class="text-small text-secondaire md:hidden">Glissez pour parcourir · touchez pour agrandir</p>
     </div>
     <HorsEcran />
   </section>
 
   <!-- Renvoi vers la page sur l'IA -->
   <section aria-labelledby="titre-ia" class="conteneur pb-[72px] pt-12">
-    <div class="flex flex-col items-start gap-4 rounded-2xl border border-sable-fonce bg-white p-7">
+    <div class="flex flex-col items-start gap-4 rounded-2xl border border-trait bg-carte p-7">
       <div class="flex items-center gap-3">
         <span class="rounded bg-vert px-2 py-1 text-label text-white">IA</span>
         <h2 id="titre-ia" class="text-h3">Et l’IA dans tout ça ?</h2>
       </div>
-      <p class="text-body text-texte-secondaire">
+      <p class="text-body text-secondaire">
         J’utilise l’IA comme un outil de travail, à presque toutes les étapes sauf l’inspiration : planning, recherche de
         failles, test des parcours, relecture. Les choix et la validation restent les miens, et je détaille tout sur une
         page dédiée.

@@ -7,12 +7,15 @@
 
 @import 'tailwindcss';
 
-/* Thème daisyUI construit à partir des variables Figma « EWME — Couleurs » */
+/*
+ * Deux thèmes daisyUI : « ewme-clair » (identité du site, par défaut) et « ewme-sombre » (option).
+ * Le thème se choisit avec le bouton soleil/lune du header ; le choix est mémorisé (Layout.astro).
+ */
 @plugin "daisyui" {
   themes: false;
 }
 @plugin "daisyui/theme" {
-  name: 'ewme';
+  name: 'ewme-clair';
   default: true;
   color-scheme: light;
   --color-base-100: #faf7f2;
@@ -30,8 +33,68 @@
   --radius-field: 0.5rem;
   --radius-box: 1rem;
 }
+@plugin "daisyui/theme" {
+  name: 'ewme-sombre';
+  color-scheme: dark;
+  --color-base-100: #141412;
+  --color-base-200: #24231f;
+  --color-base-300: #2c2b27;
+  --color-base-content: #f2ede4;
+  --color-primary: #ce1a1b;
+  --color-primary-content: #ffffff;
+  --color-secondary: #1e4d3b;
+  --color-secondary-content: #ffffff;
+  --color-accent: #14284b;
+  --color-accent-content: #ffffff;
+  --color-neutral: #161616;
+  --color-neutral-content: #faf7f2;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+}
 
-/* Jetons de design : mêmes noms que les variables Figma */
+/*
+ * Couleurs par rôle : elles changent avec le thème. À utiliser pour tout ce qui est posé sur le fond
+ * de page (textes, cartes, traits). Ce qui est posé sur le panneau vert garde les couleurs fixes.
+ */
+:root,
+[data-theme='ewme-clair'] {
+  --role-fond: #faf7f2;
+  --role-principal: #161616;
+  --role-secondaire: #6b655d;
+  --role-carte: #ffffff;
+  --role-surface: #f1ece4;
+  --role-surface-forte: #e8e2d8;
+  --role-trait: #e8e2d8;
+  --role-trait-fort: #d9d2c6;
+  --role-vert-texte: #1e4d3b;
+  --role-trame: rgb(22 22 22 / 0.05);
+}
+[data-theme='ewme-sombre'],
+:root:has(input.theme-controller[value='ewme-sombre']:checked) {
+  --role-fond: #141412;
+  --role-principal: #f2ede4;
+  --role-secondaire: #a8a096;
+  --role-carte: #1e1e1b;
+  --role-surface: #24231f;
+  --role-surface-forte: #2c2b27;
+  --role-trait: rgb(250 247 242 / 0.14);
+  --role-trait-fort: rgb(250 247 242 / 0.24);
+  --role-vert-texte: #8fc2a8;
+  --role-trame: rgb(250 247 242 / 0.05);
+}
+@theme inline {
+  --color-fond: var(--role-fond);
+  --color-principal: var(--role-principal);
+  --color-secondaire: var(--role-secondaire);
+  --color-carte: var(--role-carte);
+  --color-surface: var(--role-surface);
+  --color-surface-forte: var(--role-surface-forte);
+  --color-trait: var(--role-trait);
+  --color-trait-fort: var(--role-trait-fort);
+  --color-vert-texte: var(--role-vert-texte);
+}
+
+/* Palette fixe (ne change pas avec le thème) : panneau vert, rouge, et objets « physiques » (polaroids, onglet crème). Mêmes noms que les variables Figma */
 @theme {
   --color-encre: #161616;
   --color-texte-secondaire: #6b655d;
@@ -146,8 +209,8 @@
   }
 
   body {
-    background-color: var(--color-creme);
-    color: var(--color-encre);
+    background-color: var(--color-fond);
+    color: var(--color-principal);
     font-family: var(--font-sans);
     font-variation-settings: 'opsz' 14;
     -webkit-font-smoothing: antialiased;
@@ -155,7 +218,7 @@
 
   /* Focus toujours visible au clavier (QUALITE A3) */
   :focus-visible {
-    outline: 2.5px solid var(--color-vert);
+    outline: 2.5px solid var(--color-vert-texte);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -175,22 +238,22 @@
 }
 
 /*
- * Fond/Trame : grille de 48 px à 5 % + repères d'impression verts tous les 192 px.
+ * Fond/Trame : grille de 48 px à 5 % (encre en clair, crème en sombre) + repères d'impression verts tous les 192 px.
  * Tout est en CSS (dégradés + SVG en ligne), aucune image téléchargée (QUALITE P6).
  */
 :root {
   /* Définie une seule fois : réutilisée par le fond de page et par l'onglet crème de l'accueil */
   --trame-images:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192'%3E%3Cpath d='M91 96h10M96 91v10' stroke='%231E4D3B' stroke-opacity='.3' stroke-width='1.25'/%3E%3C/svg%3E"),
-    linear-gradient(to right, rgb(22 22 22 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(22 22 22 / 0.05) 1px, transparent 1px);
+    linear-gradient(to right, var(--role-trame) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--role-trame) 1px, transparent 1px);
   --trame-tailles:
     192px 192px,
     48px 48px,
     48px 48px;
 }
 .fond-trame {
-  background-color: var(--color-creme);
+  background-color: var(--color-fond);
   background-image: var(--trame-images);
   background-size: var(--trame-tailles);
 }

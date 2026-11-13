@@ -42,16 +42,16 @@ const visuels = [
       {
         visuels.map((v) => (
           <li class="mb-6 break-inside-avoid">
-            <figure class="rounded-xl border border-sable-fonce bg-white px-2 pt-2">
+            <figure class="rounded-xl border border-trait bg-carte px-2 pt-2">
               <Image
                 src={v.src}
                 alt={v.alt}
                 width={532}
-                class:list={['w-full rounded-lg bg-sable object-cover', v.format === 'portrait' ? 'aspect-[266/332]' : 'aspect-square']}
+                class:list={['w-full rounded-lg bg-surface object-cover', v.format === 'portrait' ? 'aspect-[266/332]' : 'aspect-square']}
               />
               <figcaption class="flex flex-col gap-1 px-1.5 py-3">
-                <span class="text-label text-vert">{v.categorie}</span>
-                <span class="text-ui text-encre">{v.titre}</span>
+                <span class="text-label text-vert-texte">{v.categorie}</span>
+                <span class="text-ui text-principal">{v.titre}</span>
               </figcaption>
             </figure>
           </li>

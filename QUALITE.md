@@ -42,6 +42,8 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | A14 | Score Lighthouse Accessibilité | Indicateur global, complété par les tests manuels ci-dessus | Lighthouse mobile et ordinateur, sur chaque type de page | ⬜ | |
 
+| A15 | Contrastes des deux thèmes (clair par défaut, sombre en option) | Le thème clair reste l’identité du site ; le sombre est un choix du visiteur, mémorisé entre les pages | Mesuré le 13/11 dans le navigateur, couleurs calculées du site. Clair : texte 16,9:1 sur le fond, 18,1:1 sur les cartes ; gris secondaire 5,4 (fond), 5,8 (carte), 4,9 (sable) ; vert 9,0 (fond), 9,6 (carte), 7,9 (étiquette). Sombre : texte 15,8 (fond), 14,3 (carte) ; gris secondaire 7,1 / 6,5 / 6,1 ; vert éclairci #8FC2A8 9,2 / 8,3 / 7,9 ; crème sur panneau vert 9,0 dans les deux thèmes. Contour du bouton thème : 1,4 (clair) et 2,1 (sombre), sous 3:1 mais l’icône (16,9 et 15,8) suffit à repérer le bouton. Bouton atteint au clavier (Tab), focus visible, bascule à l’Espace ; pas de rotation de l’icône avec « réduire les animations » | ✅ | |
+
 ## 2. Sobriété et performance
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |

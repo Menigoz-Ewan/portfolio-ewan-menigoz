@@ -1,0 +1,47 @@
+---
+// Bouton rond soleil / lune (composant Figma « Bouton thème », 44 × 44 px).
+// Case à cocher daisyUI « theme-controller » : cochée = thème sombre.
+// Lune affichée en thème clair (pour passer en sombre), soleil en thème sombre.
+// Le choix est mémorisé dans localStorage ; le script du <head> (Layout.astro) l'applique avant l'affichage.
+interface Props {
+  class?: string;
+}
+const { class: classe = '' } = Astro.props;
+---
+
+<label
+  class:list={[
+    'swap swap-rotate size-11 shrink-0 rounded-full border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:bg-surface',
+    'has-focus-visible:outline-[2.5px] has-focus-visible:outline-offset-2 has-focus-visible:outline-vert-texte',
+    classe,
+  ]}
+>
+  <input type="checkbox" class="theme-controller" value="ewme-sombre" aria-label="Thème sombre" data-bouton-theme />
+  <!-- Lune (thème clair) -->
+  <svg class="swap-off size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+  <!-- Soleil (thème sombre) -->
+  <svg class="swap-on size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+  </svg>
+</label>
+
+<script>
+  // Coche la case selon le thème appliqué par le <head>, puis mémorise chaque changement.
+  const cases = document.querySelectorAll<HTMLInputElement>('[data-bouton-theme]');
+  const html = document.documentElement;
+  for (const c of cases) {
+    c.checked = html.dataset.theme === 'ewme-sombre';
+    c.addEventListener('change', () => {
+      const theme = c.checked ? 'ewme-sombre' : 'ewme-clair';
+      html.dataset.theme = theme;
+      try {
+        localStorage.setItem('ewme-theme', theme);
+      } catch {
+        // Stockage indisponible (navigation privée stricte) : le thème vaut pour cette page seulement
+      }
+    });
+  }
+</script>

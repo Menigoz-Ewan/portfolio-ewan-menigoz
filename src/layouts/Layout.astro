@@ -37,6 +37,17 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Thème : appliqué avant l'affichage pour éviter un flash.
+      Clair par défaut, même si l'appareil est en mode sombre ; sombre seulement si le visiteur l'a choisi.
+    -->
+    <script is:inline>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('ewme-theme') === 'ewme-sombre' ? 'ewme-sombre' : 'ewme-clair';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'ewme-clair';
+      }
+    </script>
     <title>{titreComplet}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonique} />
@@ -82,13 +93,13 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
         <div class="halo -right-[320px] top-[80px] size-[800px]"></div>
         <div
           class:list={[
-            'absolute bottom-[200px] h-[640px] w-[1405px] text-encre opacity-[0.07]',
+            'absolute bottom-[200px] h-[640px] w-[1405px] text-principal opacity-[0.07]',
             coteFilaire === 'gauche' ? '-left-[385px]' : 'left-[415px]',
           ]}
           set:html={svgFilaire}
         />
         <p
-          class="absolute left-[54px] top-[672px] hidden origin-top-left -rotate-90 text-label text-encre opacity-30 xl:block"
+          class="absolute left-[54px] top-[672px] hidden origin-top-left -rotate-90 text-label text-principal opacity-30 xl:block"
           style="translate: 0 308px;"
         >
           EWME · 47.51° N — 6.80° E · Montbéliard

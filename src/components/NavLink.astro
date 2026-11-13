@@ -22,7 +22,7 @@ const { href, actif = false, surOnglet = false } = Astro.props;
       aria-current={actif ? 'page' : undefined}
       class:list={[
         'group relative flex flex-col items-center gap-1.5 pt-2 text-ui transition-colors duration-(--duree-lien) ease-(--ease-sortie)',
-        actif ? 'text-encre' : 'text-texte-secondaire hover:text-encre',
+        actif ? 'text-principal' : 'text-secondaire hover:text-principal',
       ]}
     >
       <slot />

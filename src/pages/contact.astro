@@ -20,7 +20,7 @@ const aide = [
 
 // Bordure à 75 % du gris secondaire : contraste ≥ 3:1 sur le crème (QUALITE A10).
 const champ =
-  'w-full rounded-md border border-texte-secondaire/75 bg-creme px-3 py-2.5 text-small text-encre placeholder:text-texte-secondaire transition-colors focus:border-vert focus:outline-2 focus:outline-offset-1 focus:outline-vert aria-[invalid=true]:border-rouge';
+  'w-full rounded-md border border-secondaire/75 bg-fond px-3 py-2.5 text-small text-principal placeholder:text-secondaire transition-colors focus:border-vert-texte focus:outline-2 focus:outline-offset-1 focus:outline-vert-texte aria-[invalid=true]:border-rouge';
 ---
 
 <Layout
@@ -40,13 +40,13 @@ const champ =
       <dl class="flex flex-col">
         {
           liens.map((l) => (
-            <div class="flex items-center justify-between gap-4 border-t border-sable-fonce py-3.5">
-              <dt class="text-label text-texte-secondaire">{l.libelle}</dt>
-              <dd class="text-ui text-encre">
+            <div class="flex items-center justify-between gap-4 border-t border-trait py-3.5">
+              <dt class="text-label text-secondaire">{l.libelle}</dt>
+              <dd class="text-ui text-principal">
                 {l.href ? (
                   <a
                     href={l.href}
-                    class="flex items-center gap-2 rounded transition-colors hover:text-vert"
+                    class="flex items-center gap-2 rounded transition-colors hover:text-vert-texte"
                     {...(l.telecharger ? { download: '' } : {})}
                     {...(l.externe ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   >
@@ -54,7 +54,7 @@ const champ =
                     <Icon nom={l.icone!} />
                   </a>
                 ) : l.icone ? (
-                  <span class="flex items-center gap-2 text-texte-secondaire">
+                  <span class="flex items-center gap-2 text-secondaire">
                     {l.valeur} <span class="text-small">(lien à venir)</span>
                   </span>
                 ) : (
@@ -66,8 +66,8 @@ const champ =
         }
       </dl>
 
-      <div class="flex flex-col gap-2.5 rounded-xl border border-vert/18 bg-vert/6 p-5">
-        <h2 class="text-label text-vert">Pour une proposition de stage</h2>
+      <div class="flex flex-col gap-2.5 rounded-xl border border-vert-texte/18 bg-vert/6 p-5">
+        <h2 class="text-label text-vert-texte">Pour une proposition de stage</h2>
         <ul class="flex flex-col gap-2.5">
           {
             aide.map((a) => (
@@ -84,7 +84,7 @@ const champ =
     <!-- Formulaire (PocketBase) -->
     <section aria-label="Formulaire de contact" class="w-full lg:w-[588px]">
       <form
-        class="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-sable-fonce bg-white p-6 md:p-8"
+        class="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-trait bg-carte p-6 md:p-8"
         novalidate
         data-formulaire
         data-pocketbase={site.pocketbase}
@@ -115,11 +115,11 @@ const champ =
         </div>
 
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <p class="text-small text-texte-secondaire">Tous les champs sont requis.</p>
+          <p class="text-small text-secondaire">Tous les champs sont requis.</p>
           <Button type="submit">Envoyer</Button>
         </div>
-        <p class="text-small text-texte-secondaire">
-          Vos données servent uniquement à vous répondre. Détails dans les <a href="/mentions-legales#donnees" class="underline hover:text-encre">mentions légales</a>.
+        <p class="text-small text-secondaire">
+          Vos données servent uniquement à vous répondre. Détails dans les <a href="/mentions-legales#donnees" class="underline hover:text-principal">mentions légales</a>.
         </p>
         <p role="status" aria-live="polite" class="hidden rounded-lg px-4 py-3 text-small" data-statut></p>
       </form>
@@ -135,8 +135,8 @@ const champ =
 
   const afficherStatut = (texte: string, succes: boolean) => {
     statut.textContent = texte;
-    statut.classList.remove('hidden', 'bg-vert/10', 'text-vert', 'bg-rouge/10', 'text-rouge');
-    statut.classList.add(...(succes ? ['bg-vert/10', 'text-vert'] : ['bg-rouge/10', 'text-rouge']));
+    statut.classList.remove('hidden', 'bg-vert/10', 'text-vert-texte', 'bg-rouge/10', 'text-rouge');
+    statut.classList.add(...(succes ? ['bg-vert/10', 'text-vert-texte'] : ['bg-rouge/10', 'text-rouge']));
   };
 
   const verifier = (champ: HTMLInputElement | HTMLTextAreaElement) => {

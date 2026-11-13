@@ -24,8 +24,8 @@
       </svg>
     </div>
     <div class="chg-textes">
-      <p class="font-display text-[28px] font-semibold leading-8 text-encre">Ewan Menigoz</p>
-      <p class="text-label text-vert">Portfolio · Design UI/UX</p>
+      <p class="font-display text-[28px] font-semibold leading-8 text-principal">Ewan Menigoz</p>
+      <p class="text-label text-vert-texte">Portfolio · Design UI/UX</p>
     </div>
   </div>
   <span class="sr-only">Chargement du portfolio</span>
@@ -56,7 +56,7 @@
     position: relative;
     width: calc(391.55 * var(--u));
     height: calc(163.64 * var(--u));
-    color: var(--color-encre);
+    color: var(--color-principal);
   }
   @media (max-width: 640px) {
     .chg-logo {
@@ -78,7 +78,7 @@
   .chg-wm {
     left: calc(97.36 * var(--u));
     width: calc(196.82 * var(--u));
-    color: var(--color-vert);
+    color: var(--color-vert-texte);
     opacity: 0;
   }
   .chg-e2 {
@@ -138,7 +138,8 @@
     await Promise.all([
       e.animate([{ transform: `translateX(${-ouvert}px)` }, { transform: 'none' }], { ...opts, duration: 460 }).finished,
       e2.animate([{ transform: `translateX(${ouvert}px)` }, { transform: 'none' }], { ...opts, duration: 460 }).finished,
-      wm.animate([{ color: '#1e4d3b' }, { color: '#161616' }], { ...opts, duration: 460 }).finished,
+      // Le WM passe du vert à la couleur du texte (lues dans le thème actif)
+      wm.animate([{ color: getComputedStyle(wm).color }, { color: getComputedStyle(logo).color }], { ...opts, duration: 460 }).finished,
     ]);
     await attendre(260);
 

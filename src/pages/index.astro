@@ -73,18 +73,18 @@ const personne = {
   <!-- Compétences : panneau fixe, compétences et outils regroupés par domaine -->
   <section aria-labelledby="titre-competences" class="conteneur pb-6 pt-7">
     <h2 id="titre-competences" class="sr-only">Ce que je sais faire</h2>
-    <ul class="grid overflow-hidden rounded-3xl border border-sable-fonce bg-white md:grid-cols-3">
+    <ul class="grid overflow-hidden rounded-3xl border border-trait bg-carte md:grid-cols-3">
       {
         domaines.map((d, i) => (
-          <li class:list={['flex flex-col gap-3 p-8', i > 0 && 'border-t border-sable-fonce md:border-l md:border-t-0']}>
-            <span class="self-start rounded-xl bg-vert/8 p-2.5 text-vert">
+          <li class:list={['flex flex-col gap-3 p-8', i > 0 && 'border-t border-trait md:border-l md:border-t-0']}>
+            <span class="self-start rounded-xl bg-vert/8 p-2.5 text-vert-texte">
               <Icon nom={d.icone} taille={22} />
             </span>
             <h3 class="text-h3">{d.titre}</h3>
-            <p class="text-small text-texte-secondaire">{d.texte}</p>
+            <p class="text-small text-secondaire">{d.texte}</p>
             <ul class="flex flex-wrap gap-1.5" aria-label={`Outils : ${d.titre}`}>
               {d.outils.map((o) => (
-                <li class="rounded-full bg-sable px-2.5 py-[5px] text-ui">{o}</li>
+                <li class="rounded-full bg-surface px-2.5 py-[5px] text-ui">{o}</li>
               ))}
             </ul>
           </li>
@@ -110,25 +110,25 @@ const personne = {
 
   <!-- Méthode de travail : panneau blanc arrondi qui fait écho au panneau vert du hero -->
   <section aria-labelledby="titre-methode" class="mx-auto max-w-[1440px] px-3 pb-24 pt-8 md:px-6">
-    <div class="flex flex-col gap-10 rounded-[28px] border border-sable-fonce bg-white px-6 py-12 md:rounded-[40px] md:px-24 md:py-[72px]">
+    <div class="flex flex-col gap-10 rounded-[28px] border border-trait bg-carte px-6 py-12 md:rounded-[40px] md:px-24 md:py-[72px]">
       <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <h2 id="titre-methode" class="text-h1">Ma méthode de travail</h2>
-        <p class="max-w-[420px] text-body text-texte-secondaire">
+        <p class="max-w-[420px] text-body text-secondaire">
           Je suis la même démarche sur chaque projet : comprendre, concevoir, puis intégrer moi-même ce que j’ai dessiné.
         </p>
       </div>
       <ol class="grid gap-6 lg:grid-cols-3">
         {
           etapes.map((e, i) => (
-            <li class="flex flex-col gap-3 rounded-2xl border border-sable-fonce bg-creme p-7">
+            <li class="flex flex-col gap-3 rounded-2xl border border-trait bg-fond p-7">
               <p class="flex items-center gap-2.5">
                 <span class="rounded bg-vert px-2 py-1 text-label text-white">{String(i + 1).padStart(2, '0')}</span>
-                <span class="text-label text-vert">{e.phase}</span>
+                <span class="text-label text-vert-texte">{e.phase}</span>
               </p>
               <h3 class="text-h3">{e.titre}</h3>
-              <p class="text-small text-texte-secondaire">{e.texte}</p>
-              <hr class="border-sable-fonce" />
-              <p class="text-label text-texte-secondaire">{e.outils}</p>
+              <p class="text-small text-secondaire">{e.texte}</p>
+              <hr class="border-trait" />
+              <p class="text-label text-secondaire">{e.outils}</p>
             </li>
           ))
         }

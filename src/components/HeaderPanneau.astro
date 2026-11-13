@@ -6,6 +6,7 @@ import Brand from './Brand.astro';
 import NavLink from './NavLink.astro';
 import Button from './Button.astro';
 import MenuMobile from './MenuMobile.astro';
+import BoutonTheme from './BoutonTheme.astro';
 import { navigation, type PageId } from '../data/site';
 
 interface Props {
@@ -23,7 +24,8 @@ const { active = null, variante = 'page' } = Astro.props;
   <header class="relative flex h-16 items-center justify-between px-2 lg:px-6 xl:px-20">
     <Brand />
 
-    <div class="hidden items-center gap-16 lg:flex">
+    <!-- Menu, bouton thème (52 px après le menu) puis « Me contacter » (16 px après), comme dans la maquette -->
+    <div class="hidden items-center lg:flex">
       <nav aria-label="Navigation principale">
         <ul class="flex items-center gap-[72px]">
           {
@@ -38,6 +40,7 @@ const { active = null, variante = 'page' } = Astro.props;
           }
         </ul>
       </nav>
+      <BoutonTheme class="ml-[52px] mr-4" />
       <Button href="/contact">Me contacter</Button>
     </div>
 

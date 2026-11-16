@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // À remplacer par le nom de domaine définitif (VPS) : sert au sitemap,
   // aux URL canoniques et aux aperçus de partage (Open Graph).
-  site: 'https://ewan-menigoz.example',
+  site: 'https://portfolio.ewan-menigoz.fr',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

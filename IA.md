@@ -93,3 +93,7 @@ Ensuite, le travail a continué étape par étape jusqu'à aujourd'hui : chaque 
 
 | Filtres animés, contexte, affiches (16/11) | J'ai demandé une animation fluide pour les filtres, le retrait des points dans les étiquettes du contexte, et j'ai fourni mes 3 affiches finales et 2 captures d'Affinity. Claude a animé les filtres avec les View Transitions natives (coupées avec « réduire les animations »), converti les affiches en PNG et rédigé les textes alternatifs des captures. Il a remarqué que le titre de mes affiches était coupé et a laissé les images du triptyque garder leurs proportions. | *(à compléter)* |
 
+| Mentions légales, RGPD et confidentialité (16/11) | J'ai demandé une vérification des pages et l'ajout de ce qui manquait. Claude a fait l'inventaire réel du site (aucun cookie, aucune requête externe, deux clés de stockage local), corrigé le texte sur les cookies, ajouté les mentions obligatoires (directeur de la publication, téléphone de l'hébergeur, base légale, droits, CNIL) et les crédits. Les informations qu'il ne connaît pas sont laissées en [À COMPLÉTER]. | *(à compléter)* |
+
+| Mentions légales complétées (16/11) | Claude m’a posé des questions sur chaque [À COMPLÉTER] : j’ai donné mon hébergeur (Infomaniak), mon domaine, les membres d’OpenSigne, les durées de conservation, l’adresse de l’IUT et mes choix (adresse personnelle non publiée, pas de nom de licence pour Météo-France). Il a rempli la page et vérifié qu’il ne restait aucun marqueur. | *(à compléter)* |
+

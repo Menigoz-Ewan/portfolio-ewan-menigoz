@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # À mettre à jour avec le nom de domaine définitif
-Sitemap: https://ewan-menigoz.example/sitemap-index.xml
+Sitemap: https://portfolio.ewan-menigoz.fr/sitemap-index.xml

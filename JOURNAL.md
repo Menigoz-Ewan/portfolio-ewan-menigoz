@@ -127,3 +127,16 @@ Le terme “Premium Tech” n’existe pas vraiment, ou du moins, de qualifie pa
 - Le triptyque des études de cas garde les proportions de chaque image (il n'y a plus de hauteur fixe) : les affiches s'affichent entières, titre compris. TiK•TaK et Climat ne bougent presque pas (483 px au lieu de 490).
 - Les nouvelles affiches remplacent aussi les anciennes dans la galerie, la pile de polaroïds et la vignette (même fichier).
 
+- **16/11 · Mentions légales, RGPD et confidentialité vérifiées et complétées.** Erreurs trouvées : le texte annonçait « peut utiliser des cookies de mesure d’audience » alors que le site n’en dépose aucun (inventaire fait dans le navigateur) ; directeur de la publication, téléphone de l’hébergeur, base légale, durée de conservation, destinataire, droits complets et recours à la CNIL manquaient ; la case du formulaire oubliait l’objet du message. Ajouts : crédits (co-auteur, marques et logos de tiers, données Météo-France, polices et outils), liens externes, tableau du stockage local, date de mise à jour. Restent [À COMPLÉTER] : hébergeur (nom, adresse, téléphone, site, pays), domaine, durée de conservation des messages, durée des journaux du serveur, équipe OpenSigne.
+
+**Décidé (suite)**
+- Une seule page pour les mentions légales, le RGPD et la confidentialité, en 5 sections ; le lien « Confidentialité » du pied de page mène à la section Données personnelles.
+- Adresse personnelle non publiée (site non professionnel, article 6-III-2 de la LCEN) : elle est donnée à l’hébergeur. À valider par Ewan.
+
+- **16/11 · Mentions légales complétées.** Plus aucun [À COMPLÉTER] : hébergeur Infomaniak Network SA (Genève, centre de données en Suisse), domaine portfolio.ewan-menigoz.fr, messages conservés 12 mois, journaux du serveur 12 mois au plus, équipe OpenSigne (Enzo Hillairet, Lilian Maitre), adresse de l’IUT corrigée (4 place Tharradin). L’adresse du site est aussi mise à jour dans astro.config.mjs et robots.txt (sitemap).
+
+**Décidé (suite)**
+- Adresse personnelle non publiée (LCEN, article 6-III-2) : validé par Ewan.
+- Données Météo-France : « données publiques », sans nom de licence.
+- PocketBase est hébergé chez Infomaniak, comme le site : la Suisse a une décision d’adéquation de la Commission européenne, ce qui est précisé dans la section RGPD.
+

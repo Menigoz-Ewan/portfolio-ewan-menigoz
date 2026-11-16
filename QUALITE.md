@@ -101,17 +101,17 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 |---|---|---|---|---|---|
 
-| J1 | Mentions légales complètes (éditeur, hébergeur) | Obligation de la loi pour la confiance dans l'économie numérique (LCEN) | La maquette indique encore une adresse Netlify : à remplacer par mon domaine et l'hébergeur du VPS | ❌ | À corriger |
+| J1 | Mentions légales complètes (éditeur, hébergeur) | Obligation de la loi pour la confiance dans l'économie numérique (LCEN) | La maquette indique encore une adresse Netlify : à remplacer par mon domaine et l'hébergeur du VPS | ✅ | 16/11 : page complète, plus aucun [À COMPLÉTER] dans le site construit (dist). Éditeur, directeur de la publication, article 6-III-2 de la LCEN, hébergeur Infomaniak (adresse, téléphone, site), domaine portfolio.ewan-menigoz.fr |
 
-| J2 | Information RGPD sous le formulaire | Le formulaire collecte un nom et une adresse e-mail stockés dans PocketBase | Texte court : finalité, durée de conservation, droits d'accès et de suppression, contact | ⬜ | |
+| J2 | Information RGPD sous le formulaire | Le formulaire collecte un nom et une adresse e-mail stockés dans PocketBase | Texte court : finalité, durée de conservation, droits d'accès et de suppression, contact | ✅ | 16/11 : finalité, base légale (consentement), destinataire, hébergement en Suisse (décision d’adéquation), durée de conservation (12 mois), droits et réclamation CNIL ; texte de la case corrigé (l’objet manquait) |
 
 | J3 | Données réduites au strict nécessaire et protégées | PocketBase sur mon VPS | Champs minimum, HTTPS, accès administrateur protégé, suppression des messages après la durée annoncée | ⬜ | |
 
-| J4 | Cookies : bandeau seulement si nécessaire | Les mentions actuelles disent « peut utiliser des cookies » sans préciser | Inventaire réel des cookies dans les DevTools ; adapter le texte et ne pas mettre de bandeau si aucun cookie soumis à consentement | ⬜ | |
+| J4 | Cookies : bandeau seulement si nécessaire | Les mentions actuelles disent « peut utiliser des cookies » sans préciser | Inventaire réel des cookies dans les DevTools ; adapter le texte et ne pas mettre de bandeau si aucun cookie soumis à consentement | ✅ | Mesuré le 16/11 sur /mentions-legales : document.cookie vide, aucune requête vers un autre domaine, seulement sessionStorage « ewme-chargement-vu » (et localStorage « ewme-theme » après un changement de thème). Texte adapté, pas de bandeau |
 
-| J5 | Licences des polices et bibliothèques déclarées | Polices sous licence SIL OFL ; Astro, Tailwind CSS, daisyUI | Fichier de crédits dans le dépôt et mention dans les mentions légales | ⬜ | |
+| J5 | Licences des polices et bibliothèques déclarées | Polices sous licence SIL OFL ; Astro, Tailwind CSS, daisyUI | Fichier de crédits dans le dépôt et mention dans les mentions légales | 🟨 | 16/11 : polices (SIL OFL) et outils (MIT) cités dans les mentions légales. Reste le fichier de crédits dans le dépôt |
 
-| J6 | Droits sur les contenus montrés | Projets collectifs ou académiques, photos et visuels de patrimoine dans les affiches | Créditer les co-auteurs et les sources des images | ⬜ | |
+| J6 | Droits sur les contenus montrés | Projets collectifs ou académiques, photos et visuels de patrimoine dans les affiches | Créditer les co-auteurs et les sources des images | ✅ | 16/11 : co-auteurs cités (Enzo Loddo pour Climat Outre-Mer ; Enzo Hillairet et Lilian Maitre pour OpenSigne), marques et logos de tiers, données publiques de Météo-France |
 
 | J7 | Droit à l'image | Photos de la pile de polaroids et photo en situation | Accord des personnes visibles | ⬜ | |
 

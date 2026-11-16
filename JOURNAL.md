@@ -487,3 +487,19 @@
 
 **À faire**
 - Relire les trois entrées *(À RELIRE)* du journal et remplir ma colonne de IA.md avant de rendre le dépôt public.
+
+### 17/11 · Mise en ligne : GitHub et portfolio.ewan-menigoz.fr
+
+**Fait**
+- Code publié sur GitHub (dépôt `Menigoz-Ewan/portfolio-ewan-menigoz`, branche `main`).
+- Site en ligne sur mon VPS, à côté de PocketBase : enregistrement DNS `A` « portfolio » chez Infomaniak, dossier `/var/www/portfolio`, configuration Apache dédiée (site statique, pas de liste des dossiers, page 404 personnalisée), HTTPS avec Certbot (Let's Encrypt, renouvellement automatique).
+- Mise à jour du site : `npm run build` sur mon PC, suppression de l'ancien `dist` sur le serveur, envoi avec `scp`, puis droits de lecture (`chmod -R a+rX`).
+
+**Ce qui a coincé**
+- Connexion refusée : mon VPS écoute en SSH sur un port particulier (23015), à préciser avec `-p` pour `ssh` et `-P` pour `scp`.
+- Erreur 403 : les dossiers envoyés depuis Windows n'étaient lisibles que par moi ; corrigé avec `chmod -R a+rX`.
+- « Site inaccessible » chez moi alors qu'il était en ligne : le DNS de mon opérateur mobile gardait la réponse « domaine inexistant » d'avant la création de l'adresse (jusqu'à une heure). Contourné en passant Chrome par un DNS public.
+
+**Vérifié**
+- Les 12 pages du sitemap répondent (200), ainsi que le CV, le PDF de La Cimade, `robots.txt` et les sitemaps ; une adresse inconnue renvoie la page 404 ; HTTP redirige vers HTTPS ; certificat valide jusqu'au 14/02/2027.
+- Formulaire : PocketBase répond et accepte les envois venant du portfolio (CORS), vérifié sans écrire de message, puis j'ai envoyé un vrai message depuis le site en ligne : il est bien arrivé dans PocketBase.

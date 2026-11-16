@@ -116,5 +116,31 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
 
       <Footer active={active} />
     </div>
+
+    <script>
+      // Parallaxe du fond : la trame est redescendue de 80 % du défilement, elle défile donc à 20 % de la vitesse
+      // de la page (le contenu, lui, défile normalement). Désactivée avec « réduire les animations ».
+      const VITESSE_TRAME = 0.8;
+      const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let enAttente = false;
+      const decaler = () => {
+        enAttente = false;
+        const decalage = reduit.matches ? 0 : window.scrollY * VITESSE_TRAME;
+        document.documentElement.style.setProperty('--decalage-trame', `${decalage}px`);
+      };
+      window.addEventListener(
+        'scroll',
+        () => {
+          // Au plus une mise à jour par image affichée
+          if (!enAttente) {
+            enAttente = true;
+            requestAnimationFrame(decaler);
+          }
+        },
+        { passive: true },
+      );
+      reduit.addEventListener('change', decaler);
+      decaler();
+    </script>
   </body>
 </html>

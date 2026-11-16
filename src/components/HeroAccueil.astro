@@ -249,7 +249,8 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
     const aligner = () => {
       const o = onglet.getBoundingClientRect();
       const f = fond.getBoundingClientRect();
-      onglet.style.backgroundPosition = `${f.left - o.left}px ${f.top - o.top}px`;
+      // + le décalage de parallaxe du fond, pour que les deux trames restent alignées pendant le défilement
+      onglet.style.backgroundPosition = `${f.left - o.left}px calc(${f.top - o.top}px + var(--decalage-trame, 0px))`;
       onglet.classList.add('trame-alignee');
     };
     aligner();

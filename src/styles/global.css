@@ -260,6 +260,8 @@
   background-color: var(--color-fond);
   background-image: var(--trame-images);
   background-size: var(--trame-tailles);
+  /* Parallaxe : la trame est redescendue d'une partie du défilement (script du Layout), elle défile donc plus lentement */
+  background-position: 0 var(--decalage-trame, 0px);
 }
 
 /*

@@ -1,5 +1,10 @@
 ---
-// Bouton du design system : 4 types (Primary, Secondary, Light, Contour clair).
+// Bouton du design system : 4 variantes, choisies selon le fond sur lequel le bouton est posé.
+//   Fond clair (page, carte) : primary = action principale (rouge, se remplit de rouge foncé),
+//                              secondary = action secondaire (clair bordé, se remplit de vert sapin).
+//   Fond vert (panneau, bloc vert) : light = action principale (blanc, pastille rouge, se remplit de rouge),
+//                                     contour = action secondaire (transparent bordé de blanc, se remplit de crème).
+// Le rouge signale toujours l'action principale, quel que soit le fond.
 // Interaction « pastille qui s'étend » (variante A du canvas Claude Design, inspirée du « Continue button » de Jitter) :
 // - au repos : l'icône est dans une pastille ronde, à droite du texte ;
 // - au survol / focus clavier : la pastille grandit jusqu'à remplir tout le bouton (le bouton change de couleur),
@@ -11,7 +16,7 @@ import Icon, { type NomIcone } from './Icon.astro';
 interface Props {
   href?: string;
   type?: 'button' | 'submit';
-  variante?: 'primary' | 'secondary' | 'light' | 'encre' | 'contour';
+  variante?: 'primary' | 'secondary' | 'light' | 'contour';
   icone?: NomIcone | null;
   telecharger?: boolean;
   externe?: boolean;
@@ -191,7 +196,7 @@ const lien = href
   }
 
   /* ── Couleurs des 4 variantes ───────────────────────────────────────── */
-  /* Primary : action principale, rouge ; la pastille rouge foncé remplit le bouton */
+  /* Primary : action principale sur fond clair, rouge ; la pastille rouge foncé remplit le bouton */
   .bouton-primary {
     --fond: var(--color-rouge);
     --texte: #fff;
@@ -204,7 +209,7 @@ const lien = href
   .bouton-primary:hover {
     box-shadow: 0 6px 18px rgb(206 26 27 / 0.35);
   }
-  /* Secondary : fond clair et bordure ; la pastille vert sapin remplit le bouton, le texte passe en blanc */
+  /* Secondary : action secondaire sur fond clair ; fond clair et bordure ; la pastille vert sapin remplit le bouton, le texte passe en blanc */
   .bouton-secondary {
     --fond: var(--color-surface);
     --texte: var(--color-principal);
@@ -214,28 +219,17 @@ const lien = href
     --contour-focus: var(--color-vert-texte);
     box-shadow: inset 0 0 0 1px var(--color-trait-fort);
   }
-  /* Light : bouton blanc sur le panneau vert ; pastille verte, mais remplissage rouge au survol,
-     comme le bouton « Me contacter » (un remplissage vert se confondrait avec le panneau) */
+  /* Light : action principale sur fond vert ; bouton blanc, pastille rouge qui remplit le bouton au survol
+     (un remplissage vert se confondrait avec le panneau) */
   .bouton-light {
     --fond: #fff;
     --texte: var(--color-encre);
-    --pastille: var(--color-vert);
-    --remplissage: var(--color-rouge);
+    --pastille: var(--color-rouge);
     --icone: #fff;
     --texte-survol: #fff;
     --contour-focus: #fff;
   }
-  /* Encre : bouton blanc sur le panneau vert, pastille et remplissage encre (noir) ;
-     pour une action secondaire sur le panneau (ex. « Télécharger mon CV »), sans vert sur vert ni rouge */
-  .bouton-encre {
-    --fond: #fff;
-    --texte: var(--color-encre);
-    --pastille: var(--color-encre);
-    --icone: #fff;
-    --texte-survol: #fff;
-    --contour-focus: #fff;
-  }
-  /* Contour clair : sur le panneau vert ; la pastille crème remplit le bouton, le texte passe en vert */
+  /* Contour clair : action secondaire sur fond vert ; la pastille crème remplit le bouton, le texte passe en vert */
   .bouton-contour {
     --texte: #fff;
     --pastille: var(--color-creme);

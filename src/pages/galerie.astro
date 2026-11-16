@@ -52,7 +52,7 @@ const visuels = [
           visuels.map((v, i) => (
             <li class="visuel" data-index={i} data-x={v.x} data-y={v.y}>
               <button type="button" class="visuel-bouton" aria-pressed="false" data-titre={v.titre} data-categorie={v.categorie}>
-                <Image src={v.src} alt={v.alt} width={640} class="visuel-image" draggable="false" loading="eager" />
+                <Image src={v.src} alt={v.alt} width={800} class="visuel-image" draggable="false" loading="eager" />
                 <span class="sr-only">
                   {v.categorie} : {v.titre}
                 </span>
@@ -97,19 +97,23 @@ const visuels = [
     transform-style: preserve-3d;
     pointer-events: none; /* la liste ne doit pas capter les clics destinés aux visuels lointains */
   }
-  /* Chaque visuel est placé par le script (translate3d) depuis le centre de la scène ; petit au repos */
+  /*
+   * Chaque visuel est placé par le script (translate3d) depuis le centre de la scène.
+   * Netteté : il est dessiné en grand (400 px) puis réduit (--echelle) ; le navigateur affiche ainsi
+   * une image nette quand on s'en approche, au lieu d'agrandir une petite image (pixellisée).
+   */
   .visuel {
+    --echelle: 0.325; /* 400 px × 0,325 = 130 px au repos */
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 130px;
-    will-change: transform, opacity;
+    width: 400px;
   }
   .visuel-bouton {
     display: block;
     width: 100%;
     padding: 0;
-    border-radius: 8px;
+    border-radius: 24px; /* environ 8 px une fois réduit */
     overflow: hidden;
     background: var(--color-surface);
     box-shadow: 0 10px 24px rgb(0 0 0 / 0.14);
@@ -158,7 +162,7 @@ const visuels = [
       height: 540px;
     }
     .visuel {
-      width: 70px;
+      width: 216px; /* 70 px au repos */
     }
   }
   /* Réduire les animations : grille immobile des 8 visuels */
@@ -185,6 +189,7 @@ const visuels = [
     .visuel {
       position: static;
       width: auto;
+      --echelle: 1;
       transform: none !important;
       opacity: 1 !important;
     }
@@ -244,7 +249,7 @@ const RECUL = 300; // les autres visuels s'effacent quand ils approchent à moin
         // Le visuel choisi peut venir tout près ; les autres s'effacent avant de devenir grands
         const proche = it === choisi ? borne(devant / 30, 0, 1) : borne((devant - RECUL / 2) / (RECUL / 2), 0, 1);
         const opacite = Math.min(loin, proche, borne((PROFONDEUR - devant) / 150, 0, 1));
-        it.el.style.transform = `translate3d(${x}px, ${y}px, ${DECALAGE - devant}px) translate(-50%, -50%)`;
+        it.el.style.transform = `translate3d(${x}px, ${y}px, ${DECALAGE - devant}px) translate(-50%, -50%) scale(var(--echelle))`;
         it.el.style.opacity = String(opacite);
         it.el.style.zIndex = String(Math.round(PROFONDEUR - devant)); // le plus proche passe devant
         it.el.style.pointerEvents = opacite > 0.05 ? 'auto' : 'none';

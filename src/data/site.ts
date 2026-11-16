@@ -30,7 +30,7 @@ export const site = {
   // Adresse de l'instance PocketBase (variable d'environnement PUBLIC_POCKETBASE_URL).
   pocketbase: import.meta.env.PUBLIC_POCKETBASE_URL ?? '',
   stage: {
-    duree: '10 semaines',
+    duree: '8-10 semaines',
     periode: 'mars-juin',
     lieu: 'Montbéliard et alentours',
   },

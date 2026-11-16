@@ -422,3 +422,23 @@
 
 **Vérifié**
 - Par script, à 1 600 px et en mobile 375 px : les 8 visuels sont cliquables au repos ; le plus lointain (31 px de large) passe à environ 330 px au centre après un clic ; recul au clic dans le vide ; légende sans chevauchement ; pas de défilement horizontal.
+
+### 16/11 · Boutons harmonisés, fond en parallaxe et finitions (mes retours)
+
+**Fait**
+- Galerie : visuels nets quand on s'en approche. Ils étaient dessinés petits (130 px) puis agrandis par la 3D, donc pixellisés ; ils sont maintenant dessinés en grand (400 px, image source de 800 px) puis réduits.
+- Boutons : 4 variantes au lieu de 5, choisies selon le fond. Fond clair : rouge pour l'action principale, clair bordé (remplissage vert sapin) pour l'action secondaire. Fond vert : blanc à pastille rouge (remplissage rouge) pour l'action principale, contour blanc (remplissage crème) pour l'action secondaire. Le rouge signale toujours l'action principale. La variante noire « encre » est supprimée : « Télécharger mon CV » passe en contour blanc.
+- À propos : bloc « Et l'IA dans tout ça ? » rapproché de l'anneau des passions (42 px d'écart au lieu d'environ 190 px).
+- Accueil : « 8-10 semaines » dans le statut du stage.
+- Fond quadrillé en parallaxe : la trame défile à 60 % de la vitesse de la page (passée ensuite à 20 %, voir plus bas), le contenu défile normalement. La trame de l'onglet du hero suit le même décalage pour rester alignée. Désactivé avec « réduire les animations ».
+
+**Vérifié**
+- Par script et capture à 1 440 px : visuel approché net (image de 800 px chargée), 8 visuels toujours cliquables ; décalage de la trame (40 % du défilement) et onglet aligné ; écart du bloc IA ; nouveau statut du stage. Thème sombre non regardé en capture.
+
+### 16/11 · Fond quadrillé plus lent (mes retours)
+
+**Fait**
+- La trame défilait encore trop vite à 60 % : elle passe à 20 % de la vitesse de la page (redescendue de 80 % du défilement).
+
+**Vérifié**
+- Par script : pour 1 000 px de défilement, la trame est décalée de 800 px, elle ne remonte donc que de 200 px.

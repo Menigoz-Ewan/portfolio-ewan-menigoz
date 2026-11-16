@@ -1,0 +1,214 @@
+---
+// Image du hero (sans cadre ni légende) : une seule image à la fois.
+// - À l'arrivée sur la page, elle s'ouvre en cercle depuis son centre (« iris ») en se redressant.
+// - Un clic (ou Entrée / Espace au clavier) ouvre l'image suivante en cercle depuis le point cliqué,
+//   pendant que le cadre rebondit et change d'inclinaison.
+// Aucun changement automatique. Avec « réduire les animations » : image affichée d'emblée, changement sans effet.
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import portrait from '../assets/images/portrait-ewan.png';
+import chateau from '../assets/images/affiche-chateau.png';
+import theatre from '../assets/images/galerie/affiche-theatre.png';
+import temple from '../assets/images/galerie/affiche-temple.png';
+import exposition from '../assets/images/polaroid-exposition.png';
+import cimade from '../assets/images/polaroid-cimade.png';
+import tiktak from '../assets/images/vignette-tiktak.png';
+
+// Images, dans l'ordre d'apparition.
+// « affiche » : l'image est agrandie pour cacher les marges blanches de l'affiche (titre, logos).
+const reserve: { src: ImageMetadata; alt: string; affiche?: boolean }[] = [
+  { src: portrait, alt: 'Portrait d’Ewan Menigoz en noir et blanc' },
+  { src: chateau, alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs', affiche: true },
+  { src: tiktak, alt: 'Visuel de TiK•TaK : trois montres à bracelet en cuir sur fond vert sapin' },
+  { src: theatre, alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel', affiche: true },
+  { src: exposition, alt: 'Deux grandes toiles aux motifs bleu-vert accrochées dans une salle d’exposition' },
+  { src: temple, alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher', affiche: true },
+  { src: cimade, alt: 'Affiche de La Cimade : poing levé noir veiné de rouge, entouré de cercles rouges' },
+];
+
+// Images optimisées par Astro (WebP, 680 px de large) : le script n'a plus qu'à changer l'adresse
+const images = await Promise.all(
+  reserve.map(async (r) => ({
+    url: (await getImage({ src: r.src, width: 680, format: 'webp' })).src,
+    alt: r.alt,
+    affiche: Boolean(r.affiche),
+  })),
+);
+
+// « compact » : version réduite pour les écrans étroits (sous 1024 px), même comportement
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<div class:list={['relative', compact ? 'mx-auto h-[340px] w-[260px]' : 'h-[480px] w-[420px]']} data-image-iris data-images={JSON.stringify(images)}>
+  <button
+    type="button"
+    class:list={[
+      'cadre-iris arrivee absolute overflow-hidden rounded-2xl bg-creme/10 shadow-[0_24px_48px_rgb(0_0_0/0.3)]',
+      compact ? 'left-[15px] top-[10px] h-[290px] w-[230px]' : 'left-[45px] top-[22px] h-[420px] w-[330px]',
+    ]}
+    aria-label="Afficher l’image suivante"
+    data-cadre
+  >
+    <img
+      src={images[0].url}
+      alt={images[0].alt}
+      width="680"
+      height="860"
+      class:list={['entree absolute inset-0 size-full object-cover', images[0].affiche && 'recadre']}
+      loading={compact ? 'lazy' : 'eager'}
+      data-dessous
+    />
+    <img src={images[0].url} alt="" aria-hidden="true" width="680" height="860" class="absolute inset-0 size-full object-cover opacity-0" decoding="async" data-dessus />
+  </button>
+  <!-- Annonce pour les lecteurs d'écran : l'image qui vient d'apparaître -->
+  <p class="sr-only" aria-live="polite" data-iris-annonce></p>
+  <!-- Indication manuscrite (décorative : l'image est un bouton nommé) -->
+  <p
+    aria-hidden="true"
+    class:list={[
+      'absolute rotate-[-4deg] whitespace-nowrap font-note font-bold leading-none text-creme',
+      compact ? 'bottom-0 left-[60px] text-[22px]' : '-bottom-7 left-[150px] text-[24px]',
+    ]}
+  >
+    {compact ? 'touchez la photo !' : 'cliquez sur la photo !'}
+  </p>
+</div>
+
+<style>
+  /* Le cadre : légèrement incliné ; il change d'inclinaison et rebondit à chaque nouvelle image */
+  .cadre-iris {
+    rotate: 3deg;
+    transition: rotate 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Arrivée sur la page (classe retirée au premier clic, pour ne pas rejouer cette animation) */
+  .cadre-iris.arrivee {
+    animation: cadre-arrivee 900ms cubic-bezier(0.34, 1.4, 0.64, 1) 400ms both;
+  }
+  .cadre-iris.penche {
+    rotate: -3deg;
+  }
+  .cadre-iris.rebond {
+    animation: cadre-rebond 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .cadre-iris:focus-visible {
+    outline: 2.5px solid var(--color-creme);
+    outline-offset: 5px;
+  }
+  @keyframes cadre-arrivee {
+    from {
+      opacity: 0;
+      scale: 0.85;
+      rotate: -8deg;
+    }
+  }
+  @keyframes cadre-rebond {
+    40% {
+      scale: 0.96;
+    }
+    70% {
+      scale: 1.02;
+    }
+  }
+  /* Arrivée de la première image : elle s'ouvre en cercle depuis le centre */
+  .entree {
+    --x: 50%;
+    --y: 50%;
+    animation: iris 1000ms cubic-bezier(0.65, 0, 0.35, 1) 500ms both;
+  }
+  /*
+   * L'iris : l'image est découpée en cercle (clip-path).
+   * Le cercle part de 0 au point (--x, --y) et grandit jusqu'à 150 % : il couvre alors toute l'image.
+   */
+  [data-dessus].ouverture {
+    opacity: 1;
+    animation: iris 750ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  @keyframes iris {
+    from {
+      clip-path: circle(0% at var(--x) var(--y));
+    }
+    to {
+      clip-path: circle(150% at var(--x) var(--y));
+    }
+  }
+  /* Affiches : agrandies de 22 % pour que leurs marges blanches sortent du cadre */
+  .recadre {
+    scale: 1.22;
+  }
+  :global(html[data-chargement]) .cadre-iris,
+  :global(html[data-chargement]) .entree {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cadre-iris,
+    .cadre-iris.rebond,
+    .entree,
+    [data-dessus].ouverture {
+      animation: none;
+    }
+    .cadre-iris {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  type ImageIris = { url: string; alt: string; affiche: boolean };
+
+  for (const bloc of document.querySelectorAll<HTMLElement>('[data-image-iris]')) {
+    const images: ImageIris[] = JSON.parse(bloc.dataset.images ?? '[]');
+    const cadre = bloc.querySelector<HTMLButtonElement>('[data-cadre]')!;
+    const dessous = bloc.querySelector<HTMLImageElement>('[data-dessous]')!;
+    const dessus = bloc.querySelector<HTMLImageElement>('[data-dessus]')!;
+    const annonce = bloc.querySelector<HTMLElement>('[data-iris-annonce]')!;
+    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let actuelle = 0;
+    let occupe = false;
+
+    cadre.addEventListener('click', async (e) => {
+      if (occupe) return; // une animation à la fois
+      occupe = true;
+      actuelle = (actuelle + 1) % images.length;
+      const image = images[actuelle];
+
+      // Point de départ du cercle : là où l'on a cliqué, ou le centre au clavier (e.detail vaut 0)
+      const zone = cadre.getBoundingClientRect();
+      const x = e.detail ? ((e.clientX - zone.left) / zone.width) * 100 : 50;
+      const y = e.detail ? ((e.clientY - zone.top) / zone.height) * 100 : 50;
+      dessus.style.setProperty('--x', `${x}%`);
+      dessus.style.setProperty('--y', `${y}%`);
+
+      // On attend que la nouvelle image soit chargée avant de l'ouvrir (pas de cercle vide)
+      dessus.src = image.url;
+      dessus.classList.toggle('recadre', image.affiche);
+      await dessus.decode().catch(() => {});
+
+      // Fin : l'image du dessous prend la nouvelle image, puis le calque du dessus redevient invisible
+      const terminer = async () => {
+        dessous.src = image.url;
+        dessous.alt = image.alt;
+        dessous.classList.toggle('recadre', image.affiche);
+        dessous.classList.remove('entree');
+        await dessous.decode().catch(() => {});
+        dessus.classList.remove('ouverture');
+        cadre.classList.remove('rebond');
+        occupe = false;
+      };
+
+      if (reduit.matches) await terminer();
+      else {
+        // Le cadre rebondit et change d'inclinaison pendant que l'image s'ouvre
+        cadre.classList.remove('arrivee');
+        cadre.classList.add('rebond');
+        cadre.classList.toggle('penche');
+        dessus.classList.add('ouverture');
+        dessus.addEventListener('animationend', terminer, { once: true });
+      }
+
+      annonce.textContent = `Image ${actuelle + 1} sur ${images.length} : ${image.alt}`;
+    });
+  }
+</script>

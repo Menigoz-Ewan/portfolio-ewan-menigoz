@@ -135,11 +135,11 @@ const opensigne: Projet = {
     accroche:
       'Une web app gamifiée pour apprendre la langue des signes française, pensée comme une vraie startup.',
     fiche: {
-      role: 'Designer UI/UX, SEO & lancement',
+      role: 'Designer UI/UX, SEO et lancement',
       contexte: 'Projet collectif · BUT MMI, 1re année',
       outils: 'Figma, Astro, Tailwind, HTML/CSS',
       livrables:
-        'Web app, modèle économique, stratégie d’acquisition, audit éco-conception & accessibilité',
+        'Web app, modèle économique, stratégie d’acquisition, audit d’éco-conception et d’accessibilité',
     },
     visuelPrincipal: [
       {
@@ -180,7 +180,7 @@ const opensigne: Projet = {
     bilan: [
       'Allier exigence technique et contraintes éthiques : RGAA et éco-conception.',
       'Penser l’expérience utilisateur et l’acquisition dès la phase de code.',
-      'Concevoir un produit digital viable, du concept au lancement.',
+      'Concevoir un produit numérique viable, du concept au lancement.',
     ],
     suivant: 'affiches-touristiques',
   },
@@ -192,10 +192,10 @@ const affichesTouristiques: Projet = {
   titre: 'Affiches touristiques',
   categories: ['crea', 'com'],
   sousDomaines: ['Direction artistique'],
-  resume: 'Trois affiches vectorielles qui donnent envie de visiter Montbéliard.',
+  resume: 'Trois affiches vectorielles qui donnent envie de visiter le Pays de Montbéliard.',
   vignette: {
     src: vignetteAffiches,
-    alt: 'Affiche vectorielle du château des ducs de Wurtemberg à Montbéliard',
+    alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg à Montbéliard, en aplats de couleurs',
   },
   etude: {
     accroche: 'Trois affiches vectorielles fictives pour donner envie de visiter le patrimoine du Pays de Montbéliard.',
@@ -206,9 +206,9 @@ const affichesTouristiques: Projet = {
       livrables: '3 affiches vectorielles, fichiers sources, note d’intention',
     },
     visuelPrincipal: [
-      { src: afficheChateau, alt: 'Affiche du château des ducs de Wurtemberg, en flat design' },
-      { src: afficheTheatre, alt: 'Affiche du théâtre gallo-romain de Mandeure vu du ciel' },
-      { src: afficheTemple, alt: 'Affiche du temple Saint-Martin et de son clocher' },
+      { src: afficheChateau, alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg, en flat design' },
+      { src: afficheTheatre, alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel' },
+      { src: afficheTemple, alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher' },
     ],
     contexte: {
       titre: 'Une commande claire, des contraintes print précises.',
@@ -235,7 +235,7 @@ const affichesTouristiques: Projet = {
         'Un flat design sans contours : volumes géométriques et aplats de couleurs. Une signature commune, « L’art de bâtir le temps », relie le théâtre gallo-romain de Mandeure, le temple Saint-Martin et le château des ducs de Wurtemberg.',
       visuel: {
         src: afficheTheatreDetail,
-        alt: 'Détail de l’affiche du théâtre gallo-romain de Mandeure',
+        alt: 'Détail de l’affiche du théâtre gallo-romain de Mandeure : gradins en demi-cercle vus du ciel, en aplats de verts et de beiges',
       },
     },
     bilan: [
@@ -267,9 +267,9 @@ const climatOutreMer: Projet = {
     lien: { href: 'https://climat-outre-mer.netlify.app/', libelle: 'Accéder au site' },
     fiche: {
       role: 'Data designer : notebook Observable et intégration des graphiques dans le site (en binôme avec Enzo Loddo)',
-      contexte: 'SAE303 · BUT MMI · Open Data University, défi Météo-France',
+      contexte: 'SAE 303 · BUT MMI · Open Data University, défi Météo-France',
       outils: 'Observable (Plot, JavaScript), Astro, Tailwind CSS, Leaflet, GitHub, data.gouv.fr',
-      livrables: 'Notebook documenté, 5 visualisations interactives, site en 4 temps, page Méthode',
+      livrables: 'Notebook documenté, 5 visualisations interactives, site en 5 temps, page Méthode',
     },
     visuelPrincipal: [
       {
@@ -298,7 +298,7 @@ const climatOutreMer: Projet = {
         { src: climatEvolution, alt: 'Trois courbes de température de 1970 à 2024 : la Martinique monte le plus vite.' },
         {
           src: climatMethode,
-          alt: 'Schéma de la méthode : 126 282 lignes brutes, 79 706 lignes gardées, 22 stations, 5 graphiques, puis un récit en quatre temps.',
+          alt: 'Schéma de la méthode : 126 282 lignes brutes, 79 706 lignes gardées, 22 stations, 5 graphiques, puis un récit en cinq temps.',
         },
       ],
     },
@@ -332,7 +332,7 @@ const tiktak: Projet = {
   resume: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
   vignette: {
     src: vignetteTiktak,
-    alt: 'Aperçu du site TiK•TaK',
+    alt: 'Visuel de TiK•TaK : trois montres à bracelet en cuir et l’accroche « Configurateur de montres personnalisées »',
   },
   etude: {
     accroche: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
@@ -418,7 +418,7 @@ const laCimade: Projet = {
       role: 'Designer graphique (projet individuel)',
       contexte: 'Projet étudiant fictif · BUT MMI 1re année',
       outils: 'Figma, Canva (mise en page)',
-      livrables: 'logo et 3 variantes, charte graphique de 28 pages, affiche A3, flyer, header web',
+      livrables: 'Logo et 3 variantes, charte graphique de 28 pages, affiche A3, flyer, header web',
     },
     visuelPrincipal: [
       {

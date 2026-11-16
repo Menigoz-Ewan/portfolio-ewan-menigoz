@@ -1,6 +1,11 @@
 ---
 // Bouton du design system : 4 types (Primary, Secondary, Light, Contour clair).
-// La taille ne change jamais entre les états : au survol, seule la flèche glisse de 4 px.
+// Interaction « pastille qui s'étend » (variante A du canvas Claude Design, inspirée du « Continue button » de Jitter) :
+// - au repos : l'icône est dans une pastille ronde, à droite du texte ;
+// - au survol / focus clavier : la pastille grandit jusqu'à remplir tout le bouton (le bouton change de couleur),
+//   le texte glisse un peu et l'icône bouge ;
+// - au clic : le bouton s'enfonce (97 %) puis rebondit en revenant à sa taille.
+// Avec « réduire les animations », les couleurs changent sans mouvement.
 import Icon, { type NomIcone } from './Icon.astro';
 
 interface Props {
@@ -25,25 +30,6 @@ const {
   ...attrs
 } = Astro.props;
 
-const styles = {
-  primary:
-    'bg-rouge text-white shadow-[0_4px_12px_rgb(206_26_27/0.25)] hover:bg-rouge-fonce hover:shadow-[0_6px_18px_rgb(206_26_27/0.35)] active:bg-rouge-presse active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.25)] focus-visible:outline-principal',
-  secondary:
-    'bg-surface text-principal border border-trait-fort hover:bg-surface-forte hover:border-principal/35 active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.15)] active:border-principal/50 focus-visible:outline-vert-texte',
-  light:
-    'bg-white text-encre hover:bg-sable hover:shadow-[0_6px_16px_rgb(0_0_0/0.12)] active:bg-sable-fonce active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.15)] focus-visible:outline-white',
-  contour:
-    'text-white border border-white/60 hover:bg-white/12 hover:border-white active:bg-white/20 focus-visible:outline-white',
-};
-
-const classes = [
-  'group inline-flex items-center gap-2 rounded-lg px-5 py-3 text-button whitespace-nowrap',
-  'transition-[background-color,border-color,box-shadow] duration-(--duree-bouton) ease-(--ease-sortie)',
-  'focus-visible:outline-[2.5px] focus-visible:outline-offset-2 focus-visible:rounded-lg',
-  styles[variante],
-  classe,
-].join(' ');
-
 const Balise = href ? 'a' : 'button';
 const lien = href
   ? {
@@ -54,13 +40,215 @@ const lien = href
   : { type };
 ---
 
-<Balise class={classes} {...lien} {...attrs}>
-  <slot />
+<Balise
+  class:list={['bouton text-button', `bouton-${variante}`, icone ? 'avec-icone' : 'sans-icone', classe]}
+  data-icone={icone ?? undefined}
+  {...lien}
+  {...attrs}
+>
+  <span class="bouton-texte"><slot /></span>
   {
     icone && (
-      <span class="inline-flex transition-transform duration-(--duree-bouton) ease-(--ease-sortie) group-hover:translate-x-1 motion-reduce:transform-none">
-        <Icon nom={icone} taille={16} />
+      <span class="bouton-pastille" aria-hidden="true">
+        <span class="bouton-icone">
+          <Icon nom={icone} taille={16} />
+        </span>
       </span>
     )
   }
 </Balise>
+
+<style>
+  /* ── Forme commune ──────────────────────────────────────────────────── */
+  .bouton {
+    /* Couleurs propres à chaque variante (définies plus bas) */
+    --fond: transparent;
+    --texte: inherit;
+    --pastille: transparent;
+    --remplissage: var(--pastille); /* couleur qui remplit le bouton au survol (la pastille par défaut) */
+    --icone: inherit;
+    --texte-survol: inherit;
+
+    position: relative;
+    isolation: isolate; /* le remplissage (::before) reste derrière le texte */
+    overflow: hidden; /* le remplissage ne déborde pas de la forme arrondie */
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px; /* cible tactile confortable */
+    border-radius: 999px;
+    white-space: nowrap;
+    background: var(--fond);
+    color: var(--texte);
+    transition:
+      transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow var(--duree-bouton) var(--ease-sortie);
+  }
+  /* Très petits écrans : un libellé long passe à la ligne au lieu de déborder */
+  @media (max-width: 400px) {
+    .bouton {
+      white-space: normal;
+    }
+  }
+  .avec-icone {
+    padding: 6px 6px 6px 20px;
+  }
+  .sans-icone {
+    padding: 12px 20px;
+  }
+  .bouton:focus-visible {
+    outline: 2.5px solid var(--contour-focus, currentColor);
+    outline-offset: 3px;
+  }
+
+  /* Le remplissage : un disque caché derrière la pastille, qui grossit au survol */
+  .bouton::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    margin-top: -16px;
+    border-radius: 999px;
+    background: var(--remplissage);
+    transform: scale(0);
+    transition: transform 500ms var(--ease-sortie);
+  }
+  .sans-icone::before {
+    right: 50%;
+    margin-right: -16px;
+  }
+
+  .bouton-texte {
+    transition:
+      color 300ms ease,
+      transform 450ms var(--ease-sortie);
+  }
+  .bouton-pastille {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--pastille);
+    color: var(--icone);
+    transition: background-color 300ms ease;
+  }
+  /* Au survol, la pastille prend la couleur du remplissage : elle se fond dans le bouton */
+  .bouton:hover .bouton-pastille,
+  .bouton:focus-visible .bouton-pastille {
+    background: var(--remplissage);
+  }
+  .bouton-icone {
+    display: inline-flex;
+    transition: transform 450ms var(--ease-sortie);
+  }
+
+  /* ── Survol et focus clavier : la pastille remplit le bouton ────────── */
+  .bouton:hover::before,
+  .bouton:focus-visible::before {
+    transform: scale(20);
+  }
+  .bouton:hover .bouton-texte,
+  .bouton:focus-visible .bouton-texte {
+    color: var(--texte-survol);
+  }
+  .avec-icone:hover .bouton-texte,
+  .avec-icone:focus-visible .bouton-texte {
+    transform: translateX(4px);
+  }
+  /* L'icône bouge selon son sens : la flèche pointe en diagonale, le téléchargement descend */
+  .bouton[data-icone='arrow-right']:hover .bouton-icone,
+  .bouton[data-icone='arrow-right']:focus-visible .bouton-icone {
+    transform: rotate(-45deg);
+  }
+  .bouton[data-icone='arrow-up-right']:hover .bouton-icone,
+  .bouton[data-icone='arrow-up-right']:focus-visible .bouton-icone {
+    transform: translate(2px, -2px);
+  }
+  .bouton[data-icone='download']:hover .bouton-icone,
+  .bouton[data-icone='download']:focus-visible .bouton-icone {
+    transform: translateY(2px);
+  }
+
+  /* ── Clic : enfoncé pendant l'appui, puis rebond au relâchement ─────── */
+  /* (la courbe cubic-bezier(0.34, 1.56, 0.64, 1) dépasse 1 : le bouton grossit un instant avant de se poser) */
+  .bouton:active {
+    transform: scale(0.97);
+    transition-duration: var(--duree-appui);
+  }
+
+  /* Bouton désactivé (formulaire pendant l'envoi) : pas d'effet */
+  .bouton:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+  .bouton:disabled::before {
+    transform: scale(0);
+  }
+
+  /* ── Couleurs des 4 variantes ───────────────────────────────────────── */
+  /* Primary : action principale, rouge ; la pastille rouge foncé remplit le bouton */
+  .bouton-primary {
+    --fond: var(--color-rouge);
+    --texte: #fff;
+    --pastille: var(--color-rouge-presse);
+    --icone: #fff;
+    --texte-survol: #fff;
+    --contour-focus: var(--color-principal);
+    box-shadow: 0 4px 12px rgb(206 26 27 / 0.25);
+  }
+  .bouton-primary:hover {
+    box-shadow: 0 6px 18px rgb(206 26 27 / 0.35);
+  }
+  /* Secondary : fond clair et bordure ; la pastille vert sapin remplit le bouton, le texte passe en blanc */
+  .bouton-secondary {
+    --fond: var(--color-surface);
+    --texte: var(--color-principal);
+    --pastille: var(--color-vert);
+    --icone: #fff;
+    --texte-survol: #fff;
+    --contour-focus: var(--color-vert-texte);
+    box-shadow: inset 0 0 0 1px var(--color-trait-fort);
+  }
+  /* Light : bouton blanc sur le panneau vert ; pastille verte, mais remplissage rouge au survol,
+     comme le bouton « Me contacter » (un remplissage vert se confondrait avec le panneau) */
+  .bouton-light {
+    --fond: #fff;
+    --texte: var(--color-encre);
+    --pastille: var(--color-vert);
+    --remplissage: var(--color-rouge);
+    --icone: #fff;
+    --texte-survol: #fff;
+    --contour-focus: #fff;
+  }
+  /* Contour clair : sur le panneau vert ; la pastille crème remplit le bouton, le texte passe en vert */
+  .bouton-contour {
+    --texte: #fff;
+    --pastille: var(--color-creme);
+    --icone: var(--color-vert);
+    --texte-survol: var(--color-vert);
+    --contour-focus: #fff;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+  }
+
+  /* ── Réduire les animations : changement d'état sans mouvement ──────── */
+  @media (prefers-reduced-motion: reduce) {
+    .bouton,
+    .bouton::before,
+    .bouton-texte,
+    .bouton-icone {
+      transition: none;
+    }
+    .bouton:active,
+    .avec-icone:hover .bouton-texte,
+    .avec-icone:focus-visible .bouton-texte,
+    .bouton:hover .bouton-icone,
+    .bouton:focus-visible .bouton-icone {
+      transform: none;
+    }
+  }
+</style>

@@ -28,7 +28,8 @@ const Balise = href ? 'a' : 'article';
     classe,
   ]}
 >
-  <div class="relative h-[228px] overflow-hidden rounded-[10px] bg-surface">
+  <!-- Proportions des vignettes (728 × 456) : l’image n’est jamais rognée, même sur mobile -->
+  <div class="relative aspect-[728/456] overflow-hidden rounded-[10px] bg-surface">
     <Image src={vignette.src} alt={href ? '' : vignette.alt} width={728} height={456} class="size-full object-cover" />
     {
       href && (

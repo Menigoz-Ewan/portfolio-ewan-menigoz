@@ -1,12 +1,15 @@
 ---
 // Contenu du panneau vert de l'accueil (le panneau et l'onglet viennent de HeaderPanneau).
 // Hauteur du bloc complet : 676 px en desktop, pour voir le haut de la section Compétences dès le premier écran.
-import { Image } from 'astro:assets';
 import filaireHero from '../assets/svg/ewme-filaire-hero.svg?raw';
-import portrait from '../assets/images/portrait-ewan.png';
 import Button from './Button.astro';
-import PileDePolaroids from './PileDePolaroids.astro';
+import ImageIris from './ImageIris.astro';
 import { site } from '../data/site';
+
+// Titre animé : la 1re moitié apparaît mot par mot, la 2e « se tape » lettre par lettre (variante B).
+// Chaque morceau reçoit son rang (--i) ; le CSS en déduit le délai de son animation.
+const titreDebut = 'Je conçois des interfaces claires,'.split(' ');
+const titreFin = [...'puis je les code.'];
 
 const svgFilaire = filaireHero
   .replace(/\s(width|height)="[^"]*"/g, '')
@@ -23,8 +26,16 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
   <div class="relative flex flex-col gap-10 px-6 py-10 lg:flex-row lg:items-start lg:justify-between lg:px-20 lg:pb-6 lg:pt-8">
     <!-- lg:pb-14 : réserve la place de l'onglet crème (40 px) + 40 px d'air sous les boutons, même quand ils passent sur deux lignes -->
     <div class="flex max-w-[640px] flex-col items-start gap-4 lg:pb-14">
+      <!--
+        Le texte complet est lu par les lecteurs d'écran (sr-only) ; la version découpée en mots et en lettres,
+        qui sert seulement à l'animation, leur est cachée (aria-hidden) pour éviter une lecture lettre par lettre.
+      -->
       <h1 class="text-hero text-creme">
-        Je conçois des interfaces claires, <span class="text-creme/60">puis je les code.</span>
+        <span class="sr-only">Je conçois des interfaces claires, puis je les code.</span>
+        <span aria-hidden="true" class="titre-anime">
+          {titreDebut.map((mot, i) => <><span class="titre-mot" style={`--i: ${i}`}>{mot}</span>{' '}</>)}
+          <span class="text-creme/60">{titreFin.map((lettre, i) => <span class="titre-lettre" style={`--i: ${i}`}>{lettre}</span>)}</span>
+        </span>
       </h1>
 
       <p class="text-lead text-creme">
@@ -51,8 +62,9 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
                 stroke-linecap="round"
                 stroke-linejoin="round"></path>
             </svg>
+            <!-- Texte écrit lettre par lettre, avec un petit rebond (variante C) -->
             <p class="note-texte absolute left-[170px] top-[72px] -rotate-4 whitespace-nowrap font-note text-[30px] font-bold leading-[38px] text-creme">
-              écrivez-moi !
+              {[...'écrivez-moi !'].map((lettre, i) => <span class="note-lettre" style={`--i: ${i}`}>{lettre}</span>)}
             </p>
           </div>
         </div>
@@ -63,24 +75,19 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
       <p class="pt-2 font-mono text-xs font-medium uppercase tracking-[0.08em] text-creme/80 lg:hidden">{statutStage}</p>
     </div>
 
-    <!-- Composition : pile de photos + étiquettes (écrans larges) -->
+    <!-- Composition : image qui change au clic (iris) + étiquettes (écrans larges) -->
     <div class="relative hidden h-[520px] w-[500px] shrink-0 lg:-mr-6 lg:-mt-4 lg:block">
-      <div aria-hidden="true" class="absolute left-[150px] top-[60px] h-[380px] w-[300px] rotate-7 rounded-2xl bg-creme/10"></div>
       <div class="absolute left-10 top-2.5">
-        <PileDePolaroids />
+        <ImageIris />
       </div>
       <p aria-hidden="true" class="absolute left-[345px] top-[50px] z-50 rotate-6 whitespace-nowrap rounded-full bg-white px-3.5 py-2 text-ui text-encre">BUT MMI · 2e année</p>
       <p aria-hidden="true" class="absolute left-2 top-[150px] z-50 -rotate-5 whitespace-nowrap rounded-full bg-sable px-3.5 py-2 text-ui text-encre">Figma → Astro</p>
     </div>
 
-    <!-- Écrans étroits : un seul polaroid -->
-    <figure class="mx-auto w-[240px] rotate-3 rounded-[14px] border border-sable-fonce bg-white p-2.5 pb-3 shadow-[0_18px_36px_rgb(0_0_0/0.22)] lg:hidden">
-      <Image src={portrait} alt="Portrait d’Ewan Menigoz en noir et blanc" width={440} height={460} class="h-[230px] w-full rounded-lg object-cover" />
-      <figcaption class="mt-2.5 flex items-center justify-between">
-        <span class="text-ui text-encre">Ewan, Montbéliard</span>
-        <span class="text-label text-texte-secondaire">Moi</span>
-      </figcaption>
-    </figure>
+    <!-- Écrans étroits : la même image, en plus petit (sans les étiquettes) -->
+    <div class="lg:hidden">
+      <ImageIris compact />
+    </div>
   </div>
 
   <!--
@@ -110,40 +117,120 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
       var(--oreille-d) right bottom / 24px 40px no-repeat;
   }
   /*
-   * Note au crayon : la flèche « se dessine » (le trait apparaît le long du chemin),
-   * puis le texte apparaît en fondu. pathLength="1" ramène la longueur du chemin à 1,
-   * ce qui permet d'animer stroke-dashoffset de 1 (trait caché) à 0 (trait complet).
+   * Titre (variante B) — chronologie :
+   * 0 s → 0,75 s : « Je conçois des interfaces claires, » monte mot par mot (60 ms d'écart) ;
+   * 0,7 s → 1,65 s : « puis je les code. » se tape lettre par lettre (55 ms d'écart) ;
+   * le curseur suit la frappe : il est dessiné juste après la dernière lettre apparue,
+   * puis, une fois le texte tapé, il clignote en continu après le point (choix d'Ewan).
+   */
+  .titre-mot {
+    display: inline-block;
+    animation: titre-monte 500ms var(--ease-sortie) calc(var(--i) * 60ms) both;
+  }
+  .titre-lettre {
+    position: relative; /* repère du curseur, placé juste après la lettre */
+    animation: titre-tape 1ms linear calc(700ms + var(--i) * 55ms) both;
+  }
+  /*
+   * Le curseur : chaque lettre en porte un (::after), visible seulement pendant 55 ms,
+   * le temps que la lettre suivante apparaisse. Il semble donc avancer avec le texte.
+   */
+  .titre-lettre::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 0.12em;
+    width: 0.06em;
+    height: 0.85em;
+    margin-left: 0.06em;
+    background: var(--color-creme);
+    opacity: 0;
+    animation: titre-curseur-passe 55ms linear calc(700ms + var(--i) * 55ms) forwards;
+  }
+  /* Dernière lettre (le point) : le curseur y reste et clignote en continu */
+  .titre-lettre:last-child::after {
+    animation: titre-clignote 1000ms steps(1, end) calc(700ms + var(--i) * 55ms) infinite;
+  }
+  @keyframes titre-monte {
+    from {
+      opacity: 0;
+      transform: translateY(0.35em);
+    }
+  }
+  @keyframes titre-tape {
+    from {
+      opacity: 0;
+    }
+  }
+  /* Visible pendant toute la durée, puis caché d'un coup à la fin (pas de fondu) */
+  @keyframes titre-curseur-passe {
+    0%,
+    99% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes titre-clignote {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /*
+   * Note au crayon (variante C) — chronologie :
+   * 1,9 s → 2,4 s : la flèche « se dessine » (pathLength="1" : on anime stroke-dashoffset de 1, caché, à 0, complet) ;
+   * 2,3 s → 3,9 s : les lettres apparaissent une à une (120 ms d'écart) avec un petit rebond.
    */
   .note-fleche path {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: dessiner 500ms ease-out 400ms forwards;
-  }
-  .note-texte {
-    opacity: 0;
-    animation: apparaitre 300ms ease-out 900ms forwards;
-  }
-  /* Pendant l'écran de chargement, la note attend : elle se dessine une fois la page révélée */
-  :global(html[data-chargement]) .note-fleche path,
-  :global(html[data-chargement]) .note-texte {
-    animation-play-state: paused;
+    animation: dessiner 500ms ease-out 1900ms forwards;
   }
   @keyframes dessiner {
     to {
       stroke-dashoffset: 0;
     }
   }
-  @keyframes apparaitre {
-    to {
-      opacity: 1;
+  .note-lettre {
+    display: inline-block;
+    white-space: pre; /* garde l'espace avant le « ! » */
+    animation: note-ecrit 450ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(2300ms + var(--i) * 120ms) both;
+  }
+  @keyframes note-ecrit {
+    from {
+      opacity: 0;
+      transform: translateY(6px) rotate(-10deg) scale(0.5);
     }
   }
+
+  /* Pendant l'écran de chargement, tout attend : les animations démarrent une fois la page révélée */
+  :global(html[data-chargement]) .titre-mot,
+  :global(html[data-chargement]) .titre-lettre,
+  :global(html[data-chargement]) .titre-lettre::after,
+  :global(html[data-chargement]) .note-fleche path,
+  :global(html[data-chargement]) .note-lettre {
+    animation-play-state: paused;
+  }
+
+  /* Réduire les animations : titre et note affichés d'emblée, curseur fixe après le point */
   @media (prefers-reduced-motion: reduce) {
+    .titre-mot,
+    .titre-lettre,
+    .titre-lettre::after,
     .note-fleche path,
-    .note-texte {
+    .note-lettre {
       animation: none;
-      stroke-dashoffset: 0;
+    }
+    .titre-lettre:last-child::after {
       opacity: 1;
+    }
+    .note-fleche path {
+      stroke-dashoffset: 0;
     }
   }
 

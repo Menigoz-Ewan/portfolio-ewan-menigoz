@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 
 const liens = [
-  { libelle: 'Email', valeur: site.email, href: `mailto:${site.email}`, icone: 'arrow-up-right' as const },
+  { libelle: 'E-mail', valeur: site.email, href: `mailto:${site.email}`, icone: 'arrow-up-right' as const },
   { libelle: 'LinkedIn', valeur: 'Voir le profil', href: 'https://www.linkedin.com/in/ewan-menigoz-3b10a7385/', icone: 'arrow-up-right' as const, externe: true },
   { libelle: 'CV', valeur: 'Télécharger (PDF)', href: site.cv, icone: 'download' as const, telecharger: true },
   { libelle: 'Lieu', valeur: 'Montbéliard, Doubs' },
@@ -25,13 +25,13 @@ const champ =
 
 <Layout
   titre="Contact"
-  description="Contacter Ewan Menigoz pour un stage en design UI/UX ou en front-end : formulaire, email ou LinkedIn."
+  description="Contacter Ewan Menigoz pour un stage en design UI/UX ou en front-end : formulaire, e-mail ou LinkedIn."
   active="contact"
 >
   <IntroPage
     slot="panneau"
     titre="Un projet, un stage ? Parlons-en."
-    chapo="Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par email ou sur LinkedIn."
+    chapo="Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par e-mail ou sur LinkedIn."
   />
 
   <div class="conteneur flex flex-col gap-12 pb-24 pt-12 lg:flex-row lg:items-start lg:justify-between">
@@ -98,9 +98,9 @@ const champ =
             <p id="erreur-nom" class="hidden text-small text-rouge" data-erreur>Indiquez votre nom.</p>
           </div>
           <div class="flex flex-col gap-1.5">
-            <label for="email" class="text-ui">Email</label>
+            <label for="email" class="text-ui">E-mail</label>
             <input id="email" name="email" type="email" autocomplete="email" required placeholder="vous@entreprise.fr" class={champ} aria-describedby="erreur-email" />
-            <p id="erreur-email" class="hidden text-small text-rouge" data-erreur>Indiquez une adresse email valide.</p>
+            <p id="erreur-email" class="hidden text-small text-rouge" data-erreur>Indiquez une adresse e-mail valide.</p>
           </div>
         </div>
         <div class="flex flex-col gap-1.5">
@@ -126,7 +126,7 @@ const champ =
               aria-describedby="erreur-consentement"
             />
             <label for="consentement" class="text-small text-secondaire">
-              J’accepte que mes données (nom, adresse e-mail, objet et message) servent uniquement à me répondre. Détails dans les
+              J’accepte que mes données (nom, adresse e-mail, objet et message) servent uniquement à me répondre. Détails dans les{' '}
               <a href="/mentions-legales#donnees" class="underline hover:text-principal">mentions légales</a>.
             </label>
           </div>
@@ -144,7 +144,7 @@ const champ =
 
         <div class="flex flex-wrap items-center justify-between gap-4">
           <p class="text-small text-secondaire">Tous les champs sont requis.</p>
-          <Button type="submit" class="disabled:cursor-wait disabled:opacity-60">Envoyer</Button>
+          <Button type="submit">Envoyer</Button>
         </div>
         <p role="status" aria-live="polite" class="hidden rounded-lg px-4 py-3 text-small" data-statut></p>
       </form>
@@ -200,7 +200,7 @@ const champ =
 
     const url = formulaire.dataset.pocketbase;
     if (!url) {
-      afficherStatut('Le formulaire n’est pas encore relié. Écrivez-moi directement par email, merci !', false);
+      afficherStatut('Le formulaire n’est pas encore relié. Écrivez-moi directement par e-mail, merci !', false);
       return;
     }
 
@@ -225,7 +225,7 @@ const champ =
       if (!reponse.ok) throw new Error(String(reponse.status));
       reussite();
     } catch {
-      afficherStatut('L’envoi n’a pas fonctionné. Réessayez dans un instant ou écrivez-moi par email.', false);
+      afficherStatut('L’envoi n’a pas fonctionné. Réessayez dans un instant ou écrivez-moi par e-mail.', false);
     } finally {
       bouton.disabled = false;
       bouton.removeAttribute('aria-busy');

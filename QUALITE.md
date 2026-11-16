@@ -1,6 +1,6 @@
 # Checklist qualité web
 
-> Les critères ci-dessous partent des éléments réels de mon site (header en onglet, pile de photos animée, cartes « Hors écran », filtres de projets, formulaire PocketBase, hébergement sur VPS), et non d'une grille générique.
+> Les critères ci-dessous partent des éléments réels de mon site (header en onglet, image du hero qui change au clic, cartes « Hors écran », filtres de projets, formulaire PocketBase, hébergement sur VPS), et non d'une grille générique.
 > Pour chaque critère : pourquoi il compte dans mon cas, comment je le vérifie, le résultat et ce que j'ai corrigé.
 > Statut : ⬜ à vérifier · 🟨 en cours · ✅ vérifié · ❌ problème trouvé
 
@@ -11,108 +11,65 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 ## 1. Accessibilité
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |
-
 |---|---|---|---|---|---|
-
-| A1 | Tout le site se parcourt au clavier, dans un ordre logique | Header en onglet, filtres, cartes « Hors écran », pile de photos et formulaire sont des éléments interactifs | Parcours complet avec Tab, Maj+Tab, Entrée, Espace et Échap, sur chaque page | ⬜ | |
-
-| A2 | Un lien « Aller au contenu » en premier | Le header est répété sur toutes les pages | Premier Tab sur chaque page | ⬜ | |
-
-| A3 | Le focus est toujours visible | L'état Focus des boutons est prévu dans la maquette ; il faut le garder sur les liens, les filtres et les cartes | Parcours clavier + vérification visuelle sur fond crème, blanc et vert | ⬜ | |
-
+| A1 | Tout le site se parcourt au clavier, dans un ordre logique | Header en onglet, filtres, cartes « Hors écran », pile de photos et formulaire sont des éléments interactifs | Parcours complet avec Tab, Maj+Tab, Entrée, Espace et Échap, sur chaque page | ✅ | Testé le 16/11 au clavier seul (Tab, Entrée, Échap) : accueil à 1440 px (lien d’évitement, logo, menu, bouton thème, « Me contacter », boutons du hero, image du hero, cartes, pied de page) dans un ordre logique ; menu mobile à 375 px : ouverture avec Entrée, parcours des liens, fermeture avec Échap et retour du focus sur « Menu » |
+| A2 | Un lien « Aller au contenu » en premier | Le header est répété sur toutes les pages | Premier Tab sur chaque page | ✅ | 16/11 : « Aller au contenu » est le premier élément atteint avec Tab (accueil 1440 px et 375 px, page Contact) |
+| A3 | Le focus est toujours visible | L'état Focus des boutons est prévu dans la maquette ; il faut le garder sur les liens, les filtres et les cartes | Parcours clavier + vérification visuelle sur fond crème, blanc et vert | ✅ | 16/11 : contour de focus plein de 2,4 px sur tous les éléments parcourus (vert sur le crème, crème ou blanc sur le vert, encre sur « Me contacter ») ; les boutons se remplissent aussi au focus |
 | A4 | Les cartes « Hors écran » réagissent au focus, pas seulement au survol | La consigne affichée est « Survolez ou touchez une carte » : le clavier est oublié | Tab sur chaque carte ; adapter le texte de la consigne | ⬜ | |
-
-| A5 | La pile de photos animée peut être mise en pause | Une animation automatique de plus de 5 secondes doit pouvoir être arrêtée (WCAG 2.2.2) | Vérifier la présence d'un bouton pause accessible au clavier | ⬜ | 
+| A5 | La pile de photos animée peut être mise en pause | Une animation automatique de plus de 5 secondes doit pouvoir être arrêtée (WCAG 2.2.2) | Vérifier la présence d'un bouton pause accessible au clavier | ✅ | 16/11 : la pile animée a été supprimée ; l’image du hero ne change plus qu’au clic, il n’y a donc plus d’animation automatique à mettre en pause |
 |
 | A6 | `prefers-reduced-motion` est respecté | La pile de photos, les translations au scroll, les cartes animées et la note manuscrite de l'accueil (flèche qui se dessine, texte en fondu) | Activer « réduire les animations » dans Windows, recharger le site | ⬜ | |
-
-| A7 | Chaque image porteuse de sens a un `alt` descriptif ; les images décoratives ont `alt=""` | Photos en polaroid, visuels OpenSigne, affiches touristiques, galerie, logo | WAVE + relecture manuelle de chaque `alt` | ⬜ | |
-
-| A8 | Le logo SVG a un nom accessible | Il sert de lien vers l'accueil | NVDA : le lien doit être annoncé « EWME, accueil » | ⬜ | |
-
-| A9 | Contrastes de texte ≥ 4,5 : 1 | Gris #6B655D sur crème et sable, rouge sur crème, blanc sur rouge, vert #1E4D3B sur crème (onglet « stage recherché » de l'accueil) | Calcul fait dans la charte (5,4 / 4,9 / 5,2 / 5,5 ; vert sur crème 9 : 1) ; à recontrôler sur le site avec axe | 🟨 | |
-
+| A7 | Chaque image porteuse de sens a un `alt` descriptif ; les images décoratives ont `alt=""` | Photos en polaroid, visuels OpenSigne, affiches touristiques, galerie, logo | WAVE + relecture manuelle de chaque `alt` | ✅ | 16/11 : inventaire de toutes les images ; 24 textes alternatifs réécrits d’après le contenu réel des images (planche contact), titres des affiches cités ; images décoratives en `alt=""` (vignettes dans les liens, calque de l’iris). Lighthouse « image-alt » : réussi sur les 13 pages |
+| A8 | Le logo SVG a un nom accessible | Il sert de lien vers l'accueil | NVDA : le lien doit être annoncé « EWME, accueil » | 🟨 | 16/11 : nom accessible « EWME, accueil » présent dans le code (aria-label) ; pas encore écouté avec NVDA |
+| A9 | Contrastes de texte ≥ 4,5 : 1 | Gris #6B655D sur crème et sable, rouge sur crème, blanc sur rouge, vert #1E4D3B sur crème (onglet « stage recherché » de l'accueil) | Calcul fait dans la charte (5,4 / 4,9 / 5,2 / 5,5 ; vert sur crème 9 : 1) ; à recontrôler sur le site avec axe | ✅ | Mesuré le 16/11 par script sur les 13 pages, transitions coupées : texte le moins contrasté à 5,39:1 (clair) et 5,54:1 (sombre) sur les pages générales, 5,33:1 sur les études de cas. Seule alerte : le lien actif du menu (crème sur l’onglet vert, que le script ne voit pas) : faux positif |
 | A10 | Contraste des bordures de champs ≥ 3 : 1 | La couleur « bordure » #D9D2C6 n'atteint que 1,4 : 1 sur le crème : elle ne doit pas servir à délimiter les champs | Contrôle des champs du formulaire ; si besoin, bordure en gris #6B655D (5,4 : 1) | ⬜ | |
-
 | A11 | Le formulaire de contact a des étiquettes visibles, des erreurs explicites et liées au champ | Formulaire PocketBase | NVDA + envoi d'un formulaire vide puis invalide | ⬜ | |
-
 | A12 | Structure sémantique : un seul `h1` par page, titres dans l'ordre, repères `header`, `nav`, `main`, `footer`, `lang="fr"` | Les pages projet ont beaucoup de sections | Extension HeadingsMap + validateur W3C | ⬜ | |
-
-| A13 | Zoom à 200 % et affichage à 320 px de large sans perte de contenu | Maquette conçue en 1440 px | Zoom navigateur + mode responsive des DevTools | ⬜ | |
-
-| A14 | Score Lighthouse Accessibilité | Indicateur global, complété par les tests manuels ci-dessus | Lighthouse mobile et ordinateur, sur chaque type de page | ⬜ | |
-
+| A13 | Zoom à 200 % et affichage à 320 px de large sans perte de contenu | Maquette conçue en 1440 px | Zoom navigateur + mode responsive des DevTools | 🟨 | Mesuré le 16/11 : aucun débordement ni défilement horizontal sur les 13 pages à 320, 360, 375, 414, 768, 1024, 1280 et 1440 px (script), contrôle visuel à 375, 768 et 1024 px. Corrigé : grille « En bref » (une colonne sous 375 px), bande « Hors écran » (défile sous 1280 px), bouton long à 320 px, vignettes rognées sur mobile. Zoom à 200 % pas encore testé |
+| A14 | Score Lighthouse Accessibilité | Indicateur global, complété par les tests manuels ci-dessus | Lighthouse mobile et ordinateur, sur chaque type de page | ✅ | Lighthouse 13.6 du 16/11, 13 pages : 100 partout en mobile et en ordinateur. Premier passage à 96 sur La Cimade et OpenSigne (ordinateur) : contraste mesuré pendant le fondu d’apparition ; remesuré : 100 |
 | A15 | Contrastes des deux thèmes (clair par défaut, sombre en option) | Le thème clair reste l’identité du site ; le sombre est un choix du visiteur, mémorisé entre les pages | Mesuré le 13/11 dans le navigateur, couleurs calculées du site. Clair : texte 16,9:1 sur le fond, 18,1:1 sur les cartes ; gris secondaire 5,4 (fond), 5,8 (carte), 4,9 (sable) ; vert 9,0 (fond), 9,6 (carte), 7,9 (étiquette). Sombre : texte 15,8 (fond), 14,3 (carte) ; gris secondaire 7,1 / 6,5 / 6,1 ; vert éclairci #8FC2A8 9,2 / 8,3 / 7,9 ; crème sur panneau vert 9,0 dans les deux thèmes. Contour du bouton thème : 1,4 (clair) et 2,1 (sombre), sous 3:1 mais l’icône (16,9 et 15,8) suffit à repérer le bouton. Bouton atteint au clavier (Tab), focus visible, bascule à l’Espace ; pas de rotation de l’icône avec « réduire les animations » | ✅ | |
-
 | A16 | Menu à onglets fantômes : lisible, utilisable au clavier | Contour en pointillé derrière chaque lien inactif, rempli au survol et au focus | Mesuré le 13/11 : texte des liens 16,9:1 (clair) et 15,8:1 (sombre) sur le fond ; 15,4:1 sur le remplissage sable au survol (clair), 12,9:1 sur le remplissage crème 8 % (sombre). Au clavier (Tab), le fantôme se remplit et le contour de focus vert reste visible. Chaque lien occupe toute sa case (152 × 64 px, 128 px entre 1024 et 1280 px). Positions contrôlées contre la maquette Figma à 1440 px, et en 1280 et 1024 px | ✅ | |
-
 | A17 | Formulaire de contact : erreurs annoncées, consentement, anti-spam | Envoi vers PocketBase (collection « messages ») | Testé le 16/11 (envoi simulé, sans écrire dans la base) : formulaire vide → 5 erreurs affichées et liées aux champs, focus sur le premier ; sans consentement → envoi bloqué ; envoi réussi → bouton désactivé pendant l'envoi (`aria-busy`), message de réussite dans la zone `role="status"` / `aria-live="polite"`, formulaire vidé ; erreur serveur → message d'erreur, saisie conservée ; champ piège rempli → aucun envoi. Côté PocketBase : lecture publique de la collection refusée (403), CORS autorisé. Création publique à confirmer par un vrai envoi | 🟨 | |
-
 | A18 | Étiquettes des projets : domaine lisible sans la couleur seule | Pastille par domaine (texte + pictogramme), sous-domaines en mots-clés, mêmes pictogrammes sur les filtres | Mesuré le 16/11 : pastille crème sur vert 9,0:1 (cartes, deux thèmes) ; sous-domaines gris sur la carte 5,8:1 (clair) et 6,5:1 (sombre) ; sous-domaines crème 80 % sur le panneau vert 6,4:1 ; pictogramme des filtres 9,6:1 (clair) et 8,3:1 (sombre). Le nom du domaine est écrit en toutes lettres (pas seulement une icône). Filtre « Communication » → OpenSigne et Affiches touristiques. Vérifié à 1440 px et 375 px. En sombre, la pastille verte se détache peu de la carte (1,7:1) mais son texte reste à 9:1 | ✅ | |
+| A19 | Animations du hero accessibles | Titre tapé avec curseur qui suit la frappe, note écrite lettre par lettre, image qui change au clic (iris), boutons à pastille | Vérifié le 16/11 : titre lu d’un bloc par les lecteurs d’écran (texte sr-only, version animée en aria-hidden) ; curseur contrôlé pas à pas (900 ms : 4 lettres, curseur après la 4e ; 1 300 ms : 11 lettres, après la 11e ; à la fin, un seul curseur après le point) ; image : vrai `<button>` (« Afficher l’image suivante »), utilisable avec Entrée, cercle centré au clavier, image annoncée en `aria-live` (« Image 2 sur 7 : … »), aucun changement automatique ; boutons : remplissage au focus clavier comme au survol (bouton blanc : remplissage rouge, texte blanc), contour de focus visible ; à 1440 px. Écart assumé : le curseur clignote en continu (WCAG 2.2.2 demande de pouvoir l’arrêter au-delà de 5 s). « Réduire les animations » : règles écrites dans le CSS, pas encore testées dans le navigateur | 🟨 | Tester avec « réduire les animations » ; décider si le curseur garde un clignotement continu |
 
 ## 2. Sobriété et performance
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |
-
 |---|---|---|---|---|---|
-
-| P1 | Score Lighthouse Performance ≥ 90 sur mobile | Objectif fixé pour le projet | Lighthouse en navigation privée, mobile, sur l'accueil, une page projet et la galerie | ⬜ | |
-
+| P1 | Score Lighthouse Performance ≥ 90 sur mobile | Objectif fixé pour le projet | Lighthouse en navigation privée, mobile, sur l'accueil, une page projet et la galerie | ✅ | Lighthouse 13.6 du 16/11, mobile : 99 à 100 sur les 13 pages (99 : À propos, Galerie, Projets, OpenSigne) ; ordinateur : 100 partout. LCP mobile de 0,9 à 2,2 s |
 | P2 | JavaScript limité aux îlots utiles | Astro n'envoie pas de JS par défaut ; seuls la pile de photos, les filtres et le formulaire en ont besoin | Onglet Réseau : poids et nombre de fichiers JS par page | ⬜ |
  |
 | P3 | Images en AVIF/WebP, dimensionnées, avec `srcset` et `loading="lazy"` sous la ligne de flottaison | La galerie et les pages projet sont les pages les plus lourdes | Composant `<Image>` d'Astro + Lighthouse (« Properly size images ») | ⬜ | |
-
-| P4 | Pas de décalage de mise en page (CLS < 0,1) | Images et polaroids chargés tardivement | `width` et `height` sur toutes les images ; Lighthouse | ⬜ | |
-
+| P4 | Pas de décalage de mise en page (CLS < 0,1) | Images et polaroids chargés tardivement | `width` et `height` sur toutes les images ; Lighthouse | ✅ | Lighthouse du 16/11 : CLS au plus 0,033 (Affiches touristiques, mobile), 0 à 0,016 ailleurs |
 | P5 | Polices auto-hébergées en WOFF2, sous-ensemble latin, `font-display: swap`, graisses limitées | Quatre familles : League Spartan, DM Sans, Geist Mono, et Caveat Bold seulement (sous-ensemble latin, 50 Ko) pour la note manuscrite de l'accueil, téléchargée uniquement en desktop car la note est masquée sous 1280 px | Onglet Réseau : nombre et poids des fichiers de police | ⬜ | |
-
 | P6 | La grille de fond ne coûte rien | Composant « Fond/Trame » | Vérifier qu'elle est faite en CSS, sans image | ⬜ | |
-
 | P7 | Compression et cache côté serveur | Hébergement sur VPS : c'est à moi de le configurer | En-têtes `content-encoding` (gzip ou brotli) et `cache-control` dans l'onglet Réseau | ⬜ | |
-
 | P8 | Poids et nombre de requêtes par page | Mesure de sobriété | EcoIndex / GreenIT-Analysis sur chaque type de page | ⬜ | |
 
 ## 3. Référencement
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |
-
 |---|---|---|---|---|---|
-
 | R0 | Étape de recherche : requêtes visées | Savoir sur quoi je veux être trouvé : mon nom, « designer UI/UX Montbéliard », « stage UI/UX Doubs »… | Recherche de mots-clés, analyse des portfolios concurrents ; résultat consigné ici | ⬜ | |
-
-| R1 | `title` et `meta description` uniques sur chaque page | Huit pages + une page par projet | Inspection du `<head>` de chaque page | ⬜ | |
-
+| R1 | `title` et `meta description` uniques sur chaque page | Huit pages + une page par projet | Inspection du `<head>` de chaque page | ✅ | 16/11 : `title` et `meta description` présents et différents sur les 13 pages (vérifiés dans le site construit) ; description de la page Projets corrigée (« Études de cas », « datavisualisation ») |
 | R2 | URL lisibles pour les projets | Routes dynamiques `/projets/[slug]` | Exemple : `/projets/opensigne` | ⬜ | |
-
 | R3 | `sitemap.xml` et `robots.txt` | Indexation par les moteurs | `@astrojs/sitemap`, test dans la Search Console | ⬜ | |
 | R4 | URL canonique et nom de domaine unique | Éviter le doublon entre l'adresse du VPS et mon domaine | Balise `link rel="canonical"`, redirection HTTP → HTTPS et www → sans www | ⬜ | |
-
 | R5 | Données structurées `Person` (JSON-LD) | Aider les moteurs à relier mon nom, mon métier et mes réseaux | Test des résultats enrichis de Google | ⬜ | |
-
 | R6 | Aperçu de partage (Open Graph) | Les recruteurs partagent des liens par message | Image et titre de partage vérifiés avec un outil de prévisualisation | ⬜ | |
-
 | R7 | Page 404 personnalisée | Les liens cassés ne doivent pas faire perdre le visiteur | Visite d'une URL inexistante | ⬜ | |
-
-| R8 | Score Lighthouse SEO | Indicateur global | Lighthouse | ⬜ | |
+| R8 | Score Lighthouse SEO | Indicateur global | Lighthouse | ✅ | Lighthouse 13.6 du 16/11 : SEO 100 sur les 13 pages, en mobile et en ordinateur |
 
 ## 4. Conformité juridique
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |
-
 |---|---|---|---|---|---|
-
 | J1 | Mentions légales complètes (éditeur, hébergeur) | Obligation de la loi pour la confiance dans l'économie numérique (LCEN) | La maquette indique encore une adresse Netlify : à remplacer par mon domaine et l'hébergeur du VPS | ✅ | 16/11 : page complète, plus aucun [À COMPLÉTER] dans le site construit (dist). Éditeur, directeur de la publication, article 6-III-2 de la LCEN, hébergeur Infomaniak (adresse, téléphone, site), domaine portfolio.ewan-menigoz.fr |
-
 | J2 | Information RGPD sous le formulaire | Le formulaire collecte un nom et une adresse e-mail stockés dans PocketBase | Texte court : finalité, durée de conservation, droits d'accès et de suppression, contact | ✅ | 16/11 : finalité, base légale (consentement), destinataire, hébergement en Suisse (décision d’adéquation), durée de conservation (12 mois), droits et réclamation CNIL ; texte de la case corrigé (l’objet manquait) |
-
 | J3 | Données réduites au strict nécessaire et protégées | PocketBase sur mon VPS | Champs minimum, HTTPS, accès administrateur protégé, suppression des messages après la durée annoncée | ⬜ | |
-
 | J4 | Cookies : bandeau seulement si nécessaire | Les mentions actuelles disent « peut utiliser des cookies » sans préciser | Inventaire réel des cookies dans les DevTools ; adapter le texte et ne pas mettre de bandeau si aucun cookie soumis à consentement | ✅ | Mesuré le 16/11 sur /mentions-legales : document.cookie vide, aucune requête vers un autre domaine, seulement sessionStorage « ewme-chargement-vu » (et localStorage « ewme-theme » après un changement de thème). Texte adapté, pas de bandeau |
-
 | J5 | Licences des polices et bibliothèques déclarées | Polices sous licence SIL OFL ; Astro, Tailwind CSS, daisyUI | Fichier de crédits dans le dépôt et mention dans les mentions légales | 🟨 | 16/11 : polices (SIL OFL) et outils (MIT) cités dans les mentions légales. Reste le fichier de crédits dans le dépôt |
-
 | J6 | Droits sur les contenus montrés | Projets collectifs ou académiques, photos et visuels de patrimoine dans les affiches | Créditer les co-auteurs et les sources des images | ✅ | 16/11 : co-auteurs cités (Enzo Loddo pour Climat Outre-Mer ; Enzo Hillairet et Lilian Maitre pour OpenSigne), marques et logos de tiers, données publiques de Météo-France |
-
 | J7 | Droit à l'image | Photos de la pile de polaroids et photo en situation | Accord des personnes visibles | ⬜ | |
-
 | J8 | Déclaration d'usage de l'IA | Exigence du projet | `IA.md` à la racine du dépôt + page « Ma façon de travailler avec l'IA » | 🟨 | |

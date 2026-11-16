@@ -14,21 +14,21 @@ import dessin from '../assets/images/hors-ecran/dessin.png';
 import mode from '../assets/images/hors-ecran/mode.png';
 
 const cartes = [
-  { titre: 'Photographie', src: photographie, alt: 'Appareil photo argentique posé sur une table', rot: 2 },
-  { titre: 'Musique', src: musique, alt: 'Instruments de musique dans une pièce sombre', rot: -1.5 },
+  { titre: 'Photographie', src: photographie, alt: 'Appareil photo noir et sa sangle, posés sur une table claire', rot: 2 },
+  { titre: 'Musique', src: musique, alt: 'Batterie et cymbales sur un tapis, dans une pièce sombre', rot: -1.5 },
   { titre: 'Cinéma', src: cinema, alt: 'Ancien projecteur de cinéma à bobines', rot: 1 },
-  { titre: 'Jeux vidéo', src: jeuxVideo, alt: 'Manette de jeu vidéo rouge', rot: -2 },
-  { titre: 'Mangas', src: mangas, alt: 'Étagère remplie de mangas', rot: 1.5 },
-  { titre: 'Architecture', src: architecture, alt: 'Façade d’immeuble moderne vue en contre-plongée', rot: -1 },
-  { titre: 'Nature', src: nature, alt: 'Sous-bois en automne', rot: 2 },
-  { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert', rot: -1.5 },
-  { titre: 'Mode', src: mode, alt: 'Vêtements colorés sur un portant', rot: 1 },
+  { titre: 'Jeux vidéo', src: jeuxVideo, alt: 'Manette de jeu vidéo rouge posée sur un tapis de bureau', rot: -2 },
+  { titre: 'Mangas', src: mangas, alt: 'Bibliothèque en bois remplie de mangas', rot: 1.5 },
+  { titre: 'Architecture', src: architecture, alt: 'Deux façades métalliques courbes vues en contre-plongée, le ciel nuageux entre elles', rot: -1 },
+  { titre: 'Nature', src: nature, alt: 'Sous-bois en automne vu du sol : feuilles mortes au premier plan, arbres et lumière au-dessus', rot: 2 },
+  { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert sur des portraits dessinés au crayon', rot: -1.5 },
+  { titre: 'Mode', src: mode, alt: 'Vêtements violets, turquoise et gris suspendus côte à côte', rot: 1 },
 ];
 ---
 
 <div data-hors-ecran>
   <ul
-    class="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 py-6 [scrollbar-width:none] md:mx-0 md:h-[220px] md:snap-none md:items-center md:justify-between md:gap-0 md:overflow-visible md:px-0 md:py-0"
+    class="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 py-6 [scrollbar-width:none] xl:mx-0 xl:h-[220px] xl:snap-none xl:items-center xl:justify-between xl:gap-0 xl:overflow-visible xl:px-0 xl:py-0"
     data-bande
   >
     {
@@ -37,7 +37,7 @@ const cartes = [
           <button
             type="button"
             aria-pressed="false"
-            class="carte flex w-[160px] flex-col items-center gap-1 rounded-md border border-trait bg-carte p-1.5 pb-2 md:w-[112px] md:p-[5px] md:pb-1"
+            class="carte flex w-[160px] flex-col items-center gap-1 rounded-md border border-trait bg-carte p-1.5 pb-2 xl:w-[112px] xl:p-[5px] xl:pb-1"
           >
             <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[3px] object-cover" />
             <span class="text-small text-secondaire">{c.titre}</span>
@@ -46,7 +46,7 @@ const cartes = [
       ))
     }
   </ul>
-  <div class="flex justify-center gap-1.5 md:hidden" aria-hidden="true" data-pagination>
+  <div class="flex justify-center gap-1.5 xl:hidden" aria-hidden="true" data-pagination>
     {cartes.map((_, i) => <span class:list={['point h-1.5 rounded-full transition-all duration-(--duree-carte)', i === 0 ? 'w-[18px] bg-vert' : 'w-1.5 bg-trait-fort']} />)}
   </div>
 </div>
@@ -70,7 +70,8 @@ const cartes = [
   .carte[aria-pressed='true'] span {
     color: var(--color-principal);
   }
-  @media (max-width: 767px) {
+  /* Sous 1280 px, les 9 cartes ne tiennent pas sur une ligne : elles défilent (bande glissable) */
+  @media (max-width: 1279px) {
     .carte[aria-pressed='true'] {
       transform: rotate(0deg) scale(1.08);
     }

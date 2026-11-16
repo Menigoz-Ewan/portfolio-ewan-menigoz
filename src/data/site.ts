@@ -31,7 +31,7 @@ export const site = {
   pocketbase: import.meta.env.PUBLIC_POCKETBASE_URL ?? '',
   stage: {
     duree: '10 semaines',
-    periode: 'Mars-Juin',
+    periode: 'mars-juin',
     lieu: 'Montbéliard et alentours',
   },
 };

@@ -46,6 +46,8 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | A16 | Menu à onglets fantômes : lisible, utilisable au clavier | Contour en pointillé derrière chaque lien inactif, rempli au survol et au focus | Mesuré le 13/11 : texte des liens 16,9:1 (clair) et 15,8:1 (sombre) sur le fond ; 15,4:1 sur le remplissage sable au survol (clair), 12,9:1 sur le remplissage crème 8 % (sombre). Au clavier (Tab), le fantôme se remplit et le contour de focus vert reste visible. Chaque lien occupe toute sa case (152 × 64 px, 128 px entre 1024 et 1280 px). Positions contrôlées contre la maquette Figma à 1440 px, et en 1280 et 1024 px | ✅ | |
 
+| A17 | Formulaire de contact : erreurs annoncées, consentement, anti-spam | Envoi vers PocketBase (collection « messages ») | Testé le 16/11 (envoi simulé, sans écrire dans la base) : formulaire vide → 5 erreurs affichées et liées aux champs, focus sur le premier ; sans consentement → envoi bloqué ; envoi réussi → bouton désactivé pendant l'envoi (`aria-busy`), message de réussite dans la zone `role="status"` / `aria-live="polite"`, formulaire vidé ; erreur serveur → message d'erreur, saisie conservée ; champ piège rempli → aucun envoi. Côté PocketBase : lecture publique de la collection refusée (403), CORS autorisé. Création publique à confirmer par un vrai envoi | 🟨 | |
+
 ## 2. Sobriété et performance
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |

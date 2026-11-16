@@ -97,3 +97,16 @@ Le terme “Premium Tech” n’existe pas vraiment, ou du moins, de qualifie pa
   - Ce qui a coincé : ma première version ne ressemblait pas à la maquette (Ewan l'a refusée) : j'avais suivi la liste écrite (cellules de 120 px, onglet de 152 px, trait à 35 %) au lieu de mesurer dans Figma. Refait d'après Figma : liens espacés de 72 px, fantômes centrés sur chaque texte avec un trait encre plein (pointillé), onglet actif de 154 px au total (dessus de 86 px + deux courbes de 34 px), la même silhouette que les fantômes. À 1024 px, le fantôme d'« Accueil » touchait la signature. Deuxième retour d'Ewan : au survol, le remplissage du fantôme voisin recouvrait le bas de la courbe de l'onglet vert, qui paraissait coupé. Corrigé avec le même empilement que Figma : remplissage du fantôme sous l'onglet vert, trait par-dessus. Puis Ewan a affiné la maquette : fantômes séparés de 12 px (une case de 152 px par lien, texte centré), panneau et onglet actif devant les fantômes, bouton thème 12 px après le menu ; repris tel quel dans le code, avec des cases de 128 px entre 1024 et 1280 px (non dessiné) pour que tout tienne.
   - Décidé : la maquette Figma prime sur la liste écrite quand elles divergent ; pas de marge intérieure dans le header entre 1024 et 1280 px (28 px restent entre la signature et le premier fantôme) ; le petit soulignement vert au survol est retiré (le fantôme le remplace) ; le contour de focus reste le vert existant ; rien en mobile (pas de maquette).
 
+## Semaine du 16 au 22 novembre 2026
+
+**Fait**
+- **16/11 · Formulaire de contact branché sur PocketBase (branche `feat/formulaire`).** Envoi en `fetch` (sans dépendance) vers `pb.ewan-menigoz.fr`, collection « messages » : nom, email, objet, message, consentement et champ piège `site_web`. Case de consentement RGPD obligatoire, bouton désactivé pendant l'envoi, messages de réussite et d'erreur annoncés aux lecteurs d'écran. L'adresse de l'instance est dans `.env` (ignoré par git).
+
+**Ce qui a coincé**
+- La collection n'avait pas de champ « Objet », alors que le formulaire en a un : dans un premier temps, l'objet était placé en tête du message.
+
+**Décidé**
+- Ewan a ajouté un champ texte `objet` (150 caractères maximum) dans la collection : l'objet y est envoyé séparément, et le champ Objet du formulaire est limité à 150 caractères (`maxlength`).
+- Champ piège : sorti de l'écran (pas `display: none`, que certains robots repèrent), caché aux lecteurs d'écran et hors du parcours clavier ; s'il est rempli, le site affiche une réussite sans rien envoyer.
+- Aucun envoi réel pendant les tests (pour ne pas écrire dans la vraie base) : envoi simulé dans le navigateur.
+

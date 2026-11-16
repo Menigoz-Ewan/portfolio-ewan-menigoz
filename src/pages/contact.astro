@@ -105,7 +105,7 @@ const champ =
         </div>
         <div class="flex flex-col gap-1.5">
           <label for="objet" class="text-ui">Objet</label>
-          <input id="objet" name="objet" type="text" required placeholder="Proposition de stage, Refonte charte graphique..." class={champ} aria-describedby="erreur-objet" />
+          <input id="objet" name="objet" type="text" required maxlength="150" placeholder="Proposition de stage, Refonte charte graphique..." class={champ} aria-describedby="erreur-objet" />
           <p id="erreur-objet" class="hidden text-small text-rouge" data-erreur>Indiquez l’objet de votre message.</p>
         </div>
         <div class="flex flex-col gap-1.5">
@@ -114,13 +114,38 @@ const champ =
           <p id="erreur-message" class="hidden text-small text-rouge" data-erreur>Écrivez votre message.</p>
         </div>
 
+        <!-- Consentement RGPD : obligatoire pour envoyer -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-start gap-3">
+            <input
+              id="consentement"
+              name="consentement"
+              type="checkbox"
+              required
+              class="checkbox checkbox-secondary checkbox-sm mt-0.5 rounded-[5px] border-secondaire/75"
+              aria-describedby="erreur-consentement"
+            />
+            <label for="consentement" class="text-small text-secondaire">
+              J’accepte que mes données (nom, email et message) servent uniquement à me répondre. Détails dans les
+              <a href="/mentions-legales#donnees" class="underline hover:text-principal">mentions légales</a>.
+            </label>
+          </div>
+          <p id="erreur-consentement" class="hidden text-small text-rouge" data-erreur>Cochez cette case pour envoyer votre message.</p>
+        </div>
+
+        <!--
+          Champ piège anti-spam : invisible à l'écran et pour les lecteurs d'écran, hors du parcours clavier.
+          Un humain le laisse vide ; un robot qui remplit tout le remplit.
+        -->
+        <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label for="site_web">Site web</label>
+          <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
         <div class="flex flex-wrap items-center justify-between gap-4">
           <p class="text-small text-secondaire">Tous les champs sont requis.</p>
-          <Button type="submit">Envoyer</Button>
+          <Button type="submit" class="disabled:cursor-wait disabled:opacity-60">Envoyer</Button>
         </div>
-        <p class="text-small text-secondaire">
-          Vos données servent uniquement à vous répondre. Détails dans les <a href="/mentions-legales#donnees" class="underline hover:text-principal">mentions légales</a>.
-        </p>
         <p role="status" aria-live="polite" class="hidden rounded-lg px-4 py-3 text-small" data-statut></p>
       </form>
     </section>
@@ -128,10 +153,15 @@ const champ =
 </Layout>
 
 <script>
-  // Validation accessible (erreurs liées au champ) puis envoi vers PocketBase (collection « messages »).
+  // Validation accessible (erreurs liées au champ) puis envoi vers PocketBase (collection « messages »),
+  // avec fetch, sans dépendance. Adresse de l'instance : PUBLIC_POCKETBASE_URL dans .env (site.pocketbase).
   const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]')!;
   const statut = formulaire.querySelector<HTMLElement>('[data-statut]')!;
-  const champs = [...formulaire.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')];
+  const bouton = formulaire.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+  const piege = formulaire.querySelector<HTMLInputElement>('#site_web')!;
+  // Champs à vérifier : tous sauf le champ piège
+  const champs = [...formulaire.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')].filter((c) => c !== piege);
+  const valeur = (nom: string) => (formulaire.elements.namedItem(nom) as HTMLInputElement | HTMLTextAreaElement).value.trim();
 
   const afficherStatut = (texte: string, succes: boolean) => {
     statut.textContent = texte;
@@ -140,13 +170,19 @@ const champ =
   };
 
   const verifier = (champ: HTMLInputElement | HTMLTextAreaElement) => {
-    const valide = champ.checkValidity() && champ.value.trim() !== '';
+    const valide = champ.type === 'checkbox' ? (champ as HTMLInputElement).checked : champ.checkValidity() && champ.value.trim() !== '';
     champ.setAttribute('aria-invalid', String(!valide));
     document.getElementById(`erreur-${champ.id}`)?.classList.toggle('hidden', valide);
     return valide;
   };
 
-  for (const champ of champs) champ.addEventListener('blur', () => verifier(champ));
+  for (const champ of champs) champ.addEventListener(champ.type === 'checkbox' ? 'change' : 'blur', () => verifier(champ));
+
+  const reussite = () => {
+    formulaire.reset();
+    for (const c of champs) c.removeAttribute('aria-invalid');
+    afficherStatut('Merci, votre message est bien envoyé. Je vous réponds rapidement.', true);
+  };
 
   formulaire.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -156,23 +192,43 @@ const champ =
       return;
     }
 
+    // Champ piège rempli : c'est un robot. On affiche une réussite sans rien envoyer.
+    if (piege.value !== '') {
+      reussite();
+      return;
+    }
+
     const url = formulaire.dataset.pocketbase;
     if (!url) {
       afficherStatut('Le formulaire n’est pas encore relié. Écrivez-moi directement par email, merci !', false);
       return;
     }
 
+    const donnees = {
+      nom: valeur('nom'),
+      email: valeur('email'),
+      objet: valeur('objet'),
+      message: valeur('message'),
+      consentement: true,
+      site_web: '',
+    };
+
+    bouton.disabled = true;
+    bouton.setAttribute('aria-busy', 'true');
+    statut.classList.add('hidden');
     try {
-      const reponse = await fetch(`${url}/api/collections/messages/records`, {
+      const reponse = await fetch(`${url.replace(/\/$/, '')}/api/collections/messages/records`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(formulaire))),
+        body: JSON.stringify(donnees),
       });
       if (!reponse.ok) throw new Error(String(reponse.status));
-      formulaire.reset();
-      afficherStatut('Merci, votre message est bien envoyé. Je vous réponds rapidement.', true);
+      reussite();
     } catch {
-      afficherStatut('L’envoi n’a pas fonctionné. Réessayez ou écrivez-moi par email.', false);
+      afficherStatut('L’envoi n’a pas fonctionné. Réessayez dans un instant ou écrivez-moi par email.', false);
+    } finally {
+      bouton.disabled = false;
+      bouton.removeAttribute('aria-busy');
     }
   });
 </script>

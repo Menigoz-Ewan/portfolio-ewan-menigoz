@@ -3,9 +3,16 @@ import Layout from '../../layouts/Layout.astro';
 import IntroPage from '../../components/IntroPage.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import Button from '../../components/Button.astro';
-import { projets, categories, lienProjet, type Categorie } from '../../data/projets';
+import Icon from '../../components/Icon.astro';
+import { projets, domaines, ordreDomaines, lienProjet, type Categorie } from '../../data/projets';
 
 const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter((p) => p.categories.includes(id as Categorie)).length);
+
+// Boutons de filtre : « Tous » puis un par domaine, avec le même pictogramme que les pastilles des cartes
+const filtres = [
+  { id: 'tous', libelle: 'Tous', icone: undefined },
+  ...ordreDomaines.map((id) => ({ id, libelle: domaines[id].long, icone: domaines[id].icone })),
+];
 ---
 
 <Layout
@@ -24,13 +31,17 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
   <section aria-label="Filtres" class="conteneur py-8">
     <div role="group" aria-label="Filtrer les projets" class="flex flex-wrap gap-2" data-filtres>
       {
-        categories.map((c) => (
+        filtres.map((c) => (
           <button
             type="button"
             aria-pressed={c.id === 'tous' ? 'true' : 'false'}
             data-filtre={c.id}
-            class="filtre flex items-center gap-2 rounded-full border py-2.5 pl-4 pr-3.5 transition-colors duration-(--duree-bouton) ease-(--ease-sortie)"
+            class:list={[
+              'filtre flex items-center gap-2 rounded-full border py-2.5 pr-3.5 transition-colors duration-(--duree-bouton) ease-(--ease-sortie)',
+              c.icone ? 'pl-3' : 'pl-4',
+            ]}
           >
+            {c.icone && <span class="filtre-icone"><Icon nom={c.icone} /></span>}
             <span class="text-ui">{c.libelle}</span>
             <span class="font-mono text-[11px] font-medium">{compte(c.id)}</span>
           </button>
@@ -46,13 +57,13 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
     <ul class="grid gap-9 md:grid-cols-2 lg:grid-cols-3">
       {
         projets.map((p) => (
-          <li data-categories={p.categories.join(' ')}>
-            <ProjectCard titre={p.titre} etiquette={p.etiquette} resume={p.resume} vignette={p.vignette} href={lienProjet(p)} class="h-full" />
+          <li data-categories={p.categories.join(' ')} class="carte-filtrable">
+            <ProjectCard titre={p.titre} categories={p.categories} sousDomaines={p.sousDomaines} resume={p.resume} vignette={p.vignette} href={lienProjet(p)} class="h-full" />
           </li>
         ))
       }
       <!-- Toute la largeur de la grille : passe toujours sur sa propre ligne, sous les projets -->
-      <li class="md:col-span-2 lg:col-span-3" data-cta>
+      <li class="carte-filtrable md:col-span-2 lg:col-span-3" data-cta>
         <div class="flex h-full flex-col justify-center gap-8 rounded-2xl bg-vert p-8 md:min-h-[356px] md:flex-row lg:min-h-[396px] md:items-center md:justify-between md:px-12">
           <div class="flex max-w-[420px] flex-col gap-3 text-white">
             <h2 class="text-h1">Et si le prochain était le vôtre ?</h2>
@@ -88,6 +99,14 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
   .filtre[aria-pressed='true'] span:last-child {
     color: rgb(255 255 255 / 0.7);
   }
+  /* Pictogramme du domaine : vert comme les pastilles, blanc quand le filtre est actif */
+  .filtre-icone {
+    display: inline-flex;
+    color: var(--color-vert-texte);
+  }
+  .filtre[aria-pressed='true'] .filtre-icone {
+    color: #fff;
+  }
 </style>
 
 <script>
@@ -96,17 +115,39 @@ const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter(
   const projets = document.querySelectorAll<HTMLElement>('[data-categories]');
   const annonce = document.querySelector<HTMLElement>('[data-filtres-annonce]');
 
+  const reduireAnimations = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Affiche ou masque les cartes selon le filtre choisi
+  const filtrer = (filtre: string) => {
+    let visibles = 0;
+    for (const p of projets) {
+      const visible = filtre === 'tous' || (p.dataset.categories ?? '').split(' ').includes(filtre);
+      p.hidden = !visible;
+      if (visible) visibles++;
+    }
+    if (annonce) annonce.textContent = `${visibles} projet${visibles > 1 ? 's' : ''} affiché${visibles > 1 ? 's' : ''}`;
+  };
+
   for (const bouton of boutons) {
     bouton.addEventListener('click', () => {
-      const filtre = bouton.dataset.filtre;
+      const filtre = bouton.dataset.filtre ?? 'tous';
       for (const b of boutons) b.setAttribute('aria-pressed', String(b === bouton));
-      let visibles = 0;
-      for (const p of projets) {
-        const visible = filtre === 'tous' || (p.dataset.categories ?? '').split(' ').includes(filtre ?? '');
-        p.hidden = !visible;
-        if (visible) visibles++;
+
+      // Sans View Transitions (Firefox) ou avec « réduire les animations » : changement immédiat
+      if (!document.startViewTransition || reduireAnimations.matches) {
+        filtrer(filtre);
+        return;
       }
-      if (annonce) annonce.textContent = `${visibles} projet${visibles > 1 ? 's' : ''} affiché${visibles > 1 ? 's' : ''}`;
+
+      // Animation native du navigateur (la même que pour les changements de page) :
+      // chaque carte reçoit un nom le temps de l'animation, le navigateur la fait glisser
+      // vers sa nouvelle place, et fait apparaître / disparaître les autres en fondu.
+      // Le bloc « Et si le prochain était le vôtre ? » glisse aussi quand la grille change.
+      const animes = [...projets, ...document.querySelectorAll<HTMLElement>('[data-cta]')];
+      animes.forEach((el, i) => (el.style.viewTransitionName = `projet-${i}`));
+      const transition = document.startViewTransition(() => filtrer(filtre));
+      // Noms retirés à la fin, pour ne pas gêner la transition entre les pages
+      transition.finished.finally(() => animes.forEach((el) => (el.style.viewTransitionName = '')));
     });
   }
 </script>

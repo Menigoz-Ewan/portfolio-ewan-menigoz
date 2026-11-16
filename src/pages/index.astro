@@ -102,7 +102,7 @@ const personne = {
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {
         selection.map((p) => (
-          <ProjectCard titre={p.titre} etiquette={p.accueil!.etiquette} resume={p.accueil!.resume} vignette={p.vignette} href={lienProjet(p)} />
+          <ProjectCard titre={p.titre} categories={p.categories} sousDomaines={p.sousDomaines} resume={p.accueil!.resume} vignette={p.vignette} href={lienProjet(p)} />
         ))
       }
     </div>

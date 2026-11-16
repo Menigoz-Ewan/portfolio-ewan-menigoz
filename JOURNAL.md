@@ -110,3 +110,20 @@ Le terme “Premium Tech” n’existe pas vraiment, ou du moins, de qualifie pa
 - Champ piège : sorti de l'écran (pas `display: none`, que certains robots repèrent), caché aux lecteurs d'écran et hors du parcours clavier ; s'il est rempli, le site affiche une réussite sans rien envoyer.
 - Aucun envoi réel pendant les tests (pour ne pas écrire dans la vraie base) : envoi simulé dans le navigateur.
 
+**Fait (suite)**
+- **16/11 · Fusion dans `main`.** `feat/formulaire` fusionnée dans `main` en avance rapide (sans conflit) ; build OK. Je travaille désormais uniquement sur `main`.
+- **16/11 · Étiquettes des projets refaites (domaines + sous-domaines).** Les anciennes étiquettes mélangeaient domaine, sous-domaine et support (« UI/UX · Web app », « Direction artistique · Print »), et rien ne reliait les cartes aux filtres. Trois pistes dessinées dans Claude Design (pastilles, rail des 3 domaines, code couleur) ; j'ai retenu la **variante A** : une pastille verte par domaine MMI (Développement, Création numérique, Communication) avec un pictogramme, puis les sous-domaines en mots-clés gris. Les mêmes pictogrammes sont sur les filtres. Nouveau composant `PastillesDomaines.astro`, utilisé sur les cartes (accueil, page Projets) et en haut des études de cas (version crème sur le panneau vert).
+
+**Décidé**
+- Sous-domaines : TiK•TaK = UX, UI, Front-end ; OpenSigne = UI, UX, SEO ; Affiches touristiques = Direction artistique ; Climat Outre-Mer = Datavisualisation, Front-end ; La Cimade = Branding, Identité visuelle.
+- Les supports (Web, Web app, Print) ne sont plus des étiquettes : ils restent dans la fiche projet (Livrables). « Projet étudiant / collectif » est retiré des étiquettes : il figure déjà dans la ligne Contexte de la fiche.
+- Les domaines s'affichent toujours dans le même ordre (Dev, Créa, Com), et les filtres portent leur nom complet.
+- Pictogramme de la Communication : bulle de dialogue (`icon-message.svg`, même style que les icônes Figma) — à reporter dans Figma.
+- Sur mobile (non dessiné), le trait entre pastilles et sous-domaines est masqué sous 640 px.
+
+- **16/11 · Animation des filtres, contexte allégé, nouvelles affiches.** Les filtres de la page Projets animent la grille avec les View Transitions natives (déjà utilisées entre les pages, aucune dépendance) : les cartes glissent vers leur nouvelle place, celles qui arrivent apparaissent en fondu avec un léger zoom, celles qui partent s'effacent. Pas d'animation avec « réduire les animations » ni sur Firefox (changement immédiat). Les points verts des étiquettes du bloc Contexte sont retirés. Affiches touristiques : les 3 affiches sont remplacées par les versions finales (titre, logos, signature), et les 4e et 5e images sont deux captures de mon travail de vectorisation dans Affinity (clocher du temple, gradins du théâtre), à la place du détail du temple et de la note d'intention.
+
+**Décidé (suite)**
+- Le triptyque des études de cas garde les proportions de chaque image (il n'y a plus de hauteur fixe) : les affiches s'affichent entières, titre compris. TiK•TaK et Climat ne bougent presque pas (483 px au lieu de 490).
+- Les nouvelles affiches remplacent aussi les anciennes dans la galerie, la pile de polaroïds et la vignette (même fichier).
+

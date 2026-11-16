@@ -287,6 +287,37 @@
   }
 }
 
+/*
+ * Filtres de la page Projets : les cartes (classe « projet ») glissent vers leur nouvelle place,
+ * celles qui arrivent apparaissent en fondu avec un léger zoom, celles qui partent s'effacent.
+ * Les noms projet-0, projet-1… sont donnés en JavaScript le temps de l'animation (projets/index.astro).
+ */
+.carte-filtrable {
+  view-transition-class: projet;
+}
+::view-transition-group(*.projet) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-sortie);
+}
+::view-transition-new(*.projet):only-child {
+  animation: carte-entree 350ms var(--ease-sortie) 100ms both;
+}
+::view-transition-old(*.projet):only-child {
+  animation: carte-sortie 200ms ease-in both;
+}
+@keyframes carte-entree {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes carte-sortie {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
 /* Halos verts flous du décor */
 .halo {
   position: absolute;

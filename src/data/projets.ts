@@ -23,8 +23,8 @@ import vignetteAffiches from '../assets/images/affiche-chateau.png';
 import afficheChateau from '../assets/images/affiche-chateau.png';
 import afficheTheatre from '../assets/images/galerie/affiche-theatre.png';
 import afficheTemple from '../assets/images/galerie/affiche-temple.png';
-import afficheTempleDetail from '../assets/images/affiches/affiche-temple-detail.png';
-import noteIntention from '../assets/images/affiches/note-intention.png';
+import affinityTempleClocher from '../assets/images/affiches/affinity-temple-clocher.png';
+import affinityTheatreGradins from '../assets/images/affiches/affinity-theatre-gradins.png';
 import afficheTheatreDetail from '../assets/images/affiches/affiche-theatre-detail.png';
 
 // Climat Outre-Mer
@@ -73,7 +73,6 @@ export interface LienExterne {
 }
 
 export interface EtudeDeCas {
-  etiquettes: string[];
   accroche: string;
   lien?: LienExterne;
   fiche: { role: string; contexte: string; outils: string; livrables: string };
@@ -88,27 +87,34 @@ export interface EtudeDeCas {
 export interface Projet {
   slug: string;
   titre: string;
-  /** Une ou plusieurs catégories (filtres de la page Projets) */
+  /** Un ou plusieurs domaines MMI (pastilles vertes + filtres de la page Projets) */
   categories: Categorie[];
-  /** Étiquette et résumé affichés sur l'accueil */
-  accueil?: { etiquette: string; resume: string };
-  /** Étiquette et résumé affichés sur la page Projets */
-  etiquette: string;
+  /** Sous-domaines (UX, UI, Branding…), affichés en mots-clés sous les pastilles */
+  sousDomaines: string[];
+  /** Résumé affiché sur l'accueil (seuls les projets qui en ont un y apparaissent) */
+  accueil?: { resume: string };
+  /** Résumé affiché sur la page Projets */
   resume: string;
   vignette: Visuel;
   etude?: EtudeDeCas;
 }
 
 /* ========================================================================
- * 3. CATÉGORIES — boutons de filtre de la page Projets
+ * 3. DOMAINES — pastilles des cartes et des études de cas, boutons de filtre
  * ======================================================================== */
 
-export const categories: { id: Categorie | 'tous'; libelle: string }[] = [
-  { id: 'tous', libelle: 'Tous' },
-  { id: 'dev', libelle: 'Dev' },
-  { id: 'com', libelle: 'Com' },
-  { id: 'crea', libelle: 'Créa' },
-];
+/** Chaque domaine : nom court (cartes), nom complet (filtres, étude de cas) et pictogramme */
+export const domaines: Record<Categorie, { court: string; long: string; icone: 'code' | 'design' | 'message' }> = {
+  dev: { court: 'Dev', long: 'Développement', icone: 'code' },
+  crea: { court: 'Créa', long: 'Création numérique', icone: 'design' },
+  com: { court: 'Com', long: 'Communication', icone: 'message' },
+};
+
+/** Ordre d'affichage des domaines (filtres et pastilles) */
+export const ordreDomaines: Categorie[] = ['dev', 'crea', 'com'];
+
+/** Range les domaines d'un projet dans l'ordre commun, pour que les pastilles soient toujours au même endroit */
+export const trierDomaines = (liste: Categorie[]) => ordreDomaines.filter((id) => liste.includes(id));
 
 /* ========================================================================
  * 4. PROJETS — un bloc par projet (« suivant » = slug du projet affiché après, dans l'ordre de la liste)
@@ -119,18 +125,17 @@ const opensigne: Projet = {
   slug: 'opensigne',
   titre: 'OpenSigne',
   categories: ['crea', 'com'],
-  etiquette: 'UI/UX · Web app',
+  sousDomaines: ['UI', 'UX', 'SEO'],
   resume: 'Apprendre la langue des signes française en jouant : parcours gamifié, projet collectif.',
   vignette: {
     src: vignetteOpenSigne,
     alt: 'Visuel d’OpenSigne : logo et slogan « Brisez le silence, apprenez à signer » sur fond lavande',
   },
   etude: {
-    etiquettes: ['UI/UX · Web app', 'Projet collectif'],
     accroche:
       'Une web app gamifiée pour apprendre la langue des signes française, pensée comme une vraie startup.',
     fiche: {
-      role: 'Designer UI/UX, développeur front-end, SEO & lancement',
+      role: 'Designer UI/UX, SEO & lancement',
       contexte: 'Projet collectif · BUT MMI, 1re année',
       outils: 'Figma, Astro, Tailwind, HTML/CSS',
       livrables:
@@ -150,7 +155,7 @@ const opensigne: Projet = {
     },
     defi: {
       enonce:
-        'Acquérir des utilisateurs sans un euro de publicité, en conciliant accessibilité et éco-conception.',
+        'Acquérir des utilisateurs en conciliant accessibilité et éco-conception.',
       fondLavande: true,
       visuels: [
         {
@@ -186,18 +191,17 @@ const affichesTouristiques: Projet = {
   slug: 'affiches-touristiques',
   titre: 'Affiches touristiques',
   categories: ['crea', 'com'],
-  etiquette: 'Direction artistique · Print',
+  sousDomaines: ['Direction artistique'],
   resume: 'Trois affiches vectorielles qui donnent envie de visiter Montbéliard.',
   vignette: {
     src: vignetteAffiches,
     alt: 'Affiche vectorielle du château des ducs de Wurtemberg à Montbéliard',
   },
   etude: {
-    etiquettes: ['Direction artistique · Print', 'Projet étudiant'],
-    accroche: 'Trois affiches vectorielles pour donner envie de visiter le patrimoine du Pays de Montbéliard.',
+    accroche: 'Trois affiches vectorielles fictives pour donner envie de visiter le patrimoine du Pays de Montbéliard.',
     fiche: {
       role: 'Designer graphique / directeur artistique',
-      contexte: 'Projet étudiant · BUT MMI',
+      contexte: 'Projet étudiant fictif · BUT MMI',
       outils: 'Affinity Designer, export PDF print (CMJN)',
       livrables: '3 affiches vectorielles, fichiers sources, note d’intention',
     },
@@ -215,8 +219,14 @@ const affichesTouristiques: Projet = {
     defi: {
       enonce: 'Moderniser l’image d’un territoire historique sans tomber dans la carte postale.',
       visuels: [
-        { src: afficheTempleDetail, alt: 'Détail de l’affiche du temple Saint-Martin' },
-        { src: noteIntention, alt: 'Extrait de la note d’intention accompagnant la série d’affiches' },
+        {
+          src: affinityTempleClocher,
+          alt: 'Vectorisation du clocher du temple Saint-Martin dans Affinity : formes en aplats, calques de polylignes visibles',
+        },
+        {
+          src: affinityTheatreGradins,
+          alt: 'Vectorisation des gradins du théâtre gallo-romain de Mandeure dans Affinity, calques nommés visibles',
+        },
       ],
     },
     solution: {
@@ -243,24 +253,22 @@ const climatOutreMer: Projet = {
   titre: 'Climat Outre-Mer',
   categories: ['dev', 'crea'],
   accueil: {
-    etiquette: 'Data visualisation · Web',
     resume: 'Un site d’enquête qui compare le réchauffement de trois territoires d’outre-mer, à partir des données de Météo-France.',
   },
-  etiquette: 'Data visualisation · Web',
+  sousDomaines: ['Datavisualisation', 'Front-end'],
   resume: 'Un site d’enquête qui compare le réchauffement de trois territoires d’outre-mer, à partir des données de Météo-France.',
   vignette: {
     src: vignetteClimat,
     alt: 'Carte de Climat Outre-Mer : courbes de température de la Martinique, de la Nouvelle-Calédonie et de La Réunion de 1970 à 2024',
   },
   etude: {
-    etiquettes: ['Data visualisation · Web', 'Projet étudiant'],
     accroche:
       'Un site d’enquête qui compare le réchauffement de la Martinique, de La Réunion et de la Nouvelle-Calédonie, à partir des données ouvertes de Météo-France.',
     lien: { href: 'https://climat-outre-mer.netlify.app/', libelle: 'Accéder au site' },
     fiche: {
       role: 'Data designer : notebook Observable et intégration des graphiques dans le site (en binôme avec Enzo Loddo)',
       contexte: 'SAE303 · BUT MMI · Open Data University, défi Météo-France',
-      outils: 'Observable (Plot, JavaScript), Astro, Tailwind CSS, Leaflet, GitHub',
+      outils: 'Observable (Plot, JavaScript), Astro, Tailwind CSS, Leaflet, GitHub, data.gouv.fr',
       livrables: 'Notebook documenté, 5 visualisations interactives, site en 4 temps, page Méthode',
     },
     visuelPrincipal: [
@@ -278,7 +286,7 @@ const climatOutreMer: Projet = {
       },
     ],
     contexte: {
-      titre: 'Une question, 55 ans de mesures, trois océans.',
+      titre: 'Une question, 55 ans de mesures, trois zones différentes.',
       texte:
         'Répondre à une question d’intérêt public avec des données ouvertes : « La Réunion, la Martinique et la Nouvelle-Calédonie vivent-elles le même changement climatique, au même rythme ? ». Du nettoyage des séries de Météo-France jusqu’au site, chaque étape devait être documentée et vérifiable.',
       contraintes: ['3 territoires', '22 stations', '1970-2024', '5 graphiques', 'Projections jusqu’en 2100'],
@@ -295,9 +303,9 @@ const climatOutreMer: Projet = {
       ],
     },
     solution: {
-      titre: 'Une enquête en quatre temps, un graphique par question.',
+      titre: 'Une enquête en cinq temps, un graphique par question.',
       texte:
-        'Chaque page pose une question et y répond par un graphique interactif : les années les plus chaudes, une carte des stations sur fond de relief, le rythme du réchauffement, les projections jusqu’en 2100 et le lien entre pluie et chaleur. Chaque graphique a un titre qui affirme la réponse et une lecture guidée en trois points. Une page Méthode expose les sources, les choix et les limites.',
+        'Chaque page pose une question et y répond par un graphique interactif. Les graphiques ont un titre qui affirme la réponse et une lecture guidée en trois points. Une page Méthode expose les sources, les choix et les limites.',
       visuel: {
         src: climatPluieChaleur,
         alt: 'Trois petits graphiques où la courbe de chaleur monte et celle de la pluie oscille autour de zéro.',
@@ -318,17 +326,15 @@ const tiktak: Projet = {
   titre: 'TiK•TaK',
   categories: ['dev', 'crea'],
   accueil: {
-    etiquette: 'UX/UI · Développement web',
     resume: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
   },
-  etiquette: 'UX/UI · Développement web',
+  sousDomaines: ['UX', 'UI', 'Front-end'],
   resume: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
   vignette: {
     src: vignetteTiktak,
     alt: 'Aperçu du site TiK•TaK',
   },
   etude: {
-    etiquettes: ['UX/UI · Développement web', 'Projet étudiant'],
     accroche: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
     lien: { href: 'https://tiktak.menigoz.optimiseus.fr/', libelle: 'Accéder au site' },
     fiche: {
@@ -394,11 +400,10 @@ const laCimade: Projet = {
   titre: 'La Cimade',
   categories: ['crea'],
   accueil: {
-    etiquette: 'Identité visuelle · Branding',
     resume:
       'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
   },
-  etiquette: 'Identité visuelle · Branding',
+  sousDomaines: ['Branding', 'Identité visuelle'],
   resume:
     'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
   vignette: {
@@ -406,7 +411,6 @@ const laCimade: Projet = {
     alt: 'Logo de La Cimade dont le « i » est remplacé par un poing levé noir veiné de rouge.',
   },
   etude: {
-    etiquettes: ['Identité visuelle · Branding', 'Projet étudiant'],
     accroche:
       'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
     lien: { href: '/projets/la-cimade-refonte-identite.pdf', libelle: 'Consulter le dossier (PDF)' },

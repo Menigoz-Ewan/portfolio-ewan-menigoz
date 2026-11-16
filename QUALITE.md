@@ -48,6 +48,8 @@ Outils retenus : Lighthouse (Chrome DevTools), axe DevTools, WAVE, lecteur d'éc
 
 | A17 | Formulaire de contact : erreurs annoncées, consentement, anti-spam | Envoi vers PocketBase (collection « messages ») | Testé le 16/11 (envoi simulé, sans écrire dans la base) : formulaire vide → 5 erreurs affichées et liées aux champs, focus sur le premier ; sans consentement → envoi bloqué ; envoi réussi → bouton désactivé pendant l'envoi (`aria-busy`), message de réussite dans la zone `role="status"` / `aria-live="polite"`, formulaire vidé ; erreur serveur → message d'erreur, saisie conservée ; champ piège rempli → aucun envoi. Côté PocketBase : lecture publique de la collection refusée (403), CORS autorisé. Création publique à confirmer par un vrai envoi | 🟨 | |
 
+| A18 | Étiquettes des projets : domaine lisible sans la couleur seule | Pastille par domaine (texte + pictogramme), sous-domaines en mots-clés, mêmes pictogrammes sur les filtres | Mesuré le 16/11 : pastille crème sur vert 9,0:1 (cartes, deux thèmes) ; sous-domaines gris sur la carte 5,8:1 (clair) et 6,5:1 (sombre) ; sous-domaines crème 80 % sur le panneau vert 6,4:1 ; pictogramme des filtres 9,6:1 (clair) et 8,3:1 (sombre). Le nom du domaine est écrit en toutes lettres (pas seulement une icône). Filtre « Communication » → OpenSigne et Affiches touristiques. Vérifié à 1440 px et 375 px. En sombre, la pastille verte se détache peu de la carte (1,7:1) mais son texte reste à 9:1 | ✅ | |
+
 ## 2. Sobriété et performance
 
 | # | Critère | Pourquoi dans mon cas | Comment je vérifie | Résultat | Correction |

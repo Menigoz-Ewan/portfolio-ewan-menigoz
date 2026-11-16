@@ -442,3 +442,48 @@
 
 **Vérifié**
 - Par script : pour 1 000 px de défilement, la trame est décalée de 800 px, elle ne remonte donc que de 200 px.
+
+### 16/11 · Fond quadrillé : tremblement au défilement corrigé (mes retours)
+
+**Ce qui a coincé**
+- Sur ma vidéo du défilement, la grille tremblait : le navigateur fait défiler la page tout de suite, mais le script ne recalait la trame qu'à l'image suivante. À chaque image, la grille avançait avec la page puis revenait en arrière de 80 % du défilement, et toute la trame était redessinée.
+
+**Fait**
+- La trame est sur un calque à part, fixé à l'écran, que le script remonte de 20 % du défilement (seulement le reste sur un motif de 192 px). Le décalage d'une image est donc 4 fois plus petit, et le calque est déplacé sans être redessiné (`transform`).
+- L'onglet du hero garde la même trame, calée sur l'écran comme le calque : les deux restent alignées.
+- Avec « réduire les animations » : la trame défile normalement avec la page.
+
+**Vérifié**
+- Par script et capture à 1 440 px : décalage du calque juste (−68 px pour 1 300 px de défilement), calque derrière tout le contenu et sans capter les clics, trame de l'onglet alignée. Fluidité à confirmer sur une vraie vidéo.
+
+### 16/11 · Formulaire : notification par e-mail (préparée)
+
+**Fait**
+- Fichier `serveur/pocketbase/pb_hooks/notification-messages.pb.js` : à chaque message enregistré dans PocketBase, un e-mail de notification m'est envoyé (objet, nom, e-mail, message), avec « Répondre » vers le visiteur. Pas de notification si le champ piège est rempli. Si l'envoi échoue, le message reste dans PocketBase et l'erreur est notée dans les logs.
+- `serveur/pocketbase/README.md` : installation (SMTP Infomaniak dans l'admin, copie du fichier, redémarrage, test).
+
+**Décidé**
+- Notification par PocketBase, déjà en place sur mon serveur, plutôt qu'un service externe (Formspree…) : pas de société de plus qui reçoit les messages, rien à changer sur le site.
+
+**À faire**
+- Compléter l'adresse de réception et vérifier la version de PocketBase (fichier écrit pour la 0.23 ou plus récente), configurer le SMTP, installer le fichier et tester.
+- Ajouter à la page Confidentialité la copie des messages dans ma boîte mail et sa durée de conservation.
+
+**Vérifié**
+- Syntaxe du fichier contrôlée (`node --check`). Pas encore testé sur le serveur.
+
+### 16/11 · Notification abandonnée et nettoyage avant GitHub
+
+**Ce qui a coincé**
+- Notification par e-mail : PocketBase (0.40.6, sur le VPS) et l'adresse d'expédition Infomaniak étaient prêts, mais le serveur d'envoi refusait la connexion (erreur 535, identifiant ou mot de passe refusé).
+
+**Décidé**
+- J'abandonne la notification : je consulterai les nouveaux messages directement dans PocketBase. Le dossier `serveur/pocketbase` (fichier jamais installé et sa notice) est supprimé.
+- Mon adresse universitaire reste comme auteur des commits, visible sur GitHub.
+
+**Fait**
+- `.claude/launch.json` retiré du suivi git (le fichier reste sur mon ordinateur) ; tout le dossier `.claude/` est ignoré.
+- Vérifié avant publication : aucun mot de passe, clé ni jeton dans les fichiers suivis ; `.env` ignoré (il ne contient que l'adresse publique de PocketBase).
+
+**À faire**
+- Relire les trois entrées *(À RELIRE)* du journal et remplir ma colonne de IA.md avant de rendre le dépôt public.

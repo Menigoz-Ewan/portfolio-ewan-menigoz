@@ -86,7 +86,9 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
       Aller au contenu
     </a>
 
-    <div class="fond-trame relative overflow-x-clip">
+    <div class="fond-page relative overflow-x-clip">
+      <!-- Trame de papier millimétré, en parallaxe (voir le script plus bas) -->
+      <div class="trame-fixe" aria-hidden="true" data-trame></div>
       <!-- Décor : halos, EWME filaire et coordonnées (purement décoratif) -->
       <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
         <div class="halo -left-[370px] -top-[290px] size-[900px]"></div>
@@ -118,15 +120,38 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
     </div>
 
     <script>
-      // Parallaxe du fond : la trame est redescendue de 80 % du défilement, elle défile donc à 20 % de la vitesse
-      // de la page (le contenu, lui, défile normalement). Désactivée avec « réduire les animations ».
-      const VITESSE_TRAME = 0.8;
+      // Parallaxe du fond : la trame défile à 20 % de la vitesse de la page (le contenu, lui, défile normalement).
+      // Le calque de la trame est fixé à l'écran ; on le remonte de 20 % du défilement. Le motif se répète tous les
+      // 192 px : on ne garde que le reste de la division, le calque n'a donc besoin que d'un motif de marge.
+      // L'onglet du hero (accueil) porte la même trame : elle est calée sur l'écran comme le calque, pour rester alignée.
+      // Avec « réduire les animations » : pas de parallaxe, la trame défile avec la page.
+      const VITESSE_TRAME = 0.2;
+      const MOTIF = 192;
       const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const trame = document.querySelector<HTMLElement>('[data-trame]')!;
+      const fond = trame.parentElement!;
+      const onglet = document.querySelector<HTMLElement>('[data-onglet-bas]');
       let enAttente = false;
+
       const decaler = () => {
         enAttente = false;
-        const decalage = reduit.matches ? 0 : window.scrollY * VITESSE_TRAME;
-        document.documentElement.style.setProperty('--decalage-trame', `${decalage}px`);
+        if (reduit.matches) {
+          trame.style.transform = '';
+          if (onglet) {
+            // Trame de l'onglet calée sur celle de la page (qui défile normalement)
+            const o = onglet.getBoundingClientRect();
+            const f = fond.getBoundingClientRect();
+            onglet.style.backgroundAttachment = '';
+            onglet.style.backgroundPosition = `${f.left - o.left}px ${f.top - o.top}px`;
+          }
+          return;
+        }
+        const decalage = -((window.scrollY * VITESSE_TRAME) % MOTIF);
+        trame.style.transform = `translate3d(0, ${decalage}px, 0)`;
+        if (onglet) {
+          onglet.style.backgroundAttachment = 'fixed';
+          onglet.style.backgroundPosition = `0 ${decalage}px`;
+        }
       };
       window.addEventListener(
         'scroll',
@@ -140,6 +165,8 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
         { passive: true },
       );
       reduit.addEventListener('change', decaler);
+      new ResizeObserver(decaler).observe(document.body); // mise en page qui bouge (polices, redimensionnement)
+      onglet?.classList.add('trame-alignee');
       decaler();
     </script>
   </body>

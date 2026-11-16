@@ -232,29 +232,10 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
     }
   }
 
-  /* Quand le script a calculé le décalage, l'onglet reçoit la même trame que le fond de page */
+  /* L'onglet reçoit la même trame que le fond de page ; le script du Layout la cale sur celle de la page */
   .onglet-bas.trame-alignee {
     background-image: var(--trame-images);
     background-size: var(--trame-tailles);
   }
 </style>
 
-<script>
-  // Aligne la trame de l'onglet sur celle du fond de page : on décale son arrière-plan
-  // de la distance qui sépare l'onglet du coin haut-gauche du fond (.fond-trame).
-  const onglet = document.querySelector<HTMLElement>('[data-onglet-bas]');
-  const fond = document.querySelector<HTMLElement>('.fond-trame');
-
-  if (onglet && fond) {
-    const aligner = () => {
-      const o = onglet.getBoundingClientRect();
-      const f = fond.getBoundingClientRect();
-      // + le décalage de parallaxe du fond, pour que les deux trames restent alignées pendant le défilement
-      onglet.style.backgroundPosition = `${f.left - o.left}px calc(${f.top - o.top}px + var(--decalage-trame, 0px))`;
-      onglet.classList.add('trame-alignee');
-    };
-    aligner();
-    // Recalcul si la mise en page bouge (redimensionnement, chargement des polices…)
-    new ResizeObserver(aligner).observe(document.body);
-  }
-</script>

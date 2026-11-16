@@ -395,3 +395,30 @@
 
 **Vérifié**
 - Capture à 1 440 px (animation figée) : boîte symétrique ; 48 tuiles dont 8 lues ; pas de défilement horizontal.
+
+### 16/11 · Galerie : champ infini à la place de la boîte (mes retours)
+
+**Fait**
+- La boîte 3D est remplacée par un « champ infini », d'après le composant Infinite Gallery de React Bits Pro (recréé en JS et CSS 3D, sans bibliothèque) : les 8 visuels flottent dans l'espace, **un seul exemplaire de chacun**. Molette ou glisser vertical : on avance ou on recule ; glisser horizontal : on se décale ; la souris fait légèrement dériver le champ ; un clic agrandit le visuel au centre (clic ou Échap pour refermer). Quand un visuel passe derrière nous, il repart au fond : la traversée ne s'arrête jamais.
+- Visuels dans leurs proportions d'origine, qui apparaissent au loin et s'effacent avant de nous traverser (effet de brouillard par l'opacité, sans fond : fonctionne dans les deux thèmes).
+- Clavier : chaque visuel est un bouton ; au Tab, le champ l'amène devant nous, Entrée l'agrandit, le focus revient dessus à la fermeture.
+
+**Décidé**
+- Rien ne bouge tout seul : plus de bouton Pause. Une consigne au-dessus explique comment avancer.
+- Le code de React Bits Pro est payant et repose sur une bibliothèque 3D : comportement refait à partir de la démo, sans dépendance.
+
+**Vérifié**
+- Par script et capture (1 600 px et mobile 375 px) : 8 visuels, molette, glisser, clic, fermeture et retour du focus ; pas de défilement horizontal.
+
+### 16/11 · Galerie : visuels lointains et clic pour s'approcher (mes retours)
+
+**Fait**
+- Visuels plus petits et plus lointains au repos, de plus en plus pâles et écartés avec la distance, comme dans la démo de React Bits Pro.
+- Clic sur n'importe quel visuel, même tout au fond : la caméra s'en approche et le place en grand au centre, avec sa légende en bas de la scène ; les autres restent autour, petits. Nouveau clic, clic dans le vide ou Échap : on recule. Au clavier, le focus fait la même chose.
+
+**Ce qui a coincé**
+- La perspective ne s'appliquait pas aux visuels (la liste entre la scène et les visuels la bloquait) : tous avaient la même taille. Corrigé en transmettant la 3D à travers la liste.
+- Les visuels lointains n'étaient pas cliquables : la liste, une fois en 3D, passait devant eux et captait les clics, et les visuels pâles étaient rendus inactifs. Maintenant, seul un visuel tout à fait effacé ne réagit pas.
+
+**Vérifié**
+- Par script, à 1 600 px et en mobile 375 px : les 8 visuels sont cliquables au repos ; le plus lointain (31 px de large) passe à environ 330 px au centre après un clic ; recul au clic dans le vide ; légende sans chevauchement ; pas de défilement horizontal.

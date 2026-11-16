@@ -1,10 +1,10 @@
 ---
-// Galerie « Passage » (variante A du canvas Claude Design, recréée d'après le modèle « Passage Gallery » de React Bits Pro) :
-// une boîte en 3D, ouverte sur toute la largeur de l'écran ; ses quatre parois (murs gauche et droit, sol, plafond)
-// sont couvertes de visuels qui avancent vers nous en boucle, puis sortent par les bords de l'écran.
-// Animation automatique : bouton pause (WCAG 2.2.2). Au survol, le visuel vient se placer droit au centre ;
-// quand la souris le quitte, il retourne dans la boîte, qui repart.
-// Avec « réduire les animations » : les visuels s'affichent en grille, immobiles.
+// Galerie « champ infini » (recréée d'après « Infinite Gallery » de React Bits Pro, sans bibliothèque 3D) :
+// les visuels flottent, petits et lointains, dans un espace en 3D qu'on traverse. Molette ou glisser vertical :
+// on avance ou on recule ; glisser horizontal : on se décale ; la souris fait légèrement dériver le champ.
+// Un clic sur n'importe quel visuel, même très loin, nous en approche : il vient au centre, en grand, et les autres
+// restent autour, plus petits. Un seul exemplaire de chaque visuel : quand il passe derrière nous, il repart au fond.
+// Rien ne bouge tout seul : pas besoin de bouton pause. Avec « réduire les animations » : grille immobile.
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import IntroPage from '../components/IntroPage.astro';
@@ -18,48 +18,17 @@ import natureMorte from '../assets/images/galerie/nature-morte.png';
 import oeuvre from '../assets/images/galerie/oeuvre-exposee.png';
 import temple from '../assets/images/galerie/affiche-temple.png';
 
+// x, y : place du visuel dans le champ, en fraction de la demi-largeur et de la demi-hauteur de la scène
 const visuels = [
-  { src: chateau, categorie: 'Illustration', titre: 'Affiche touristique · 1/3', alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs' },
-  { src: cimadeAffiche, categorie: 'Identité', titre: 'La Cimade — affiche', alt: 'Affiche pour La Cimade : poing levé noir entouré de cercles rouges' },
-  { src: cimadeLogo, categorie: 'Identité', titre: 'La Cimade — recherches de logo', alt: 'Recherches typographiques pour le logo de La Cimade : plusieurs versions du nom et de la lettre « C »' },
-  { src: exposition, categorie: 'Photographie', titre: 'Accrochage d’exposition', alt: 'Deux grandes toiles aux motifs bleu-vert accrochées dans une salle d’exposition' },
-  { src: theatre, categorie: 'Illustration', titre: 'Affiche touristique · 2/3', alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel' },
-  { src: natureMorte, categorie: 'Photographie', titre: 'Nature morte', alt: 'Nature morte : chemise, baskets jaunes, livres et objets posés au sol' },
-  { src: oeuvre, categorie: 'Photographie', titre: 'Œuvre exposée', alt: 'Tableau coloré aux formes végétales accroché à un mur blanc' },
-  { src: temple, categorie: 'Illustration', titre: 'Affiche touristique · 3/3', alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher' },
+  { src: chateau, x: -0.6, y: -0.4, categorie: 'Illustration', titre: 'Affiche touristique · 1/3', alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs' },
+  { src: cimadeAffiche, x: 0.5, y: 0.25, categorie: 'Identité', titre: 'La Cimade — affiche', alt: 'Affiche pour La Cimade : poing levé noir entouré de cercles rouges' },
+  { src: cimadeLogo, x: -0.2, y: 0.45, categorie: 'Identité', titre: 'La Cimade — recherches de logo', alt: 'Recherches typographiques pour le logo de La Cimade : plusieurs versions du nom et de la lettre « C »' },
+  { src: exposition, x: 0.6, y: -0.4, categorie: 'Photographie', titre: 'Accrochage d’exposition', alt: 'Deux grandes toiles aux motifs bleu-vert accrochées dans une salle d’exposition' },
+  { src: theatre, x: -0.75, y: 0.4, categorie: 'Illustration', titre: 'Affiche touristique · 2/3', alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel' },
+  { src: natureMorte, x: 0.2, y: -0.45, categorie: 'Photographie', titre: 'Nature morte', alt: 'Nature morte : chemise, baskets jaunes, livres et objets posés au sol' },
+  { src: oeuvre, x: 0.35, y: 0.5, categorie: 'Photographie', titre: 'Œuvre exposée', alt: 'Tableau coloré aux formes végétales accroché à un mur blanc' },
+  { src: temple, x: -0.05, y: -0.3, categorie: 'Illustration', titre: 'Affiche touristique · 3/3', alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher' },
 ];
-
-// Les quatre parois de la boîte. Pour chacune : position de la paroi (x, y), sa rotation pour faire face
-// à l'intérieur. Chaque paroi porte deux rangées (haut / bas pour les murs, gauche / droite pour le sol et le plafond).
-// --demi-l / --demi-h : demi-largeur et demi-hauteur de la boîte (définies dans le CSS).
-const parois = [
-  { nom: 'gauche', x: 'calc(var(--demi-l) * -1)', y: (k: number) => `calc(var(--demi-h) * ${k % 2 ? 0.5 : -0.5})`, rot: 'rotateY(90deg)', type: 'mur' },
-  { nom: 'droite', x: 'var(--demi-l)', y: (k: number) => `calc(var(--demi-h) * ${k % 2 ? 0.5 : -0.5})`, rot: 'rotateY(-90deg)', type: 'mur' },
-  { nom: 'sol', x: '', y: () => 'var(--demi-h)', rot: 'rotateX(90deg)', type: 'sol' },
-  { nom: 'plafond', x: '', y: () => 'calc(var(--demi-h) * -1)', rot: 'rotateX(-90deg)', type: 'sol' },
-];
-const DUREE = 24; // secondes pour traverser toute la boîte
-const PAR_PAROI = 12; // tuiles par paroi (deux par anneau)
-const ANNEAUX = PAR_PAROI / 2; // « anneaux » répartis à égale distance dans la profondeur
-// Les tuiles d'un même anneau sont à la même profondeur sur les quatre parois : le plafond est aligné
-// avec le sol, et ses tuiles touchent celles des deux murs de la même façon, à gauche comme à droite.
-const tuiles = parois.flatMap((paroi, p) =>
-  Array.from({ length: PAR_PAROI }, (_, k) => {
-    // Sol et plafond : deux colonnes, à gauche et à droite du centre
-    const x = paroi.type === 'sol' ? `calc(var(--demi-l) * ${k % 2 ? -0.45 : 0.45})` : paroi.x;
-    const anneau = Math.floor(k / 2);
-    return {
-      paroi: paroi.nom,
-      visuel: visuels[(k + p * 3) % visuels.length],
-      // Seules les 8 premières tuiles du mur gauche sont lues (les 8 visuels, une fois chacun) ; le reste est décoratif
-      lu: p === 0 && k < visuels.length,
-      classe: paroi.type === 'mur' ? 'tuile tuile-mur' : 'tuile tuile-sol',
-      style: `--x: ${x}; --y: ${paroi.y(k)}; --rot: ${paroi.rot}; --retard: ${-(anneau * DUREE) / ANNEAUX}s; --duree: ${DUREE}s`,
-    };
-  }),
-);
-// Cadres fixes qui dessinent la boîte en perspective (comme une trame)
-const cadres = Array.from({ length: 7 }, (_, i) => i);
 ---
 
 <Layout
@@ -73,367 +42,311 @@ const cadres = Array.from({ length: 7 }, (_, i) => i);
     chapo="Les visuels qui complètent mes projets : recherches graphiques, affiches et regards photographiques."
   />
 
-  <section aria-label="Visuels" class="pb-24 pt-8" data-passage>
-    <div class="passage">
-      <!-- Trame : cadres de la boîte à différentes profondeurs (décor) -->
-      <div class="zone" aria-hidden="true">
-        <div class="repere">
-          {cadres.map((i) => <span class="cadre" style={`--z: ${-i * 450}px`} />)}
-        </div>
-      </div>
-      <!--
-        Une zone par paroi, découpée à l'écran (clip-path) en triangle depuis le centre :
-        une image du plafond ne peut jamais passer devant un mur, et inversement.
-      -->
-      {
-        parois.map((paroi) => (
-          <div class:list={['zone', `zone-${paroi.nom}`]}>
-            <ul class="repere tuiles">
-              {tuiles
-                .filter((t) => t.paroi === paroi.nom)
-                .map((t) => (
-                  <li class={t.classe} style={t.style} aria-hidden={t.lu ? undefined : 'true'} data-titre={t.visuel.titre} data-categorie={t.visuel.categorie}>
-                    <figure class="tuile-figure">
-                      <Image src={t.visuel.src} alt={t.lu ? t.visuel.alt : ''} width={532} class="tuile-image" />
-                      {t.lu && <figcaption class="sr-only">{t.visuel.categorie} : {t.visuel.titre}</figcaption>}
-                    </figure>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        ))
-      }
-      <!--
-        Visuel agrandi : au survol d'une tuile, une copie de l'image vient se placer droite au centre ;
-        quand la souris la quitte, elle retourne à la place de la tuile. Copie visuelle : cachée aux lecteurs d'écran.
-      -->
-      <figure class="zoom" aria-hidden="true" hidden data-zoom>
-        <img class="zoom-image" src="" alt="" data-zoom-image />
-        <figcaption class="zoom-legende">
-          <span class="text-label" data-zoom-categorie></span>
-          <span class="text-ui" data-zoom-titre></span>
-        </figcaption>
-      </figure>
-      <button type="button" class="bouton-pause" aria-pressed="false" data-pause>
-        <span data-pause-libelle>Pause</span>
-      </button>
+  <section aria-label="Visuels" class="pb-24 pt-8" data-galerie>
+    <p class="consigne text-small text-secondaire" id="consigne-galerie">
+      Faites défiler ou glissez pour avancer dans la galerie, cliquez sur un visuel pour vous en approcher.
+    </p>
+    <div class="champ" data-champ>
+      <ul class="visuels" aria-describedby="consigne-galerie">
+        {
+          visuels.map((v, i) => (
+            <li class="visuel" data-index={i} data-x={v.x} data-y={v.y}>
+              <button type="button" class="visuel-bouton" aria-pressed="false" data-titre={v.titre} data-categorie={v.categorie}>
+                <Image src={v.src} alt={v.alt} width={640} class="visuel-image" draggable="false" loading="eager" />
+                <span class="sr-only">
+                  {v.categorie} : {v.titre}
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <!-- Légende du visuel dont on s'est approché -->
+      <p class="legende" aria-live="polite" data-legende>
+        <span class="text-label" data-legende-categorie></span>
+        <span class="text-ui" data-legende-titre></span>
+      </p>
     </div>
   </section>
 </Layout>
 
 <style>
-  /* La scène : toute la largeur de l'écran, en perspective ; les visuels sortent par les bords */
-  .passage {
-    --demi-l: 46vw;
-    --demi-h: 300px;
-    /* Points très lointains sur les diagonales de la boîte, pour tracer les zones des parois */
-    --loin-x: calc(var(--demi-l) * 20);
-    --loin-y: calc(var(--demi-h) * 20);
+  .consigne {
+    margin: 0 auto 12px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  /* La scène : toute la largeur, en perspective, sans fond (les visuels flottent sur la page) */
+  .champ {
     position: relative;
     height: 680px;
     overflow: hidden;
+    perspective: 800px;
+    perspective-origin: 50% 50%;
+    cursor: grab;
+    touch-action: none; /* le glisser déplace le champ au lieu de faire défiler la page */
+    user-select: none;
   }
-  /*
-   * Une zone = une scène en perspective qui couvre toute la largeur, avec le même point de fuite (le centre).
-   * Perspective assez lointaine : les visuels sont moins déformés sur les parois.
-   */
-  .zone {
+  .champ.en-glisse {
+    cursor: grabbing;
+  }
+  /* La liste transmet la 3D à ses visuels (sinon la perspective de la scène ne s'applique pas à eux) */
+  .visuels {
     position: absolute;
     inset: 0;
-    perspective: 1100px;
-    perspective-origin: 50% 50%;
-    pointer-events: none;
-  }
-  /* Zones des parois : triangles qui partent du centre et passent par les coins de la boîte */
-  .zone-plafond {
-    clip-path: polygon(50% 50%, calc(50% - var(--loin-x)) calc(50% - var(--loin-y)), calc(50% + var(--loin-x)) calc(50% - var(--loin-y)));
-  }
-  .zone-sol {
-    clip-path: polygon(50% 50%, calc(50% + var(--loin-x)) calc(50% + var(--loin-y)), calc(50% - var(--loin-x)) calc(50% + var(--loin-y)));
-  }
-  .zone-gauche {
-    clip-path: polygon(50% 50%, calc(50% - var(--loin-x)) calc(50% + var(--loin-y)), calc(50% - var(--loin-x)) calc(50% - var(--loin-y)));
-  }
-  .zone-droite {
-    clip-path: polygon(50% 50%, calc(50% + var(--loin-x)) calc(50% - var(--loin-y)), calc(50% + var(--loin-x)) calc(50% + var(--loin-y)));
-  }
-  /* Repère 3D : au centre de la zone, les tuiles gardent leur position dans l'espace */
-  .repere {
-    position: absolute;
-    left: 50%;
-    top: 50%;
     transform-style: preserve-3d;
+    pointer-events: none; /* la liste ne doit pas capter les clics destinés aux visuels lointains */
   }
-  /* Cadres fixes : un rectangle de la taille de la boîte, recule à chaque profondeur */
-  .cadre {
-    position: absolute;
-    left: calc(var(--demi-l) * -1);
-    top: calc(var(--demi-h) * -1);
-    width: calc(var(--demi-l) * 2);
-    height: calc(var(--demi-h) * 2);
-    border: 1px solid var(--color-trait);
-    transform: translateZ(var(--z));
-    pointer-events: none;
-  }
-  /*
-   * Une tuile : placée sur sa paroi (x, y), tournée pour faire face à l'intérieur (--rot),
-   * puis déplacée du fond de la boîte (z = -3200 px) jusque derrière nous (z = +700 px).
-   * translate(-50%, -50%) en dernier : la tuile est centrée sur son point d'accroche.
-   */
-  .tuile {
-    position: absolute;
-    left: 0;
-    top: 0;
-    pointer-events: auto; /* les zones laissent passer la souris, pas les tuiles */
-    animation: avance var(--duree) linear infinite;
-    animation-delay: var(--retard);
-  }
-  /* Tuiles presque carrées (proches des visuels) : moins d'étirement et de recadrage qu'en format allongé */
-  .tuile-mur {
-    width: 250px;
-    height: 270px;
-  }
-  .tuile-sol {
-    width: 290px;
-    height: 250px;
-  }
-  @keyframes avance {
-    from {
-      transform: translate3d(var(--x), var(--y), -3400px) var(--rot) translate(-50%, -50%);
-      opacity: 0;
-    }
-    10% {
-      opacity: 1;
-    }
-    to {
-      transform: translate3d(var(--x), var(--y), 900px) var(--rot) translate(-50%, -50%);
-      opacity: 1;
-    }
-  }
-  .tuile-figure {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--color-surface);
-    box-shadow: 0 16px 32px rgb(0 0 0 / 0.18);
-    cursor: zoom-in;
-  }
-  .tuile-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  /* Tuile dont la copie est au centre : invisible le temps de l'agrandissement */
-  .tuile.en-avant {
-    visibility: hidden;
-  }
-  /* Pause : avec le bouton, ou le temps qu'un visuel est agrandi au centre */
-  .passage.en-pause .tuile,
-  .passage.en-zoom .tuile {
-    animation-play-state: paused;
-  }
-  /* Visuel agrandi, droit, au centre de la scène, en entier (sans recadrage) */
-  .zoom {
+  /* Chaque visuel est placé par le script (translate3d) depuis le centre de la scène ; petit au repos */
+  .visuel {
     position: absolute;
     left: 50%;
     top: 50%;
-    z-index: 4;
-    translate: -50% -50%;
-    display: flex;
-    flex-direction: column;
-    width: min(420px, 80vw);
-    margin: 0;
-    border-radius: 16px;
-    overflow: hidden;
-    background: var(--color-carte);
-    box-shadow: 0 30px 60px rgb(0 0 0 / 0.3);
-    transform-origin: 0 0;
+    width: 130px;
+    will-change: transform, opacity;
   }
-  .zoom[hidden] {
-    display: none;
-  }
-  .zoom-image {
+  .visuel-bouton {
     display: block;
     width: 100%;
-    max-height: 480px;
-    object-fit: contain;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
     background: var(--color-surface);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 0.14);
+    cursor: pointer;
   }
-  .zoom-legende {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 12px 16px 14px;
-    color: var(--color-principal);
+  .visuel-bouton:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 3px;
   }
-  .zoom-legende .text-label {
-    color: var(--color-vert-texte);
+  .visuel-image {
+    display: block;
+    width: 100%;
+    height: auto; /* proportions d'origine : rien n'est étiré ni recadré */
+    pointer-events: none;
   }
-  .bouton-pause {
+  /* Légende du visuel choisi, en bas de la scène */
+  .legende {
     position: absolute;
     left: 50%;
     bottom: 16px;
+    z-index: 5000;
     translate: -50% 0;
-    z-index: 3;
-    height: 44px;
-    padding: 0 18px;
-    border-radius: 999px;
-    border: 1px solid var(--color-trait-fort);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    padding: 8px 16px;
+    border-radius: 12px;
     background: var(--color-carte);
     color: var(--color-principal);
-    transition: background-color var(--duree-bouton);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 0.12);
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 300ms ease;
   }
-  .bouton-pause:hover {
-    background: var(--color-surface);
+  .legende .text-label {
+    color: var(--color-vert-texte);
   }
-  .bouton-pause:focus-visible {
-    outline: 2.5px solid var(--color-vert-texte);
-    outline-offset: 2px;
+  .legende:empty,
+  .legende.cachee {
+    opacity: 0;
   }
-  /* Petits écrans : boîte et tuiles plus petites */
   @media (max-width: 767px) {
-    .passage {
-      --demi-h: 200px;
-      height: 480px;
+    .champ {
+      height: 540px;
     }
-    .tuile-mur {
-      width: 170px;
-      height: 190px;
-    }
-    .tuile-sol {
-      width: 200px;
-      height: 170px;
+    .visuel {
+      width: 70px;
     }
   }
-  /* Réduire les animations : grille immobile des 8 visuels, sans boîte */
+  /* Réduire les animations : grille immobile des 8 visuels */
   @media (prefers-reduced-motion: reduce) {
-    .passage {
+    .consigne,
+    .legende {
+      display: none;
+    }
+    .champ {
       height: auto;
       overflow: visible;
-      padding: 0 20px;
-    }
-    /* Seule la zone du mur gauche (les 8 visuels, une fois chacun) reste, à plat */
-    .zone {
-      display: none;
-    }
-    .zone-gauche {
-      display: block;
-      position: static;
       perspective: none;
-      clip-path: none;
-      pointer-events: auto;
+      padding: 0 20px;
+      cursor: auto;
+      touch-action: auto;
     }
-    .repere {
+    .visuels {
       position: static;
-    }
-    /* Les répétitions du mur gauche (décoratives) sont masquées */
-    .zone-gauche .tuile[aria-hidden='true'] {
-      display: none;
-    }
-    .bouton-pause {
-      display: none;
-    }
-    .tuiles {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      align-items: start;
       gap: 20px;
     }
-    .tuile {
+    .visuel {
       position: static;
       width: auto;
-      height: auto;
-      animation: none;
+      transform: none !important;
+      opacity: 1 !important;
     }
-    .tuile-image {
-      aspect-ratio: 4 / 5;
+    .visuel-bouton {
+      cursor: auto;
     }
   }
 </style>
 
 <script>
-  // Bouton pause / lecture de la boîte
-  for (const bloc of document.querySelectorAll<HTMLElement>('[data-passage]')) {
-    const passage = bloc.querySelector<HTMLElement>('.passage')!;
-    const bouton = bloc.querySelector<HTMLButtonElement>('[data-pause]')!;
-    const libelle = bouton.querySelector<HTMLElement>('[data-pause-libelle]')!;
-    bouton.addEventListener('click', () => {
-      const pause = passage.classList.toggle('en-pause');
-      bouton.setAttribute('aria-pressed', String(pause));
-      libelle.textContent = pause ? 'Lecture' : 'Pause';
-    });
+  const PROFONDEUR = 3200; // longueur de la boucle en profondeur (px) : les 8 visuels y sont répartis tous les 400 px
+  const DECALAGE = 600; // un visuel « juste devant nous » est à cette profondeur (perspective : 800 px)
+  const PRES = 130; // distance où l'on s'arrête devant un visuel choisi : il apparaît environ 2,4 fois plus grand
+const RECUL = 300; // les autres visuels s'effacent quand ils approchent à moins de cette distance : ils restent petits
+  const DERIVE = 30; // décalage maximal (px) quand la souris bouge sur la scène
 
-    // ── Visuel agrandi au centre ──────────────────────────────────────
-    const zoom = bloc.querySelector<HTMLElement>('[data-zoom]')!;
-    const zoomImage = bloc.querySelector<HTMLImageElement>('[data-zoom-image]')!;
-    const zoomTitre = bloc.querySelector<HTMLElement>('[data-zoom-titre]')!;
-    const zoomCategorie = bloc.querySelector<HTMLElement>('[data-zoom-categorie]')!;
-    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let courante: HTMLElement | null = null; // tuile dont la copie est au centre
-    let survolee = false; // la souris est-elle déjà passée sur le visuel agrandi ?
-    let enMouvement = false;
+  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Reste positif d'une division (la caméra peut avancer ou reculer sans fin)
+  const modulo = (a: number, b: number) => ((a % b) + b) % b;
+  const borne = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+  // Plus un visuel est loin, plus il est écarté du centre : le fond du champ ne se resserre pas en un point
+  const etalement = (devant: number) => 0.75 * (1 + devant / 1200);
 
-    // Décalage et échelle qui superposent le visuel agrandi à la tuile (technique « FLIP »)
-    const versTuile = (tuile: HTMLElement) => {
-      const t = tuile.getBoundingClientRect();
-      const z = zoom.getBoundingClientRect();
-      return `translate(${t.left - z.left}px, ${t.top - z.top}px) scale(${t.width / z.width}, ${t.height / z.height})`;
+  for (const bloc of document.querySelectorAll<HTMLElement>('[data-galerie]')) {
+    const champ = bloc.querySelector<HTMLElement>('[data-champ]')!;
+    const legende = bloc.querySelector<HTMLElement>('[data-legende]')!;
+    const legendeTitre = bloc.querySelector<HTMLElement>('[data-legende-titre]')!;
+    const legendeCategorie = bloc.querySelector<HTMLElement>('[data-legende-categorie]')!;
+    const items = [...bloc.querySelectorAll<HTMLElement>('.visuel')].map((el, i, tous) => ({
+      el,
+      bouton: el.querySelector<HTMLButtonElement>('button')!,
+      x: Number(el.dataset.x),
+      y: Number(el.dataset.y),
+      z: (i * PROFONDEUR) / tous.length, // profondeur de départ, à égale distance
+    }));
+
+    // Caméra : au départ, le visuel le plus proche est à 380 px ; tous paraissent petits et lointains
+    const cam = { z: -380, x: 0, y: 0, dx: 0, dy: 0 };
+    const cible = { ...cam };
+    let choisi: (typeof items)[number] | null = null;
+
+    const dessiner = () => {
+      const demiL = champ.clientWidth / 2;
+      const demiH = champ.clientHeight / 2;
+      // Le décalage reste limité : on ne perd jamais les visuels de vue
+      cible.x = borne(cible.x, -demiL * 0.8, demiL * 0.8);
+      cible.y = borne(cible.y, -demiH * 0.6, demiH * 0.6);
+      for (const k of ['z', 'x', 'y', 'dx', 'dy'] as const) cam[k] += (cible[k] - cam[k]) * 0.08;
+
+      for (const it of items) {
+        const devant = modulo(it.z - cam.z, PROFONDEUR); // distance devant nous, de 0 à PROFONDEUR
+        const x = it.x * demiL * etalement(devant) - cam.x - cam.dx;
+        const y = it.y * demiH * etalement(devant) - cam.y - cam.dy;
+        // « Brouillard » : au loin, le visuel pâlit (sans disparaître : il reste visible et cliquable) ;
+        // il ne s'efface qu'au tout dernier moment, en arrivant au fond ou juste avant de passer derrière nous
+        const loin = 1 - 0.7 * borne((devant - 700) / (PROFONDEUR - 1100), 0, 1);
+        // Le visuel choisi peut venir tout près ; les autres s'effacent avant de devenir grands
+        const proche = it === choisi ? borne(devant / 30, 0, 1) : borne((devant - RECUL / 2) / (RECUL / 2), 0, 1);
+        const opacite = Math.min(loin, proche, borne((PROFONDEUR - devant) / 150, 0, 1));
+        it.el.style.transform = `translate3d(${x}px, ${y}px, ${DECALAGE - devant}px) translate(-50%, -50%)`;
+        it.el.style.opacity = String(opacite);
+        it.el.style.zIndex = String(Math.round(PROFONDEUR - devant)); // le plus proche passe devant
+        it.el.style.pointerEvents = opacite > 0.05 ? 'auto' : 'none';
+      }
     };
 
-    const ouvrir = (tuile: HTMLElement) => {
-      if (courante || enMouvement) return;
-      courante = tuile;
-      survolee = false;
-      const image = tuile.querySelector('img')!;
-      zoomImage.src = image.currentSrc || image.src;
-      zoomTitre.textContent = tuile.dataset.titre ?? '';
-      zoomCategorie.textContent = tuile.dataset.categorie ?? '';
-      passage.classList.add('en-zoom'); // la boîte s'arrête : la tuile ne bouge plus pendant l'agrandissement
-      zoom.hidden = false;
-      tuile.classList.add('en-avant');
+    // Boucle d'affichage, seulement quand la galerie est à l'écran
+    let visible = false;
+    const boucle = () => {
+      if (!visible || reduit.matches) return;
+      dessiner();
+      requestAnimationFrame(boucle);
+    };
+    new IntersectionObserver(([e]) => {
+      const etait = visible;
+      visible = e.isIntersecting;
+      if (visible && !etait) requestAnimationFrame(boucle);
+    }).observe(champ);
+
+    // ── S'approcher d'un visuel / s'en éloigner ──────────────────────
+    const choisir = (it: (typeof items)[number]) => {
+      choisi = it;
+      // La caméra avance jusqu'à PRES devant le visuel et se place en face de lui
+      cible.z = cam.z + modulo(it.z - cam.z, PROFONDEUR) - PRES;
+      cible.x = it.x * (champ.clientWidth / 2) * etalement(PRES);
+      cible.y = it.y * (champ.clientHeight / 2) * etalement(PRES);
+      items.forEach((i) => i.bouton.setAttribute('aria-pressed', String(i === it)));
+      legendeCategorie.textContent = it.bouton.dataset.categorie ?? '';
+      legendeTitre.textContent = it.bouton.dataset.titre ?? '';
+      legende.classList.remove('cachee');
+    };
+    const relacher = (reculer: boolean) => {
+      if (!choisi) return;
+      choisi = null;
+      if (reculer) cible.z -= 400; // on recule un peu : le visuel reprend sa place parmi les autres
+      items.forEach((i) => i.bouton.setAttribute('aria-pressed', 'false'));
+      legende.classList.add('cachee');
+    };
+
+    // Molette : avancer / reculer
+    champ.addEventListener(
+      'wheel',
+      (e) => {
+        if (reduit.matches) return;
+        e.preventDefault();
+        relacher(false);
+        cible.z += e.deltaY * 1.2;
+      },
+      { passive: false },
+    );
+
+    // Glisser (souris ou doigt) : horizontal = se décaler, vertical = avancer / reculer
+    let depart: { x: number; y: number } | null = null;
+    let aGlisse = false;
+    champ.addEventListener('pointerdown', (e) => {
       if (reduit.matches) return;
-      // Le visuel part de la place de la tuile et vient se poser droit au centre
-      enMouvement = true;
-      zoom.animate([{ transform: versTuile(tuile), opacity: 0.6 }, { transform: 'none', opacity: 1 }], {
-        duration: 550,
-        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-      }).finished.finally(() => (enMouvement = false));
-    };
-
-    const fermer = () => {
-      const tuile = courante;
-      if (!tuile || enMouvement) return;
-      const fin = () => {
-        zoom.hidden = true;
-        tuile.classList.remove('en-avant');
-        passage.classList.remove('en-zoom');
-        courante = null;
-      };
-      if (reduit.matches) return fin();
-      // Retour du visuel à la place de sa tuile, puis la boîte repart
-      enMouvement = true;
-      zoom.animate([{ transform: 'none', opacity: 1 }, { transform: versTuile(tuile), opacity: 0.6 }], {
-        duration: 450,
-        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-      }).finished.finally(() => {
-        enMouvement = false;
-        fin();
-      });
-    };
-
-    for (const tuile of bloc.querySelectorAll<HTMLElement>('.tuile')) {
-      tuile.addEventListener('mouseenter', () => ouvrir(tuile));
-      tuile.addEventListener('click', () => ouvrir(tuile)); // écrans tactiles
-    }
-    // On le quitte (après l'avoir survolé), on sort de la scène, ou on touche à côté : il repart dans la boîte
-    zoom.addEventListener('mouseenter', () => (survolee = true));
-    zoom.addEventListener('mouseleave', () => survolee && fermer());
-    passage.addEventListener('mouseleave', fermer);
-    passage.addEventListener('click', (e) => {
-      const cible = e.target as HTMLElement;
-      if (courante && !zoom.contains(cible) && !cible.closest('.tuile')) fermer();
+      depart = { x: e.clientX, y: e.clientY };
+      aGlisse = false;
     });
+    window.addEventListener('pointermove', (e) => {
+      // Dérive : le champ suit légèrement la souris
+      const r = champ.getBoundingClientRect();
+      if (!depart && e.pointerType === 'mouse' && e.clientY > r.top && e.clientY < r.bottom) {
+        cible.dx = ((e.clientX - r.left) / r.width - 0.5) * 2 * DERIVE;
+        cible.dy = ((e.clientY - r.top) / r.height - 0.5) * 2 * DERIVE;
+      }
+      if (!depart) return;
+      const dx = e.clientX - depart.x;
+      const dy = e.clientY - depart.y;
+      if (!aGlisse && Math.hypot(dx, dy) > 6) {
+        aGlisse = true;
+        champ.classList.add('en-glisse');
+        relacher(false);
+      }
+      if (!aGlisse) return;
+      cible.x -= dx;
+      cible.z -= dy * 3;
+      depart = { x: e.clientX, y: e.clientY };
+    });
+    window.addEventListener('pointerup', () => {
+      depart = null;
+      champ.classList.remove('en-glisse');
+    });
+
+    for (const it of items) {
+      // Clic sur un visuel (même lointain) : on s'en approche ; nouveau clic dessus : on recule
+      it.bouton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (aGlisse || reduit.matches) return; // fin d'un glisser : pas de clic
+        if (choisi === it) relacher(true);
+        else choisir(it);
+      });
+      // Clavier (Tab) : on s'approche du visuel qui reçoit le focus
+      it.bouton.addEventListener('focus', () => {
+        if (!reduit.matches && it.bouton.matches(':focus-visible')) choisir(it);
+      });
+    }
+    // Clic dans le vide ou touche Échap : on recule
+    champ.addEventListener('click', () => !aGlisse && relacher(true));
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && relacher(true));
+
+    legende.classList.add('cachee');
+    dessiner();
   }
 </script>

@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import HeroAccueil from '../components/HeroAccueil.astro';
 import AccordeonProjets from '../components/AccordeonProjets.astro';
 import Button from '../components/Button.astro';
-import Icon from '../components/Icon.astro';
+import IconeAnimee from '../components/IconeAnimee.astro';
 import decoEwme from '../assets/svg/deco-ewme.svg?raw';
 import { projets } from '../data/projets';
 import { site } from '../data/site';
@@ -24,10 +24,10 @@ const domaines = [
     outils: ['Astro', 'Tailwind CSS', 'DaisyUI', 'CSS', 'Observable Plot'],
   },
   {
-    icone: 'graph' as const,
-    titre: 'Graphisme',
-    texte: 'Identité visuelle et illustration vectorielle, du print au web.',
-    outils: ['Affinity Designer'],
+    icone: 'message' as const,
+    titre: 'Communication',
+    texte: 'Faire connaître un projet : stratégie de lancement, référencement et supports print.',
+    outils: ['SEO', 'Ulule', 'Canva', 'Affinity Designer'],
   },
 ];
 
@@ -76,9 +76,9 @@ const personne = {
     <ul class="grid overflow-hidden rounded-3xl border border-trait bg-carte md:grid-cols-3">
       {
         domaines.map((d, i) => (
-          <li class:list={['flex flex-col gap-3 p-8', i > 0 && 'border-t border-trait md:border-l md:border-t-0']}>
+          <li class:list={['declencheur-icone flex flex-col gap-3 p-8', i > 0 && 'border-t border-trait md:border-l md:border-t-0']}>
             <span class="self-start rounded-xl bg-vert/8 p-2.5 text-vert-texte">
-              <Icon nom={d.icone} taille={22} />
+              <IconeAnimee nom={d.icone} taille={22} />
             </span>
             <h3 class="text-h3">{d.titre}</h3>
             <p class="text-small text-secondaire">{d.texte}</p>

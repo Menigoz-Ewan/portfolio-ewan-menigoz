@@ -20,7 +20,7 @@ const { projets } = Astro.props;
   {
     projets.map((p, i) => (
       <li class="panneau" data-ouvert={i === 0 ? '' : undefined}>
-        <a href={lienProjet(p)} class="panneau-lien">
+        <a href={lienProjet(p)} class="panneau-lien declencheur-icone">
           <Image src={p.vignette.src} alt="" width={1100} height={690} class="panneau-image" loading="lazy" />
           <span class="panneau-voile" aria-hidden="true" />
           <!-- Titre de la bande repliée (décoratif : le titre complet est dans la fiche) -->

@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import Icon from './Icon.astro';
+import IconeAnimee from './IconeAnimee.astro';
 import { site, type PageId } from '../data/site';
 
 interface Props {
@@ -61,9 +61,9 @@ const reseaux = [
               <a
                 href={r.href}
                 aria-label={r.libelle}
-                class="flex size-9 items-center justify-center rounded-md border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:border-principal/35 hover:bg-surface"
+                class="declencheur-icone flex size-9 items-center justify-center rounded-md border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:border-principal/35 hover:bg-surface"
               >
-                <Icon nom={r.icone} taille={18} />
+                <IconeAnimee nom={r.icone} taille={18} />
               </a>
             </li>
           ))

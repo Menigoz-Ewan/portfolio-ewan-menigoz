@@ -317,3 +317,81 @@
 - Mobile (non dessiné) : accordéon vertical ; un premier toucher ouvre le projet, le second ouvre l'étude de cas.
 - Bouton thème : l'icône montre le thème actuel (soleil en clair, lune en sombre).
 - Croissant de lune épaissi (ombre moins décalée) : la première version, trop fine, se lisait mal à 22 px.
+
+### 16/11 · Animations discrètes : icônes, logo, bouton thème, bloc Communication
+
+**Fait**
+- **Icônes animées** (nouveau composant `IconeAnimee.astro`, inspiré de useanimations.com) : plume qui dessine (design), chevrons qui s'écartent autour d'une barre oblique (code), points qui s'écrivent dans la bulle (communication), objectif qui fait la mise au point (Instagram), point et barres qui rebondissent (LinkedIn), rabat qui s'ouvre (mail). Elles se jouent au survol, ou au focus clavier, de l'élément qui les contient : blocs de l'accueil, pastilles des cartes, filtres, accordéon, liens du pied de page.
+- **Accueil.** Le bloc « Graphisme » devient « Communication » : « Faire connaître un projet : stratégie de lancement, référencement et supports print. » ; étiquettes SEO, Ulule, Canva, Affinity Designer.
+- **Logo.** Au survol (header et pied de page), il rejoue en petit l'animation de l'écran de chargement : les deux E se rejoignent, puis s'écartent pendant que le WM réapparaît en tournant, en vert.
+- **Bouton thème.** Morphing : le disque du soleil se déforme en croissant de lune d'un seul mouvement, les rayons rentrent l'un après l'autre et l'icône pivote un peu ; la page continue de « se tourner » au changement de thème.
+- **Variantes dans Claude Design** pour la page Projets (flex, galerie courbe, anneau, grille chroma, avec filtres adaptés), la galerie (passage, hélice) et les passions (anneau, roue) : en attente de mon choix.
+
+**Ce qui a coincé**
+- Les icônes de useanimations sont des animations Lottie : les reprendre telles quelles demandait la bibliothèque lottie-web (~250 Ko). J'ai préféré les recréer en SVG + CSS, sans dépendance.
+- Le morphing demande deux tracés au même nombre de points : soleil et croissant ont été calculés par un petit script (4 courbes de Bézier chacun) et vérifiés en image.
+- Les modèles « Passage » et « Helix » sont sur React Bits Pro (payant) : recréés d'après leur principe.
+
+**Décidé**
+- Aucune dépendance ajoutée. Safari ne sait pas animer le tracé : la forme y change d'un coup, le reste de l'animation est conservé.
+- Les icônes des réseaux sociaux reprennent le dessin au trait des icônes animées (au lieu des icônes exportées de Figma).
+
+### 16/11 · Pages animées : Projets en carrousel, Galerie en couloir, passions en anneau
+
+**Fait**
+- **Mes choix parmi les variantes :** carrousel flex (Projets), passage (Galerie), anneau 3D (passions).
+- **Page Projets.** Les cartes défilent sur une rangée (défilement natif : souris, doigt, pavé tactile, clavier) et s'aimantent au centre ; la carte du centre est mise en avant, les autres reculent. Sous la rangée : flèches et filtres en barre segmentée ; filtrer garde le domaine, revient au début et annonce le nombre de projets. Le bloc « Et si le prochain était le vôtre ? » passe sous le carrousel. L'ancienne animation des filtres (View Transitions) est supprimée.
+- **Page Galerie.** Couloir en perspective : les visuels, accrochés aux murs, avancent vers nous en boucle (16 s). Bouton Pause / Lecture, pause aussi au survol et au focus.
+- **À propos, « Ce qui nourrit mon regard ».** Les 9 polaroïds en anneau 3D ; flèches, clic ou Tab sur une carte pour la faire venir devant (toujours par le chemin le plus court) ; le nom de la passion est annoncé.
+
+**Ce qui a coincé**
+- Le navigateur de test était masqué : il suspend les animations et le rafraîchissement de l'écran. La logique a été vérifiée par script (carte au centre, filtres, pause, rotation de l'anneau, aucun débordement à 375, 768 et 1440 px) ; le rendu animé reste à regarder dans un vrai navigateur.
+
+**Décidé**
+- Avec « réduire les animations » : la galerie devient une grille immobile (et le bouton pause disparaît), le carrousel et l'anneau changent de position sans mouvement.
+- Mobile (non dessiné) : rangée plus étroite (cartes à 82 % de la largeur), couloir et anneau plus petits.
+
+### 16/11 · Galerie et passions : visuels flottants et zoom au survol (mes retours)
+
+**Fait**
+- Galerie : plus de grand bloc vert, les visuels flottent sur la page ; au survol, un visuel grossit un peu (rebond) sans arrêter le défilement ; seul le bouton Pause / Lecture arrête l'animation.
+- Passions : plus de fond derrière l'anneau ; au survol, un polaroïd grossit et s'éclaire.
+
+**Décidé**
+- La pause au survol est retirée (elle coupait l'effet dès qu'on approchait la souris) ; le bouton Pause reste, pour la règle WCAG 2.2.2.
+
+### 16/11 · Galerie en boîte 3D (mes retours)
+
+**Fait**
+- La galerie devient une boîte en 3D sur toute la largeur de l'écran, comme le modèle de la bibliothèque : ses quatre parois (murs gauche et droit, sol, plafond) portent les visuels (8 par paroi, 32 tuiles), qui avancent vers nous en 24 s puis sortent par les bords de l'écran, au lieu de disparaître avant. Des cadres fins dessinent la boîte en perspective.
+
+**Décidé**
+- Lecteurs d'écran : seul le mur gauche est lu (les 8 visuels, une fois chacun, avec leur légende) ; les trois autres parois répètent les images et sont décoratives.
+- Avec « réduire les animations » : les 8 visuels en grille immobile.
+
+### 16/11 · Galerie : visuels lisibles et agrandissement au centre (mes retours)
+
+**Fait**
+- Tuiles presque carrées (250 × 270 px sur les murs, 290 × 250 px au sol et au plafond) au lieu de formats très allongés, et perspective plus lointaine (1 100 px) : les visuels sont moins étirés et moins recadrés.
+- Au survol d'un visuel, une copie se détache de la boîte et vient se placer droite au centre, en entier (sans recadrage) avec sa légende ; la boîte s'arrête le temps de l'agrandissement. Quand la souris quitte le visuel (ou la scène), il retourne à la place de sa tuile et la boîte repart. Au toucher : un appui ouvre, un appui à côté referme.
+
+**Ce qui a coincé**
+- Faire partir et revenir le visuel depuis une tuile en 3D : on mesure la tuile à l'écran et on anime la copie de cette position jusqu'au centre (technique « FLIP »), puis l'inverse.
+- Fermer dès que la souris n'est plus sur le visuel aurait refermé aussitôt (la souris est encore sur l'ancienne place de la tuile) : la fermeture n'arrive qu'après être passé sur le visuel agrandi, ou en sortant de la scène.
+
+### 16/11 · Galerie : plafond et sol bien séparés des murs (mes retours)
+
+**Fait**
+- Les visuels du plafond passaient par-dessus ceux des murs. Chaque paroi a maintenant son propre calque, découpé en triangle depuis le centre (le long des diagonales de la boîte) : le plafond n'apparaît que dans le triangle du haut, le sol dans celui du bas, les murs sur les côtés. Un visuel du plafond qui arrive près d'un angle est coupé en biais au lieu de cacher le mur.
+
+**Vérifié**
+- Capture dans le navigateur (animation figée) : plus aucun chevauchement entre plafond et murs ; pas de défilement horizontal ; le survol d'une tuile du plafond ou du sol ouvre toujours l'agrandissement, qui se referme en sortant de la scène (testé par script).
+
+### 16/11 · Galerie : parois alignées en anneaux (mes retours)
+
+**Fait**
+- À gauche, les visuels du plafond touchaient ceux du mur, pas à droite : les tuiles étaient décalées en profondeur d'une paroi à l'autre. Elles sont maintenant rangées en 6 « anneaux » : dans un même anneau, les deux murs (haut et bas), le plafond et le sol (gauche et droite) sont à la même profondeur. Le plafond est aligné avec le sol et touche les deux murs de la même façon. 12 tuiles par paroi au lieu de 8, pour garder une boîte bien remplie.
+- Lecteurs d'écran : toujours 8 visuels lus, une fois chacun (les répétitions sont décoratives et masquées dans la grille « réduire les animations »).
+
+**Vérifié**
+- Capture à 1 440 px (animation figée) : boîte symétrique ; 48 tuiles dont 8 lues ; pas de défilement horizontal.

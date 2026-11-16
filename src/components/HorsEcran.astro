@@ -1,8 +1,10 @@
 ---
-// « Ce qui nourrit mon regard » : cartes polaroid.
-// Desktop : la carte survolée, focalisée au clavier ou touchée s'agrandit, les autres s'estompent.
-// Mobile : bande défilante au doigt, aimantée carte par carte (scroll-snap), avec pagination.
+// « Ce qui nourrit mon regard » : anneau 3D de polaroïds (variante A du canvas Claude Design,
+// inspirée de « Circular Carousel »). Les 9 cartes forment un cercle ; l'anneau tourne pour amener
+// une passion devant : flèches, clic sur une carte, ou focus clavier (Tab) sur une carte.
+// Avec « réduire les animations » : l'anneau change de position sans mouvement.
 import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
 import photographie from '../assets/images/hors-ecran/photographie.png';
 import musique from '../assets/images/hors-ecran/musique.png';
 import cinema from '../assets/images/hors-ecran/cinema.png';
@@ -14,111 +16,180 @@ import dessin from '../assets/images/hors-ecran/dessin.png';
 import mode from '../assets/images/hors-ecran/mode.png';
 
 const cartes = [
-  { titre: 'Photographie', src: photographie, alt: 'Appareil photo noir et sa sangle, posés sur une table claire', rot: 2 },
-  { titre: 'Musique', src: musique, alt: 'Batterie et cymbales sur un tapis, dans une pièce sombre', rot: -1.5 },
-  { titre: 'Cinéma', src: cinema, alt: 'Ancien projecteur de cinéma à bobines', rot: 1 },
-  { titre: 'Jeux vidéo', src: jeuxVideo, alt: 'Manette de jeu vidéo rouge posée sur un tapis de bureau', rot: -2 },
-  { titre: 'Mangas', src: mangas, alt: 'Bibliothèque en bois remplie de mangas', rot: 1.5 },
-  { titre: 'Architecture', src: architecture, alt: 'Deux façades métalliques courbes vues en contre-plongée, le ciel nuageux entre elles', rot: -1 },
-  { titre: 'Nature', src: nature, alt: 'Sous-bois en automne vu du sol : feuilles mortes au premier plan, arbres et lumière au-dessus', rot: 2 },
-  { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert sur des portraits dessinés au crayon', rot: -1.5 },
-  { titre: 'Mode', src: mode, alt: 'Vêtements violets, turquoise et gris suspendus côte à côte', rot: 1 },
+  { titre: 'Photographie', src: photographie, alt: 'Appareil photo noir et sa sangle, posés sur une table claire' },
+  { titre: 'Musique', src: musique, alt: 'Batterie et cymbales sur un tapis, dans une pièce sombre' },
+  { titre: 'Cinéma', src: cinema, alt: 'Ancien projecteur de cinéma à bobines' },
+  { titre: 'Jeux vidéo', src: jeuxVideo, alt: 'Manette de jeu vidéo rouge posée sur un tapis de bureau' },
+  { titre: 'Mangas', src: mangas, alt: 'Bibliothèque en bois remplie de mangas' },
+  { titre: 'Architecture', src: architecture, alt: 'Deux façades métalliques courbes vues en contre-plongée, le ciel nuageux entre elles' },
+  { titre: 'Nature', src: nature, alt: 'Sous-bois en automne vu du sol : feuilles mortes au premier plan, arbres et lumière au-dessus' },
+  { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert sur des portraits dessinés au crayon' },
+  { titre: 'Mode', src: mode, alt: 'Vêtements violets, turquoise et gris suspendus côte à côte' },
 ];
+// Angle entre deux cartes sur le cercle
+const pas = 360 / cartes.length;
 ---
 
-<div data-hors-ecran>
-  <ul
-    class="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 py-6 [scrollbar-width:none] xl:mx-0 xl:h-[220px] xl:snap-none xl:items-center xl:justify-between xl:gap-0 xl:overflow-visible xl:px-0 xl:py-0"
-    data-bande
-  >
+<div class="scene" data-anneau style={`--pas: ${pas}deg`}>
+  <ul class="anneau" data-piste>
     {
-      cartes.map((c) => (
-        <li class="snap-center" style={`--rot: ${c.rot}deg`}>
-          <button
-            type="button"
-            aria-pressed="false"
-            class="carte flex w-[160px] flex-col items-center gap-1 rounded-md border border-trait bg-carte p-1.5 pb-2 xl:w-[112px] xl:p-[5px] xl:pb-1"
-          >
-            <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[3px] object-cover" />
-            <span class="text-small text-secondaire">{c.titre}</span>
+      cartes.map((c, i) => (
+        <li class="emplacement" style={`--i: ${i}`}>
+          <button type="button" class="polaroid" aria-pressed={i === 0 ? 'true' : 'false'} data-index={i}>
+            <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[4px] object-cover" />
+            <span class="text-small text-principal">{c.titre}</span>
           </button>
         </li>
       ))
     }
   </ul>
-  <div class="flex justify-center gap-1.5 xl:hidden" aria-hidden="true" data-pagination>
-    {cartes.map((_, i) => <span class:list={['point h-1.5 rounded-full transition-all duration-(--duree-carte)', i === 0 ? 'w-[18px] bg-vert' : 'w-1.5 bg-trait-fort']} />)}
+  <div class="commandes">
+    <button type="button" class="fleche" aria-label="Passion précédente" data-precedent>
+      <span class="inline-flex rotate-180"><Icon nom="arrow-right" taille={18} /></span>
+    </button>
+    <p class="titre-courant text-label text-vert-texte" aria-live="polite" data-titre>{cartes[0].titre}</p>
+    <button type="button" class="fleche" aria-label="Passion suivante" data-suivant>
+      <Icon nom="arrow-right" taille={18} />
+    </button>
   </div>
 </div>
 
 <style>
-  .carte {
-    transform: rotate(var(--rot));
-    transition:
-      transform var(--duree-carte, 250ms) var(--ease-sortie),
-      opacity var(--duree-carte, 250ms) var(--ease-sortie),
-      border-color var(--duree-carte, 250ms),
-      box-shadow var(--duree-carte, 250ms);
-  }
-  .carte[aria-pressed='true'] {
+  /* Scène en perspective, sans fond : les polaroïds flottent sur la page ; le rayon s'adapte à la taille des cartes */
+  .scene {
+    --largeur: 170px;
+    --rayon: 330px;
     position: relative;
-    z-index: 10;
-    transform: rotate(0deg) scale(1.25) translateY(-6px);
-    border-color: var(--color-vert-texte);
-    box-shadow: 0 14px 28px rgb(23 23 23 / 0.14);
+    height: 440px;
+    overflow: hidden;
+    perspective: 1200px;
   }
-  .carte[aria-pressed='true'] span {
+  .anneau {
+    --rotation: 0deg;
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    width: var(--largeur);
+    margin-left: calc(var(--largeur) / -2);
+    transform-style: preserve-3d;
+    transform: translateZ(calc(var(--rayon) * -1)) rotateY(var(--rotation));
+    transition: transform 800ms var(--ease-sortie);
+  }
+  /* Chaque carte est tournée de son angle puis poussée sur le cercle */
+  .emplacement {
+    position: absolute;
+    inset: 0 0 auto;
+    transform: rotateY(calc(var(--i) * var(--pas))) translateZ(var(--rayon));
+    backface-visibility: hidden;
+  }
+  .polaroid {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 6px 10px;
+    border-radius: 8px;
+    background: var(--color-carte);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 0.14);
+    filter: brightness(0.75);
+    transition:
+      filter 400ms ease,
+      box-shadow 400ms ease,
+      scale 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Survol : le polaroïd grossit un peu et s'éclaire */
+  .polaroid:hover {
+    scale: 1.08;
+    filter: none;
+  }
+  .polaroid[aria-pressed='true'] {
+    filter: none;
+    box-shadow:
+      0 0 0 1.5px var(--color-vert-texte),
+      0 18px 36px rgb(0 0 0 / 0.18);
+  }
+  .polaroid:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 3px;
+  }
+  .commandes {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .titre-courant {
+    min-width: 120px;
+    text-align: center;
+  }
+  .fleche {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--color-trait-fort);
+    background: var(--color-carte);
     color: var(--color-principal);
+    transition: background-color var(--duree-bouton);
   }
-  /* Sous 1280 px, les 9 cartes ne tiennent pas sur une ligne : elles défilent (bande glissable) */
-  @media (max-width: 1279px) {
-    .carte[aria-pressed='true'] {
-      transform: rotate(0deg) scale(1.08);
+  .fleche:hover {
+    background: var(--color-surface-forte);
+  }
+  .fleche:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 2px;
+  }
+  /* Petits écrans : cartes et cercle plus petits */
+  @media (max-width: 640px) {
+    .scene {
+      --largeur: 120px;
+      --rayon: 210px;
+      height: 360px;
+    }
+    .anneau {
+      top: 50px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .anneau,
+    .polaroid {
+      transition: none;
     }
   }
 </style>
 
 <script>
-  for (const bloc of document.querySelectorAll<HTMLElement>('[data-hors-ecran]')) {
-    const cartes = [...bloc.querySelectorAll<HTMLButtonElement>('.carte')];
-    const bande = bloc.querySelector<HTMLElement>('[data-bande]')!;
-    const points = [...bloc.querySelectorAll<HTMLElement>('[data-pagination] .point')];
-    const survolPossible = window.matchMedia('(hover: hover)').matches;
+  for (const scene of document.querySelectorAll<HTMLElement>('[data-anneau]')) {
+    const anneau = scene.querySelector<HTMLElement>('[data-piste]')!;
+    const cartes = [...scene.querySelectorAll<HTMLButtonElement>('.polaroid')];
+    const titre = scene.querySelector<HTMLElement>('[data-titre]')!;
+    const pas = 360 / cartes.length;
+    let tour = 0; // position « déroulée » : permet de tourner toujours dans le sens le plus court
 
-    // Met une carte en avant ; les autres s'estompent selon leur distance (comme dans la maquette).
-    const focaliser = (index: number | null) => {
-      cartes.forEach((carte, i) => {
-        carte.setAttribute('aria-pressed', String(i === index));
-        carte.style.opacity = index === null ? '' : String(Math.max(0.55, 1 - 0.08 * Math.abs(i - index)));
-      });
+    const montrer = (index: number) => {
+      // Écart le plus court entre la carte devant et la carte demandée
+      const actuel = ((tour % cartes.length) + cartes.length) % cartes.length;
+      let ecart = index - actuel;
+      if (ecart > cartes.length / 2) ecart -= cartes.length;
+      if (ecart < -cartes.length / 2) ecart += cartes.length;
+      tour += ecart;
+      anneau.style.setProperty('--rotation', `${-tour * pas}deg`);
+      cartes.forEach((c, i) => c.setAttribute('aria-pressed', String(i === index)));
+      titre.textContent = cartes[index].querySelector('span')?.textContent ?? '';
     };
+    const courant = () => ((tour % cartes.length) + cartes.length) % cartes.length;
 
-    cartes.forEach((carte, i) => {
-      if (survolPossible) {
-        carte.addEventListener('mouseenter', () => focaliser(i));
-        carte.addEventListener('mouseleave', () => focaliser(null));
-      }
-      carte.addEventListener('focus', () => focaliser(i));
-      carte.addEventListener('blur', () => focaliser(null));
-      // Toucher ou clic : agrandit la carte, un second appui la referme.
-      carte.addEventListener('click', () => focaliser(carte.getAttribute('aria-pressed') === 'true' ? null : i));
+    scene.querySelector('[data-precedent]')!.addEventListener('click', () => montrer((courant() - 1 + cartes.length) % cartes.length));
+    scene.querySelector('[data-suivant]')!.addEventListener('click', () => montrer((courant() + 1) % cartes.length));
+    cartes.forEach((c, i) => {
+      c.addEventListener('click', () => montrer(i));
+      c.addEventListener('focus', () => montrer(i));
     });
-
-    // Pagination de la bande mobile
-    bande.addEventListener(
-      'scroll',
-      () => {
-        // offsetWidth ignore la rotation des cartes (getBoundingClientRect l'inclurait)
-        const largeur = cartes[0].offsetWidth + 12;
-        const actif = Math.min(points.length - 1, Math.round(bande.scrollLeft / largeur));
-        points.forEach((p, i) => {
-          p.classList.toggle('w-[18px]', i === actif);
-          p.classList.toggle('bg-vert', i === actif);
-          p.classList.toggle('w-1.5', i !== actif);
-          p.classList.toggle('bg-trait-fort', i !== actif);
-        });
-      },
-      { passive: true },
-    );
   }
 </script>

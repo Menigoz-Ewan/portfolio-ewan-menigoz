@@ -1,9 +1,15 @@
 ---
+// Page Projets : carrousel « flex » (variante A du canvas Claude Design, inspirée de « Flex Carousel »).
+// - Les cartes défilent sur une rangée (défilement natif : souris, doigt, pavé tactile, clavier) ;
+//   la carte la plus proche du centre est mise en avant, les autres reculent un peu.
+// - Sous le carrousel : flèches précédent / suivant et filtres en barre segmentée ;
+//   filtrer garde les projets du domaine et recentre sur le premier.
 import Layout from '../../layouts/Layout.astro';
 import IntroPage from '../../components/IntroPage.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import Button from '../../components/Button.astro';
 import Icon from '../../components/Icon.astro';
+import IconeAnimee from '../../components/IconeAnimee.astro';
 import { projets, domaines, ordreDomaines, lienProjet, type Categorie } from '../../data/projets';
 
 const compte = (id: string) => (id === 'tous' ? projets.length : projets.filter((p) => p.categories.includes(id as Categorie)).length);
@@ -27,73 +33,150 @@ const filtres = [
     chapo="Apprendre la LSF, rendre des données lisibles, valoriser un patrimoine, refondre une identité : chaque projet part d’un besoin concret et aboutit à un livrable — web app, datavisualisation, affiches ou charte."
   />
 
-  <!-- Filtres : sous le panneau, sur le fond crème -->
-  <section aria-label="Filtres" class="conteneur py-8">
-    <div role="group" aria-label="Filtrer les projets" class="flex flex-wrap gap-2" data-filtres>
-      {
-        filtres.map((c) => (
-          <button
-            type="button"
-            aria-pressed={c.id === 'tous' ? 'true' : 'false'}
-            data-filtre={c.id}
-            class:list={[
-              'filtre flex items-center gap-2 rounded-full border py-2.5 pr-3.5 transition-colors duration-(--duree-bouton) ease-(--ease-sortie)',
-              c.icone ? 'pl-3' : 'pl-4',
-            ]}
-          >
-            {c.icone && <span class="filtre-icone"><Icon nom={c.icone} /></span>}
-            <span class="text-ui">{c.libelle}</span>
-            <span class="font-mono text-[11px] font-medium">{compte(c.id)}</span>
-          </button>
-        ))
-      }
-    </div>
-  </section>
-
-  <section aria-labelledby="titre-liste" class="conteneur pb-24">
+  <section aria-labelledby="titre-liste" class="pb-16 pt-10" data-carrousel>
     <!-- Titre invisible : garde l'ordre des titres h1 → h2 → h3 (QUALITE A12) -->
     <h2 id="titre-liste" class="sr-only">Liste des projets</h2>
     <p class="sr-only" aria-live="polite" data-filtres-annonce></p>
-    <ul class="grid gap-9 md:grid-cols-2 lg:grid-cols-3">
+
+    <!-- Rangée de cartes : défile horizontalement, chaque carte s'aimante au centre -->
+    <ul class="piste" data-piste>
       {
         projets.map((p) => (
-          <li data-categories={p.categories.join(' ')} class="carte-filtrable">
+          <li data-categories={p.categories.join(' ')} class="carte-carrousel">
             <ProjectCard titre={p.titre} categories={p.categories} sousDomaines={p.sousDomaines} resume={p.resume} vignette={p.vignette} href={lienProjet(p)} class="h-full" />
           </li>
         ))
       }
-      <!-- Toute la largeur de la grille : passe toujours sur sa propre ligne, sous les projets -->
-      <li class="carte-filtrable md:col-span-2 lg:col-span-3" data-cta>
-        <div class="flex h-full flex-col justify-center gap-8 rounded-2xl bg-vert p-8 md:min-h-[356px] md:flex-row lg:min-h-[396px] md:items-center md:justify-between md:px-12">
-          <div class="flex max-w-[420px] flex-col gap-3 text-white">
-            <h2 class="text-h1">Et si le prochain était le vôtre ?</h2>
-            <p class="text-body">Je cherche un stage en design UI/UX ou en front-end.</p>
-          </div>
-          <Button href="/contact" variante="light" class="self-start md:self-auto">Proposer un stage</Button>
-        </div>
-      </li>
     </ul>
+
+    <!-- Commandes : flèches et filtres en barre segmentée -->
+    <div class="conteneur mt-6 flex flex-wrap items-center justify-center gap-3">
+      <button type="button" class="fleche-carrousel" aria-label="Projet précédent" data-precedent>
+        <span class="inline-flex rotate-180"><Icon nom="arrow-right" taille={18} /></span>
+      </button>
+      <div role="group" aria-label="Filtrer les projets" class="segments order-first w-full sm:order-none sm:w-auto" data-filtres>
+        {
+          filtres.map((c) => (
+            <button
+              type="button"
+              aria-pressed={c.id === 'tous' ? 'true' : 'false'}
+              data-filtre={c.id}
+              class:list={['filtre declencheur-icone', c.icone ? 'pl-3' : 'pl-4']}
+            >
+              {c.icone && <span class="filtre-icone"><IconeAnimee nom={c.icone} taille={16} /></span>}
+              <span class="text-ui">{c.libelle}</span>
+              <span class="font-mono text-[11px] font-medium">{compte(c.id)}</span>
+            </button>
+          ))
+        }
+      </div>
+      <button type="button" class="fleche-carrousel" aria-label="Projet suivant" data-suivant>
+        <Icon nom="arrow-right" taille={18} />
+      </button>
+    </div>
+  </section>
+
+  <!-- Appel à l'action -->
+  <section class="conteneur pb-24">
+    <div class="flex flex-col justify-center gap-8 rounded-2xl bg-vert p-8 md:min-h-[300px] md:flex-row md:items-center md:justify-between md:px-12">
+      <div class="flex max-w-[420px] flex-col gap-3 text-white">
+        <h2 class="text-h1">Et si le prochain était le vôtre ?</h2>
+        <p class="text-body">Je cherche un stage en design UI/UX ou en front-end.</p>
+      </div>
+      <Button href="/contact" variante="light" class="self-start md:self-auto">Proposer un stage</Button>
+    </div>
   </section>
 </Layout>
 
 <style>
-  /* États du composant « Filtre » : Default, Hover, Actif */
-  .filtre {
+  /* ── Rangée de cartes ───────────────────────────────────────────────── */
+  .piste {
+    --largeur-carte: min(340px, 82vw);
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    /* Marge des deux côtés : la première et la dernière carte peuvent venir au centre */
+    padding: 12px calc(50% - var(--largeur-carte) / 2) 24px;
+    scrollbar-width: none;
+  }
+  .piste::-webkit-scrollbar {
+    display: none;
+  }
+  .carte-carrousel {
+    flex: 0 0 var(--largeur-carte);
+    scroll-snap-align: center;
+    transition:
+      scale 600ms var(--ease-sortie),
+      opacity 400ms ease;
+  }
+  /* Cartes éloignées du centre : un peu plus petites et estompées */
+  .carte-carrousel:not(.centre) {
+    scale: 0.9;
+    opacity: 0.55;
+  }
+  .carte-carrousel.centre :global(.carte-projet) {
+    border-color: var(--color-vert-texte);
+    box-shadow: 0 18px 36px rgb(23 23 23 / 0.1);
+  }
+
+  /* ── Flèches ────────────────────────────────────────────────────────── */
+  .fleche-carrousel {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--color-trait-fort);
     background: var(--color-carte);
-    border-color: var(--color-trait-fort);
+    color: var(--color-principal);
+    transition: background-color var(--duree-bouton) var(--ease-sortie);
+  }
+  .fleche-carrousel:hover {
+    background: var(--color-surface);
+  }
+  .fleche-carrousel:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 2px;
+  }
+
+  /* ── Filtres en barre segmentée ─────────────────────────────────────── */
+  .segments {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--color-surface);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filtre {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    padding-block: 10px;
+    padding-right: 14px;
+    border-radius: 999px;
     color: color-mix(in srgb, var(--color-principal) 80%, transparent);
+    transition:
+      background-color var(--duree-bouton) var(--ease-sortie),
+      color var(--duree-bouton) var(--ease-sortie);
   }
   .filtre span:last-child {
     color: var(--color-secondaire);
   }
   .filtre:hover {
-    background: var(--color-surface);
-    border-color: color-mix(in srgb, var(--color-principal) 35%, transparent);
+    background: var(--color-carte);
     color: var(--color-principal);
+  }
+  .filtre:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: -2px;
   }
   .filtre[aria-pressed='true'] {
     background: var(--color-vert);
-    border-color: var(--color-vert);
     color: #fff;
   }
   .filtre[aria-pressed='true'] span:last-child {
@@ -107,47 +190,83 @@ const filtres = [
   .filtre[aria-pressed='true'] .filtre-icone {
     color: #fff;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .piste {
+      scroll-behavior: auto;
+    }
+    .carte-carrousel {
+      transition: none;
+    }
+  }
 </style>
 
 <script>
-  // Filtrage côté client : masque les projets d'une autre catégorie et annonce le résultat.
-  const boutons = document.querySelectorAll<HTMLButtonElement>('[data-filtre]');
-  const projets = document.querySelectorAll<HTMLElement>('[data-categories]');
-  const annonce = document.querySelector<HTMLElement>('[data-filtres-annonce]');
+  for (const bloc of document.querySelectorAll<HTMLElement>('[data-carrousel]')) {
+    const piste = bloc.querySelector<HTMLElement>('[data-piste]')!;
+    const cartes = [...piste.querySelectorAll<HTMLElement>('.carte-carrousel')];
+    const boutons = [...bloc.querySelectorAll<HTMLButtonElement>('[data-filtre]')];
+    const annonce = bloc.querySelector<HTMLElement>('[data-filtres-annonce]');
+    const visibles = () => cartes.filter((c) => !c.hidden);
 
-  const reduireAnimations = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  // Affiche ou masque les cartes selon le filtre choisi
-  const filtrer = (filtre: string) => {
-    let visibles = 0;
-    for (const p of projets) {
-      const visible = filtre === 'tous' || (p.dataset.categories ?? '').split(' ').includes(filtre);
-      p.hidden = !visible;
-      if (visible) visibles++;
-    }
-    if (annonce) annonce.textContent = `${visibles} projet${visibles > 1 ? 's' : ''} affiché${visibles > 1 ? 's' : ''}`;
-  };
-
-  for (const bouton of boutons) {
-    bouton.addEventListener('click', () => {
-      const filtre = bouton.dataset.filtre ?? 'tous';
-      for (const b of boutons) b.setAttribute('aria-pressed', String(b === bouton));
-
-      // Sans View Transitions (Firefox) ou avec « réduire les animations » : changement immédiat
-      if (!document.startViewTransition || reduireAnimations.matches) {
-        filtrer(filtre);
-        return;
+    // Carte la plus proche du centre de la rangée : elle reçoit la classe « centre »
+    const carteAuCentre = () => {
+      const milieu = piste.getBoundingClientRect().left + piste.clientWidth / 2;
+      let meilleure = visibles()[0];
+      let ecart = Infinity;
+      for (const c of visibles()) {
+        const r = c.getBoundingClientRect();
+        const d = Math.abs(r.left + r.width / 2 - milieu);
+        if (d < ecart) [ecart, meilleure] = [d, c];
       }
+      return meilleure;
+    };
+    const marquerCentre = () => {
+      const centre = carteAuCentre();
+      for (const c of cartes) c.classList.toggle('centre', c === centre);
+    };
+    let image = 0;
+    piste.addEventListener('scroll', () => {
+      cancelAnimationFrame(image);
+      image = requestAnimationFrame(marquerCentre);
+    }, { passive: true });
 
-      // Animation native du navigateur (la même que pour les changements de page) :
-      // chaque carte reçoit un nom le temps de l'animation, le navigateur la fait glisser
-      // vers sa nouvelle place, et fait apparaître / disparaître les autres en fondu.
-      // Le bloc « Et si le prochain était le vôtre ? » glisse aussi quand la grille change.
-      const animes = [...projets, ...document.querySelectorAll<HTMLElement>('[data-cta]')];
-      animes.forEach((el, i) => (el.style.viewTransitionName = `projet-${i}`));
-      const transition = document.startViewTransition(() => filtrer(filtre));
-      // Noms retirés à la fin, pour ne pas gêner la transition entre les pages
-      transition.finished.finally(() => animes.forEach((el) => (el.style.viewTransitionName = '')));
-    });
+    // Amène une carte au centre (défilement doux, sauf si « réduire les animations »)
+    const centrer = (carte: HTMLElement | undefined) => {
+      if (!carte) return;
+      const r = carte.getBoundingClientRect();
+      const p = piste.getBoundingClientRect();
+      piste.scrollBy({ left: r.left + r.width / 2 - (p.left + piste.clientWidth / 2) });
+    };
+    const decaler = (sens: number) => {
+      const liste = visibles();
+      const i = liste.indexOf(carteAuCentre());
+      centrer(liste[Math.min(liste.length - 1, Math.max(0, i + sens))]);
+    };
+    bloc.querySelector('[data-precedent]')!.addEventListener('click', () => decaler(-1));
+    bloc.querySelector('[data-suivant]')!.addEventListener('click', () => decaler(1));
+
+    // Au clavier : la carte qui reçoit le focus vient au centre
+    for (const c of cartes) c.addEventListener('focusin', () => centrer(c));
+
+    // Filtres : garde les cartes du domaine, recentre sur la première et annonce le résultat
+    for (const bouton of boutons) {
+      bouton.addEventListener('click', () => {
+        const filtre = bouton.dataset.filtre ?? 'tous';
+        for (const b of boutons) b.setAttribute('aria-pressed', String(b === bouton));
+        for (const c of cartes) c.hidden = !(filtre === 'tous' || (c.dataset.categories ?? '').split(' ').includes(filtre));
+        const n = visibles().length;
+        if (annonce) annonce.textContent = `${n} projet${n > 1 ? 's' : ''} affiché${n > 1 ? 's' : ''}`;
+        piste.scrollTo({ left: 0 });
+        requestAnimationFrame(marquerCentre);
+        // Petite apparition de la nouvelle sélection
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          piste.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+        }
+      });
+    }
+
+    marquerCentre();
+    window.addEventListener('resize', marquerCentre);
   }
 </script>

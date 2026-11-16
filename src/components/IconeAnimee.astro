@@ -1,0 +1,261 @@
+---
+// Icônes animées au survol (inspirées de useanimations.com, recréées en SVG + CSS, sans bibliothèque).
+// L'animation se joue quand on survole, ou atteint au clavier, l'élément parent qui porte la classe
+// « declencheur-icone » (une carte, un filtre, un lien…). Sans mouvement avec « réduire les animations ».
+// Dessin au trait, en currentColor : l'icône prend la couleur du texte autour.
+export type NomIconeAnimee = 'design' | 'code' | 'message' | 'instagram' | 'linkedin' | 'mail';
+
+interface Props {
+  nom: NomIconeAnimee;
+  taille?: number;
+  class?: string;
+}
+
+const { nom, taille = 20, class: classe = '' } = Astro.props;
+---
+
+<svg
+  class:list={['icone-animee', `icone-${nom}`, classe]}
+  width={taille}
+  height={taille}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.8"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    nom === 'design' && (
+      <g class="plume">
+        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+        <path class="plume-trait" d="M2 2l7.586 7.586" pathLength="1" />
+        <circle cx="11" cy="11" r="2" />
+      </g>
+    )
+  }
+  {
+    nom === 'code' && (
+      <>
+        <polyline class="chevron-droit" points="16 18 22 12 16 6" />
+        <polyline class="chevron-gauche" points="8 6 2 12 8 18" />
+        <path class="barre-oblique" d="M14 5l-4 14" pathLength="1" />
+      </>
+    )
+  }
+  {
+    nom === 'message' && (
+      <>
+        <path class="bulle" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <circle class="point point-1" cx="8" cy="10" r="0.6" fill="currentColor" />
+        <circle class="point point-2" cx="12" cy="10" r="0.6" fill="currentColor" />
+        <circle class="point point-3" cx="16" cy="10" r="0.6" fill="currentColor" />
+      </>
+    )
+  }
+  {
+    nom === 'instagram' && (
+      <>
+        <rect class="boitier" x="2" y="2" width="20" height="20" rx="5" />
+        <path class="objectif" d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <path class="flash" d="M17.5 6.5h.01" />
+      </>
+    )
+  }
+  {
+    nom === 'linkedin' && (
+      <>
+        <path class="barre-in" d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect class="barre-i" x="2" y="9" width="4" height="12" />
+        <circle class="point-i" cx="4" cy="4" r="2" />
+      </>
+    )
+  }
+  {
+    nom === 'mail' && (
+      <>
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline class="rabat" points="22,6 12,13 2,6" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .icone-animee {
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  .icone-animee * {
+    transform-box: fill-box;
+  }
+
+  /* Plume (design) : elle trace un petit trait en oscillant, comme si elle dessinait */
+  .plume {
+    transform-origin: 30% 30%;
+  }
+  .plume-trait {
+    stroke-dasharray: 1;
+  }
+  :global(.declencheur-icone:hover) .plume,
+  :global(.declencheur-icone:focus-visible) .plume,
+  :global(.declencheur-icone:focus-within) .plume {
+    animation: plume-dessine 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  :global(.declencheur-icone:hover) .plume-trait,
+  :global(.declencheur-icone:focus-visible) .plume-trait,
+  :global(.declencheur-icone:focus-within) .plume-trait {
+    animation: trace 600ms ease-out;
+  }
+  @keyframes plume-dessine {
+    30% {
+      transform: rotate(-14deg) translate(1px, 1px);
+    }
+    60% {
+      transform: rotate(8deg);
+    }
+  }
+
+  /* Code : les chevrons s'écartent et la barre oblique se trace entre eux */
+  .barre-oblique {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition:
+      stroke-dashoffset 400ms ease-out 100ms,
+      opacity 150ms;
+  }
+  .chevron-gauche,
+  .chevron-droit {
+    transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  :global(.declencheur-icone:hover) .barre-oblique,
+  :global(.declencheur-icone:focus-visible) .barre-oblique,
+  :global(.declencheur-icone:focus-within) .barre-oblique {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  :global(.declencheur-icone:hover) .chevron-gauche,
+  :global(.declencheur-icone:focus-visible) .chevron-gauche,
+  :global(.declencheur-icone:focus-within) .chevron-gauche {
+    transform: translateX(-2px);
+  }
+  :global(.declencheur-icone:hover) .chevron-droit,
+  :global(.declencheur-icone:focus-visible) .chevron-droit,
+  :global(.declencheur-icone:focus-within) .chevron-droit {
+    transform: translateX(2px);
+  }
+
+  /* Message : trois points apparaissent l'un après l'autre, comme quelqu'un qui écrit */
+  .point {
+    opacity: 0;
+    transform-origin: center;
+  }
+  :global(.declencheur-icone:hover) .point,
+  :global(.declencheur-icone:focus-visible) .point,
+  :global(.declencheur-icone:focus-within) .point {
+    animation: point-ecrit 900ms ease-in-out infinite;
+  }
+  .point-2 {
+    animation-delay: 150ms !important;
+  }
+  .point-3 {
+    animation-delay: 300ms !important;
+  }
+  @keyframes point-ecrit {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0) scale(1.4);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-1.5px) scale(1.8);
+    }
+  }
+
+  /* Instagram : l'objectif fait la mise au point, le flash clignote */
+  .objectif {
+    transform-origin: center;
+  }
+  :global(.declencheur-icone:hover) .objectif,
+  :global(.declencheur-icone:focus-visible) .objectif {
+    animation: mise-au-point 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  :global(.declencheur-icone:hover) .flash,
+  :global(.declencheur-icone:focus-visible) .flash {
+    animation: clignote 600ms steps(2) 2;
+  }
+  @keyframes mise-au-point {
+    40% {
+      transform: scale(0.6) rotate(-45deg);
+    }
+  }
+  @keyframes clignote {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* LinkedIn : le point du « i » saute, les deux barres poussent depuis le bas */
+  .barre-i,
+  .barre-in {
+    transform-origin: bottom;
+  }
+  :global(.declencheur-icone:hover) .point-i,
+  :global(.declencheur-icone:focus-visible) .point-i {
+    animation: saute 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  :global(.declencheur-icone:hover) .barre-i,
+  :global(.declencheur-icone:focus-visible) .barre-i {
+    animation: pousse 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  :global(.declencheur-icone:hover) .barre-in,
+  :global(.declencheur-icone:focus-visible) .barre-in {
+    animation: pousse 500ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms backwards;
+  }
+  @keyframes saute {
+    40% {
+      transform: translateY(-4px);
+    }
+  }
+  @keyframes pousse {
+    from {
+      transform: scaleY(0.3);
+    }
+  }
+
+  /* Mail : le rabat de l'enveloppe s'ouvre puis se referme */
+  .rabat {
+    transform-origin: top;
+  }
+  :global(.declencheur-icone:hover) .rabat,
+  :global(.declencheur-icone:focus-visible) .rabat {
+    animation: ouvre-rabat 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes ouvre-rabat {
+    45% {
+      transform: scaleY(-1) translateY(2px);
+    }
+  }
+
+  @keyframes trace {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icone-animee *,
+    :global(.declencheur-icone) .icone-animee * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>

@@ -276,10 +276,13 @@
   animation-duration: 250ms;
   animation-timing-function: ease-out;
 }
-/* L'onglet vert glisse d'un lien à l'autre : 0,35 s, courbe de la maquette */
+/*
+ * L'onglet vert glisse d'un lien à l'autre avec un rebond marqué (variante « pilule rebondissante ») :
+ * la courbe dépasse 1 (1,7), l'onglet va donc un peu trop loin puis revient se poser sous le lien.
+ */
 ::view-transition-group(onglet) {
-  animation-duration: 350ms;
-  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation-duration: 550ms;
+  animation-timing-function: cubic-bezier(0.34, 1.7, 0.5, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   @view-transition {

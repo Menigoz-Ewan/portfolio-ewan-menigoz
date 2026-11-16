@@ -1,6 +1,8 @@
 ---
 // Logo typographique EWME : E, W, M puis un E retourné comme une parenthèse.
 // Même espace entre toutes les lettres. En currentColor pour passer en encre ou en crème.
+// viewBox élargi d'1 unité de chaque côté : sans cette marge, le bord droit du dernier E
+// tombait sur une fraction de pixel et paraissait coupé.
 interface Props {
   /** true quand le logo sert de lien vers l'accueil : il reçoit alors un nom accessible */
   lien?: boolean;
@@ -11,7 +13,7 @@ const { lien = false, class: classe = '' } = Astro.props;
 const accessibilite = lien ? { role: 'img', 'aria-label': 'EWME, accueil' } : { 'aria-hidden': 'true' as const };
 ---
 
-<svg viewBox="0 0 392 164" fill="none" xmlns="http://www.w3.org/2000/svg" class={classe} focusable="false" {...accessibilite}>
+<svg viewBox="-1 0 394 164" overflow="visible" fill="none" xmlns="http://www.w3.org/2000/svg" class={classe} focusable="false" {...accessibilite}>
   <path d="M61.3636 0V13.0909H13.0909V75.2727H61.3636V88.3636H13.0909V150.545H61.3636V163.636H0V0H61.3636Z" fill="currentColor"></path>
   <path d="M110.452 0H97.3613V163.636H110.452L138.27 129.273L164.452 163.636H177.543V0H164.452V139.909L138.27 105.955L110.452 140.164V0Z" fill="currentColor"></path>
   <path d="M227.091 163.636H214V0H227.091L254.909 34.3636L281.091 0H294.182V163.636H281.091V23.7273L254.909 57.6818L227.091 23.4725V163.636Z" fill="currentColor"></path>

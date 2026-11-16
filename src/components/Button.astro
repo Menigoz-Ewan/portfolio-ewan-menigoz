@@ -11,7 +11,7 @@ import Icon, { type NomIcone } from './Icon.astro';
 interface Props {
   href?: string;
   type?: 'button' | 'submit';
-  variante?: 'primary' | 'secondary' | 'light' | 'contour';
+  variante?: 'primary' | 'secondary' | 'light' | 'encre' | 'contour';
   icone?: NomIcone | null;
   telecharger?: boolean;
   externe?: boolean;
@@ -221,6 +221,16 @@ const lien = href
     --texte: var(--color-encre);
     --pastille: var(--color-vert);
     --remplissage: var(--color-rouge);
+    --icone: #fff;
+    --texte-survol: #fff;
+    --contour-focus: #fff;
+  }
+  /* Encre : bouton blanc sur le panneau vert, pastille et remplissage encre (noir) ;
+     pour une action secondaire sur le panneau (ex. « Télécharger mon CV »), sans vert sur vert ni rouge */
+  .bouton-encre {
+    --fond: #fff;
+    --texte: var(--color-encre);
+    --pastille: var(--color-encre);
     --icone: #fff;
     --texte-survol: #fff;
     --contour-focus: #fff;

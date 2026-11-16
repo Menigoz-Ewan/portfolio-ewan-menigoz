@@ -20,7 +20,7 @@
 | 10/11 | Nouveau logo et header à onglet ; statut « stage » du hero ; tests d'écran de chargement ; CV |
 | 12/11 | Études de cas TiK•TaK, Climat Outre-Mer et La Cimade ; écran de chargement « Les parenthèses » |
 | 13/11 | Thème clair / sombre ; menu à onglets fantômes |
-| 16/11 | Formulaire PocketBase ; fusion dans `main` ; étiquettes des projets ; filtres animés et affiches finales ; mentions légales et RGPD ; animations du hero ; audit qualité ; responsive |
+| 16/11 | Formulaire PocketBase ; onglets « pilule », accueil en accordéon, bouton thème « éclipse » ; fusion dans `main` ; étiquettes des projets ; filtres animés et affiches finales ; mentions légales et RGPD ; animations du hero ; audit qualité ; responsive |
 
 ---
 
@@ -297,3 +297,23 @@
 - La bande « Hors écran » défile sous 1280 px (au lieu de 768 px) : les 9 cartes ne tiennent sur une ligne qu'à partir de cette largeur.
 - Grille « En bref » sur une colonne sous 375 px ; boutons qui passent à la ligne seulement sous 400 px.
 - Vignettes de projet à leurs proportions réelles (728 × 456) : plus jamais rognées.
+
+### 16/11 · Onglets « pilule », projets en accordéon, bouton thème
+
+**Fait**
+- **Variantes dans Claude Design** (onglets, bloc projets, bouton thème) ; mes choix : onglets « pilule rebondissante », galerie en accordéon et, pour le thème, d’abord « coucher de soleil + volet », puis finalement « éclipse + page qui se tourne ».
+- **Onglets du menu.** Onglet vert de 128 × 38 px (dessus en demi-cercle, oreilles de 10 px) au lieu de 154 × 64 px ; les onglets fantômes ont la même silhouette ; le glissement entre les pages rebondit (550 ms, courbe qui dépasse 1).
+- **Accueil, bloc « Trois projets, trois domaines ».** Nouveau composant `AccordeonProjets.astro` : les 3 projets en bandes côte à côte ; celle survolée ou atteinte au clavier s'élargit, son image glisse en parallaxe et sa fiche (domaines, titre, sous-domaines, résumé) apparaît. Le bouton « Tous les projets » reste.
+- **Bouton thème (« éclipse + page qui se tourne »).** Au passage en sombre, les rayons du soleil rentrent en tournant et une ombre le croque jusqu'à n'en laisser qu'un croissant de lune ; le nouveau thème apparaît en triangle depuis le coin en haut à droite, comme une page qu'on tourne, pendant que l'ancienne page s'assombrit un peu dessous (View Transitions). J'avais d'abord choisi « coucher de soleil + volet », codé puis remplacé.
+- **Petites corrections.** Bouton « Télécharger mon CV » en blanc et encre (nouvelle variante `encre`, plus de vert sur le panneau vert) ; étiquettes « Figma → Astro » et « BUT MMI · 2e année » retirées du hero ; marge de sécurité autour du logo.
+
+**Ce qui a coincé**
+- Les pages React Bits et Jitter ne montrent pas leur code (aperçus en JavaScript, modèle à « remixer ») : comportements repris d'après leur description (ouverture au survol ou au focus, image en parallaxe).
+- Bouton thème : pendant le clic, la case est déjà cochée ; lire son inverse annulait le changement. Corrigé et vérifié dans les deux sens, à la souris et au clavier.
+- Je n'ai pas trouvé où le dernier E du logo est coupé (header et écran de chargement intacts) : à préciser.
+
+**Décidé**
+- Accueil : 3 projets (TiK•TaK, Climat Outre-Mer, La Cimade), titre et bouton « Tous les projets » conservés.
+- Mobile (non dessiné) : accordéon vertical ; un premier toucher ouvre le projet, le second ouvre l'étude de cas.
+- Bouton thème : l'icône montre le thème actuel (soleil en clair, lune en sombre).
+- Croissant de lune épaissi (ombre moins décalée) : la première version, trop fine, se lisait mal à 22 px.

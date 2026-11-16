@@ -1,8 +1,11 @@
 ---
-// Bouton rond soleil / lune (composant Figma « Bouton thème », 44 × 44 px).
-// Case à cocher daisyUI « theme-controller » : cochée = thème sombre.
-// Lune affichée en thème clair (pour passer en sombre), soleil en thème sombre.
-// Le choix est mémorisé dans localStorage ; le script du <head> (Layout.astro) l'applique avant l'affichage.
+// Bouton rond du thème (44 × 44 px) — variante A du canvas Claude Design : « éclipse + page qui se tourne ».
+// - Icône : en thème clair, un soleil ; au passage en sombre, ses rayons rentrent et une ombre vient
+//   le « croquer » jusqu'à n'en laisser qu'un croissant de lune (et inversement).
+// - Page : le nouveau thème apparaît depuis le coin en haut à droite, comme une page qu'on tourne
+//   (View Transitions natives du navigateur).
+// Case à cocher daisyUI « theme-controller » : cochée = thème sombre. Le choix est mémorisé dans localStorage ;
+// le script du <head> (Layout.astro) l'applique avant l'affichage. Avec « réduire les animations » : changement immédiat.
 interface Props {
   class?: string;
 }
@@ -11,37 +14,135 @@ const { class: classe = '' } = Astro.props;
 
 <label
   class:list={[
-    'swap swap-rotate size-11 shrink-0 rounded-full border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:bg-surface',
+    'bouton-theme relative grid size-11 shrink-0 cursor-pointer place-items-center overflow-hidden rounded-full border border-trait-fort text-principal transition-colors duration-(--duree-bouton) hover:bg-surface',
     'has-focus-visible:outline-[2.5px] has-focus-visible:outline-offset-2 has-focus-visible:outline-vert-texte',
     classe,
   ]}
 >
-  <input type="checkbox" class="theme-controller" value="ewme-sombre" aria-label="Thème sombre" data-bouton-theme />
-  <!-- Lune (thème clair) -->
-  <svg class="swap-off size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-  </svg>
-  <!-- Soleil (thème sombre) -->
-  <svg class="swap-on size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="4"></circle>
-    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+  <input type="checkbox" class="theme-controller sr-only" value="ewme-sombre" aria-label="Thème sombre" data-bouton-theme />
+  <svg class="size-[22px] overflow-visible" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <!--
+      Masque de l'éclipse : tout est visible (rectangle blanc) sauf le disque noir, l'« ombre ».
+      En thème clair, l'ombre est rangée hors du soleil ; en sombre, elle glisse dessus et le croque.
+    -->
+    <defs>
+      <mask id="masque-eclipse">
+        <rect x="-4" y="-4" width="32" height="32" fill="#fff"></rect>
+        <circle class="eclipse-ombre" cx="22" cy="6" r="6" fill="#000"></circle>
+      </mask>
+    </defs>
+    <!-- Disque du soleil, qui grossit en lune -->
+    <circle class="eclipse-disque" cx="12" cy="12" r="4.5" fill="currentColor" mask="url(#masque-eclipse)"></circle>
+    <!-- Rayons, qui rentrent en tournant -->
+    <g class="eclipse-rayons" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+    </g>
   </svg>
 </label>
 
+<style>
+  /*
+   * Éclipse, quand la case est cochée (thème sombre) :
+   * les rayons rentrent en tournant, le disque grossit et l'ombre glisse dessus pour n'en laisser qu'un croissant.
+   * Courbe qui dépasse 1 : petit rebond à la fin de chaque mouvement.
+   */
+  .eclipse-rayons,
+  .eclipse-disque {
+    transform-origin: 12px 12px;
+  }
+  .eclipse-rayons,
+  .eclipse-disque,
+  .eclipse-ombre {
+    transition:
+      transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 300ms ease;
+  }
+  .bouton-theme:has(input:checked) .eclipse-rayons {
+    transform: rotate(90deg) scale(0);
+    opacity: 0;
+  }
+  .bouton-theme:has(input:checked) .eclipse-disque {
+    transform: scale(1.55);
+  }
+  .bouton-theme:has(input:checked) .eclipse-ombre {
+    transform: translate(-7px, 3px);
+  }
+
+  /*
+   * Page qui se tourne : pendant le changement de thème, la capture de la nouvelle page
+   * (::view-transition-new(root)) est découverte en triangle depuis le coin en haut à droite,
+   * qui grandit jusqu'à couvrir tout l'écran ; l'ancienne page, dessous, s'assombrit un peu (ombre de la feuille).
+   * La classe « changement-theme » n'est posée sur <html> que le temps de cette transition,
+   * pour ne pas toucher aux transitions entre les pages.
+   */
+  :global(html.changement-theme::view-transition-old(root)) {
+    animation: page-dessous 900ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  :global(html.changement-theme::view-transition-new(root)) {
+    animation: page-tourne 900ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  @keyframes -global-page-tourne {
+    from {
+      clip-path: polygon(100% 0, 100% 0, 100% 0);
+    }
+    to {
+      clip-path: polygon(-130% 0, 100% 0, 100% 240%);
+    }
+  }
+  @keyframes -global-page-dessous {
+    50% {
+      filter: brightness(0.82);
+    }
+  }
+  /* Les autres éléments nommés (l'onglet du menu) ne bougent pas pendant le changement */
+  :global(html.changement-theme::view-transition-group(*)) {
+    animation-duration: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eclipse-rayons,
+    .eclipse-disque,
+    .eclipse-ombre {
+      transition: none;
+    }
+  }
+</style>
+
 <script>
-  // Coche la case selon le thème appliqué par le <head>, puis mémorise chaque changement.
+  // Coche la case selon le thème appliqué par le <head>, puis gère chaque changement avec l'effet de page qui se tourne.
   const cases = document.querySelectorAll<HTMLInputElement>('[data-bouton-theme]');
   const html = document.documentElement;
+  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Applique un thème : case cochée, attribut data-theme et mémorisation
+  const appliquer = (sombre: boolean) => {
+    for (const c of cases) c.checked = sombre;
+    const theme = sombre ? 'ewme-sombre' : 'ewme-clair';
+    html.dataset.theme = theme;
+    try {
+      localStorage.setItem('ewme-theme', theme);
+    } catch {
+      // Stockage indisponible (navigation privée stricte) : le thème vaut pour cette page seulement
+    }
+  };
+
   for (const c of cases) {
     c.checked = html.dataset.theme === 'ewme-sombre';
-    c.addEventListener('change', () => {
-      const theme = c.checked ? 'ewme-sombre' : 'ewme-clair';
-      html.dataset.theme = theme;
-      try {
-        localStorage.setItem('ewme-theme', theme);
-      } catch {
-        // Stockage indisponible (navigation privée stricte) : le thème vaut pour cette page seulement
+    // On bloque le changement immédiat de la case (souris, Espace au clavier) pour l'appliquer nous-mêmes :
+    // le navigateur doit d'abord photographier l'ancienne page, puis la nouvelle, avant de tourner la page.
+    c.addEventListener('click', (e) => {
+      // Pendant le clic, la case montre déjà son nouvel état (le navigateur l'annulera après preventDefault)
+      const sombre = c.checked;
+      e.preventDefault();
+      if (!document.startViewTransition || reduit.matches) {
+        // Sans View Transitions (Firefox) ou avec « réduire les animations » : changement immédiat
+        // (après le clic, sinon le navigateur annule la modification de la case)
+        setTimeout(() => appliquer(sombre));
+        return;
       }
+      html.classList.add('changement-theme');
+      const transition = document.startViewTransition(() => appliquer(sombre));
+      transition.finished.finally(() => html.classList.remove('changement-theme'));
     });
   }
 </script>

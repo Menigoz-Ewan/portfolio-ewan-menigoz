@@ -71,16 +71,18 @@ const { active = null, variante = 'page' } = Astro.props;
 
 <style>
   /*
-   * Onglet actif (maquette) : 154 × 64 px au total, centré sur le lien.
-   * Un dessus de 86 px, collé au panneau (le bas de la barre = le haut du panneau),
-   * et deux « oreilles » de 34 px qui le raccordent au panneau par une courbe en S.
+   * Onglet actif « pilule rebondissante » (variante B du canvas Claude Design) : 128 × 38 px au total,
+   * centré sur le lien et posé sur le panneau (le bas de la barre = le haut du panneau).
+   * Un dessus de 108 px en demi-cercle (coins de 19 px) et deux petites « oreilles » de 10 px
+   * qui le raccordent au panneau par une courbe creuse.
    */
   .onglet {
     position: absolute;
-    top: 0;
     bottom: 0;
     left: 50%;
-    width: 86px;
+    width: 108px;
+    height: 38px;
+    border-radius: 19px 19px 0 0;
     translate: -50% 0;
     z-index: 2; /* devant les fantômes voisins (remplissage et trait), comme le panneau dans la maquette */
     background: var(--color-vert);
@@ -91,17 +93,17 @@ const { active = null, variante = 'page' } = Astro.props;
     content: '';
     position: absolute;
     bottom: 0;
-    width: 34px;
-    height: 64px;
+    width: 10px;
+    height: 10px;
     background: inherit;
   }
   /* 1 px de recouvrement pour éviter un liseré entre l'onglet et ses oreilles */
   .onglet::before {
     right: calc(100% - 1px);
-    clip-path: path('M0 64C17 64 17 0 34 0V64Z');
+    clip-path: path('M0 10Q10 10 10 0V10Z');
   }
   .onglet::after {
     left: calc(100% - 1px);
-    clip-path: path('M34 64C17 64 17 0 0 0V64Z');
+    clip-path: path('M10 10Q0 10 0 0V10Z');
   }
 </style>

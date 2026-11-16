@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroAccueil from '../components/HeroAccueil.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import AccordeonProjets from '../components/AccordeonProjets.astro';
 import Button from '../components/Button.astro';
 import Icon from '../components/Icon.astro';
 import decoEwme from '../assets/svg/deco-ewme.svg?raw';
-import { projets, lienProjet } from '../data/projets';
+import { projets } from '../data/projets';
 import { site } from '../data/site';
 
 const selection = projets.filter((p) => p.accueil);
@@ -99,13 +99,8 @@ const personne = {
       <h2 id="titre-projets" class="text-h1">Trois projets, trois domaines</h2>
       <Button href="/projets" variante="secondary">Tous les projets</Button>
     </div>
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {
-        selection.map((p) => (
-          <ProjectCard titre={p.titre} categories={p.categories} sousDomaines={p.sousDomaines} resume={p.accueil!.resume} vignette={p.vignette} href={lienProjet(p)} />
-        ))
-      }
-    </div>
+    <!-- Galerie en accordéon : survol ou focus pour ouvrir un projet ; « Tous les projets » mène au reste -->
+    <AccordeonProjets projets={selection} />
   </section>
 
   <!-- Méthode de travail : panneau blanc arrondi qui fait écho au panneau vert du hero -->

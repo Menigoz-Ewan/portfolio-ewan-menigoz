@@ -1,0 +1,212 @@
+---
+// Galerie en accordéon des projets de l'accueil (variante A du canvas Claude Design, inspirée d'« Accordion Gallery »).
+// - Écrans larges (≥ 1024 px) : les projets sont des bandes côte à côte ; celle survolée (ou atteinte au clavier)
+//   s'élargit, son image glisse en parallaxe et sa fiche apparaît ; les autres se replient, titre à la verticale.
+// - Écrans étroits : même principe à la verticale ; un premier toucher ouvre le projet, le second ouvre l'étude de cas.
+// Chaque bande est un vrai lien vers l'étude de cas. Avec « réduire les animations » : changements sans mouvement.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import PastillesDomaines from './PastillesDomaines.astro';
+import { lienProjet, type Projet } from '../data/projets';
+
+interface Props {
+  projets: Projet[];
+}
+
+const { projets } = Astro.props;
+---
+
+<ul class="accordeon" data-accordeon>
+  {
+    projets.map((p, i) => (
+      <li class="panneau" data-ouvert={i === 0 ? '' : undefined}>
+        <a href={lienProjet(p)} class="panneau-lien">
+          <Image src={p.vignette.src} alt="" width={1100} height={690} class="panneau-image" loading="lazy" />
+          <span class="panneau-voile" aria-hidden="true" />
+          <!-- Titre de la bande repliée (décoratif : le titre complet est dans la fiche) -->
+          <span class="panneau-titre-replie" aria-hidden="true">{p.titre}</span>
+          <!-- Fiche du projet ouvert -->
+          <span class="panneau-fiche">
+            <PastillesDomaines categories={p.categories} />
+            <span class="flex items-center gap-3">
+              <span class="flex-1 text-h3 text-principal">{p.titre}</span>
+              <span class="panneau-fleche text-secondaire" aria-hidden="true"><Icon nom="arrow-up-right" taille={20} /></span>
+            </span>
+            <span class="text-label text-secondaire">{p.sousDomaines.join(' · ')}</span>
+            <span class="text-small text-secondaire">{p.accueil?.resume ?? p.resume}</span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  /* ── Structure commune ──────────────────────────────────────────────── */
+  .accordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panneau {
+    position: relative;
+    height: 96px; /* bande repliée (mobile) */
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--color-vert);
+    transition: height 650ms var(--ease-sortie);
+  }
+  .panneau[data-ouvert] {
+    height: 440px;
+  }
+  .panneau-lien {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: inherit;
+  }
+  .panneau-lien:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 3px;
+  }
+  /* Image en parallaxe : décalée et agrandie quand la bande est repliée, recentrée quand elle s'ouvre */
+  .panneau-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateX(-6%) scale(1.18);
+    transition: transform 900ms var(--ease-sortie);
+  }
+  .panneau[data-ouvert] .panneau-image {
+    transform: translateX(0) scale(1.02);
+  }
+  /* Voile sombre sur les bandes repliées, pour que leur titre crème reste lisible */
+  .panneau-voile {
+    position: absolute;
+    inset: 0;
+    background: rgb(22 22 22 / 0.55);
+    transition: opacity 500ms ease;
+  }
+  .panneau[data-ouvert] .panneau-voile {
+    opacity: 0;
+  }
+  .panneau-titre-replie {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    translate: 0 -50%;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.375rem;
+    color: var(--color-creme);
+    white-space: nowrap;
+    transition: opacity 300ms ease;
+  }
+  .panneau[data-ouvert] .panneau-titre-replie {
+    opacity: 0;
+  }
+  /* Fiche : apparaît un peu après l'ouverture, en glissant vers le haut */
+  .panneau-fiche {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 18px 18px;
+    border-radius: 14px;
+    background: var(--color-carte);
+    opacity: 0;
+    translate: 0 16px;
+    visibility: hidden;
+    transition:
+      opacity 350ms ease,
+      translate 500ms var(--ease-sortie),
+      visibility 0s linear 350ms;
+  }
+  .panneau[data-ouvert] .panneau-fiche {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+    transition:
+      opacity 400ms ease 250ms,
+      translate 600ms var(--ease-sortie) 250ms,
+      visibility 0s;
+  }
+  .panneau-fleche {
+    transition: translate var(--duree-carte) var(--ease-sortie), color var(--duree-carte);
+  }
+  .panneau-lien:hover .panneau-fleche,
+  .panneau-lien:focus-visible .panneau-fleche {
+    translate: 2px -2px;
+    color: var(--color-vert-texte);
+  }
+
+  /* ── Écrans larges : bandes côte à côte ─────────────────────────────── */
+  @media (min-width: 1024px) {
+    .accordeon {
+      flex-direction: row;
+      height: 480px;
+    }
+    .panneau,
+    .panneau[data-ouvert] {
+      height: auto;
+      flex: 1 1 0;
+      min-width: 0;
+      transition: flex-grow 700ms var(--ease-sortie);
+    }
+    .panneau[data-ouvert] {
+      flex-grow: 3.4;
+    }
+    /* Titre replié à la verticale, lu de bas en haut */
+    .panneau-titre-replie {
+      left: 50%;
+      top: auto;
+      bottom: 28px;
+      translate: -50% 0;
+      writing-mode: vertical-rl;
+      rotate: 180deg;
+    }
+    .panneau-fiche {
+      right: auto;
+      width: min(420px, calc(100% - 24px));
+    }
+  }
+
+  /* ── Réduire les animations ─────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .panneau,
+    .panneau[data-ouvert],
+    .panneau-image,
+    .panneau-voile,
+    .panneau-titre-replie,
+    .panneau-fiche,
+    .panneau[data-ouvert] .panneau-fiche {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Ouvre une bande au survol, au focus clavier et au toucher ; une seule bande ouverte à la fois.
+  for (const accordeon of document.querySelectorAll<HTMLElement>('[data-accordeon]')) {
+    const panneaux = [...accordeon.querySelectorAll<HTMLElement>('.panneau')];
+    const ouvrir = (cible: HTMLElement) => {
+      for (const p of panneaux) p.toggleAttribute('data-ouvert', p === cible);
+    };
+    for (const p of panneaux) {
+      p.addEventListener('mouseenter', () => ouvrir(p));
+      p.addEventListener('focusin', () => ouvrir(p));
+      // Toucher une bande repliée l'ouvre d'abord, sans quitter la page ; le second toucher suit le lien
+      p.querySelector('a')!.addEventListener('click', (e) => {
+        if (!p.hasAttribute('data-ouvert')) {
+          e.preventDefault();
+          ouvrir(p);
+        }
+      });
+    }
+  }
+</script>

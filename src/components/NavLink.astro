@@ -12,20 +12,21 @@ interface Props {
 }
 
 const { href, actif = false } = Astro.props;
-const chemin = 'M0 64C14 64 18 58 20 46L26 14C28 4 34 0 44 0H96C106 0 112 4 114 14L120 46C122 58 126 64 140 64';
+// Même silhouette que l'onglet vert : pilule de 128 × 38 px (dessus en demi-cercle, oreilles creuses de 10 px)
+const chemin = 'M0 38Q10 38 10 28V19A19 19 0 0 1 29 0H99A19 19 0 0 1 118 19V28Q118 38 128 38';
 ---
 
 {
   actif ? (
-    <a href={href} aria-current="page" class="relative z-[3] flex h-16 items-center justify-center rounded text-ui text-creme focus-visible:outline-creme">
+    <a href={href} aria-current="page" class="relative z-[3] flex h-16 items-end justify-center rounded pb-[9px] text-ui text-creme focus-visible:outline-creme">
       <slot />
     </a>
   ) : (
-    <a href={href} class="lien-fantome relative flex h-16 w-full items-center justify-center text-ui text-principal">
-      <svg class="fantome fantome-fond" width="140" height="64" viewBox="0 0 140 64" aria-hidden="true" focusable="false">
+    <a href={href} class="lien-fantome relative flex h-16 w-full items-end justify-center pb-[9px] text-ui text-principal">
+      <svg class="fantome fantome-fond" width="128" height="38" viewBox="0 0 128 38" aria-hidden="true" focusable="false">
         <path d={chemin} />
       </svg>
-      <svg class="fantome fantome-trait" width="140" height="64" viewBox="0 0 140 64" fill="none" aria-hidden="true" focusable="false">
+      <svg class="fantome fantome-trait" width="128" height="38" viewBox="0 0 128 38" fill="none" aria-hidden="true" focusable="false">
         <path d={chemin} />
       </svg>
       <span class="relative z-[3]">
@@ -37,7 +38,7 @@ const chemin = 'M0 64C14 64 18 58 20 46L26 14C28 4 34 0 44 0H96C106 0 112 4 114 
 
 <style>
   /*
-   * Contour fantôme : 140 × 64 px, centré dans la case du lien (trait encre, pointillé 4 / 4, comme la maquette).
+   * Contour fantôme : 128 × 38 px (la silhouette de l'onglet vert), centré dans la case du lien (trait encre, pointillé 4 / 4, comme la maquette).
    */
   .fantome {
     position: absolute;

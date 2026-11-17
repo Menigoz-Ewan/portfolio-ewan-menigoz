@@ -21,3 +21,6 @@ Thumbs.db
 # Fichiers déposés automatiquement par l'application Claude (hors projet)
 Claude outputs/
 .claude/
+
+# Captures brutes des projets (sources des images, hors dépôt)
+captures/

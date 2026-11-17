@@ -54,6 +54,24 @@ import cimadeMoodboard from '../assets/images/cimade/04-moodboard-combat-588x420
 import cimadeCroquis from '../assets/images/cimade/05-croquis-588x420@2x.png';
 import cimadeTestVisibilite from '../assets/images/cimade/06-test-visibilite-690x460@2x.png';
 
+// Iris VOD
+import vignetteIris from '../assets/images/vignette-iris.png';
+import irisAvertissement from '../assets/images/iris/01-avertissement-362x490@2x.png';
+import irisDetail from '../assets/images/iris/02-detail-odyssee-362x490@2x.png';
+import irisProfil from '../assets/images/iris/03-profil-362x490@2x.png';
+import irisGuide from '../assets/images/iris/04-guide-de-style-588x420@2x.png';
+import irisNotation from '../assets/images/iris/05-notation-588x420@2x.png';
+import irisCatalogue from '../assets/images/iris/06-catalogue-690x460@2x.png';
+
+// Deep in the Grounds
+import vignetteDitg from '../assets/images/vignette-ditg.png';
+import ditgInspirations from '../assets/images/ditg/01-inspirations-362x490@2x.png';
+import ditgMaquette from '../assets/images/ditg/02-maquette-interface-362x490@2x.png';
+import ditgJeu from '../assets/images/ditg/03-jeu-362x490@2x.png';
+import ditgEditeur from '../assets/images/ditg/04-editeur-godot-588x420@2x.png';
+import ditgCode from '../assets/images/ditg/05-code-gdscript-588x420@2x.png';
+import ditgSolution from '../assets/images/ditg/06-jeu-interface-690x460@2x.png';
+
 /* ========================================================================
  * 2. TYPES — le modèle que chaque projet doit respecter
  * ======================================================================== */
@@ -474,6 +492,142 @@ const laCimade: Projet = {
       'Faire émerger un symbole fort en itérant du croquis papier jusqu’au vectoriel.',
       'Structurer une charte complète : variantes, tests de lisibilité, usages interdits, couleurs et typographies.',
     ],
+    suivant: 'iris',
+  },
+};
+
+// ─── Iris VOD ──────────────────────────────────────────────────────────────
+const iris: Projet = {
+  slug: 'iris',
+  titre: 'Iris VOD',
+  categories: ['crea', 'dev'],
+  sousDomaines: ['Identité visuelle', 'UI', 'Base de données'],
+  resume: 'Une plateforme VOD fictive pour cinéphiles, avec un logo en forme d’iris et un catalogue d’une cinquantaine de films.',
+  vignette: {
+    src: vignetteIris,
+    alt: 'Accueil d’Iris VOD : logo, barre de recherche et film à la une « L’Odyssée » (2026) avec son résumé, sur une image du film',
+  },
+  etude: {
+    accroche: 'Une plateforme de vidéo à la demande pensée pour les cinéphiles, qui invite à sortir de ses habitudes de spectateur.',
+    lien: { href: 'https://iris-vod.netlify.app/', libelle: 'Accéder au site' },
+    fiche: {
+      role: 'Logo, base de données PocketBase et participation aux maquettes',
+      contexte: 'Exercice de cours · BUT MMI 2 · 2 semaines, en groupe de 3',
+      outils: 'Papier, Figma, PocketBase, Astro, Tailwind CSS, JavaScript, Netlify',
+      livrables: 'Logo, charte graphique, maquette Figma prototypée, base de données, site en ligne',
+    },
+    visuelPrincipal: [
+      {
+        src: irisAvertissement,
+        alt: 'Fenêtre d’avertissement d’Iris VOD : « Site fictif · projet étudiant », liste des engagements et bouton « J’ai compris, découvrir le projet »',
+      },
+      {
+        src: irisDetail,
+        alt: 'Maquette Figma de la page du film « L’Odyssée » : bannière, synopsis, reprise de la lecture et lecteur vidéo',
+      },
+      {
+        src: irisProfil,
+        alt: 'Maquette Figma de la page Profil : avatar, statistiques, historique et liste « À voir » en affiches de films',
+      },
+    ],
+    contexte: {
+      titre: 'Imaginer la plateforme VOD idéale pour les cinéphiles.',
+      texte:
+        'Notre professeur nous a demandé d’imaginer la plateforme VOD idéale pour les cinéphiles, avec des fonctions pratiques et originales. Nous avions deux semaines, à trois avec Enzo Hillairet et Matthis Carnicer, avant un oral de présentation. J’ai créé le logo, structuré la base de données et participé aux maquettes. Le site n’était pas demandé : nous l’avons développé parce que le projet nous plaisait.',
+      contraintes: ['2 semaines', 'Groupe de 3', 'Sujet libre', 'Oral de présentation', 'Maquette prototypée', 'Charte graphique'],
+    },
+    defi: {
+      enonce: 'Donner envie de découvrir des films sans enfermer le spectateur dans ses habitudes.',
+      visuels: [
+        {
+          src: irisGuide,
+          alt: 'Guide de style d’Iris VOD : palette de couleurs (vert principal, blanc, gris, bleu foncé) et styles typographiques',
+        },
+        {
+          src: irisNotation,
+          alt: 'Maquette de l’écran de fin de visionnage : « Qu’avez-vous pensé du film ? », notation en étoiles, champ d’avis et bouton « Valider »',
+        },
+      ],
+    },
+    solution: {
+      titre: 'Un iris pour logo, un catalogue qui ouvre le regard.',
+      texte:
+        'Le logo réunit l’œil humain et l’objectif de caméra : j’ai exploré sur papier la forme ovale de l’œil, le cercle de l’objectif et des rayons internes, avant de le finir sur Figma. J’ai structuré une base PocketBase d’une cinquantaine de films, avec leurs vraies affiches, synopsis, acteurs et réalisateurs, puis je l’ai reliée au site qui les affiche. À trois, nous avons retenu des fonctions comme « Changer de regard », le bouton « Hasard » ou une note proposée à la fin du film, jamais imposée.',
+      visuel: {
+        src: irisCatalogue,
+        alt: 'Catalogue du genre Drame sur Iris VOD : options de tri et grille d’affiches de films',
+      },
+    },
+    bilan: [
+      'Chercher un logo sur papier, piste après piste, avant de le dessiner au propre sur Figma.',
+      'Structurer une base de données PocketBase et relier ses données à un site Astro.',
+      'Trier les idées d’un brainstorming à trois pour ne garder que les fonctions les plus utiles.',
+    ],
+    suivant: 'ditg',
+  },
+};
+
+// ─── Deep in the Grounds ───────────────────────────────────────────────────
+// [À COMPLÉTER] : textes à écrire par moi ; domaines et sous-domaines à vérifier.
+const ditg: Projet = {
+  slug: 'ditg',
+  titre: 'Deep in the Grounds',
+  categories: ['dev', 'crea'], // [À COMPLÉTER : à vérifier]
+  sousDomaines: ['Jeu vidéo', 'UI', 'GDScript'], // [À COMPLÉTER : à vérifier]
+  resume: 'Mon jeu vidéo de survie en monde ouvert, développé avec Godot. [À COMPLÉTER]',
+  vignette: {
+    src: vignetteDitg,
+    alt: 'Deep in the Grounds en jeu : le personnage, lance à la main, devant une cabane en bois et un feu de camp, dans une plaine au pied d’une montagne enneigée',
+  },
+  etude: {
+    accroche: '[À COMPLÉTER]',
+    fiche: {
+      role: '[À COMPLÉTER]',
+      contexte: 'Projet personnel · [À COMPLÉTER]',
+      outils: 'Godot 4.7 (GDScript), Figma, [À COMPLÉTER]',
+      livrables: '[À COMPLÉTER]',
+    },
+    visuelPrincipal: [
+      {
+        src: ditgInspirations,
+        alt: 'Planche d’inspirations : jeux de référence (Valheim, ARK, Dauntless, Minecraft) avec leurs visuels et leurs cartes',
+      },
+      {
+        src: ditgMaquette,
+        alt: 'Proposition de charte « Braise des profondeurs » : couleurs, typographies Cinzel et Alegreya Sans, et maquette du HUD en jeu',
+      },
+      {
+        src: ditgJeu,
+        alt: 'Le personnage combat un loup, dont la santé s’affiche (« Loup 36/50 »), au-dessus de la barre d’objets',
+      },
+    ],
+    contexte: {
+      titre: '[À COMPLÉTER]',
+      texte: '[À COMPLÉTER]',
+      contraintes: ['[À COMPLÉTER]'],
+    },
+    defi: {
+      enonce: '[À COMPLÉTER]',
+      visuels: [
+        {
+          src: ditgEditeur,
+          alt: 'Éditeur Godot 4.7 : arborescence de la scène « Partie », système de fichiers du projet, vue 3D et console de sortie',
+        },
+        {
+          src: ditgCode,
+          alt: 'Extrait du script GDScript recolte.gd : la fonction _ramasser ajoute l’objet ramassé à l’inventaire puis le retire du sol',
+        },
+      ],
+    },
+    solution: {
+      titre: '[À COMPLÉTER]',
+      texte: '[À COMPLÉTER]',
+      visuel: {
+        src: ditgSolution,
+        alt: 'Écran d’inventaire et liste des recettes de fabrication (couteau, hache, pioche, marteau, lance, livre des recettes), avec la barre de santé et la barre d’objets',
+      },
+    },
+    bilan: ['[À COMPLÉTER]'],
     suivant: 'tiktak',
   },
 };
@@ -488,6 +642,8 @@ export const projets: Projet[] = [
   opensigne,
   affichesTouristiques,
   laCimade,
+  iris,
+  ditg,
 ];
 
 /** Projets qui ont une page d'étude de cas */

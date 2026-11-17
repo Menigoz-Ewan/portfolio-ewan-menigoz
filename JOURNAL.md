@@ -508,3 +508,24 @@
 
 **Fait**
 - Accueil : « Ewan Menigoz - Portfolio » au lieu de « Ewan Menigoz — Designer UI/UX ». Autres pages : nom de la page devant, par exemple « Galerie · Ewan Menigoz - Portfolio », pour que chaque onglet reste reconnaissable.
+
+### 17/11 · Images des projets Iris VOD et Deep in the Grounds
+
+**Fait**
+- Iris VOD : vignette, triptyque, images du défi et de la solution, aux tailles @2x (captures du site en ligne avec Playwright, maquettes exportées de Figma), dans src/assets/images/iris/ et vignette-iris.png.
+- Deep in the Grounds : planche d'inspirations et proposition de charte avec le HUD (Figma), extrait de code GDScript mis en image, dans src/assets/images/ditg/.
+- Dossier captures/ (sources brutes) ajouté au .gitignore.
+
+**À faire**
+
+**Fait ensuite**
+- Avec mes captures du jeu : vignette (personnage devant la cabane et le feu de camp), jeu en action (combat contre un loup), jeu avec l'inventaire et la fabrication ouverts. Mes captures faisaient 988 px de haut : j'ai accepté un agrandissement de 1 % pour la vignette. Éditeur Godot : cadré à gauche pour garder l'arborescence de la scène et le système de fichiers.
+- Ajouter les entrées des deux projets dans src/data/projets.ts une fois validées.
+
+### 17/11 · Pages Iris VOD et Deep in the Grounds (structure)
+
+**Fait**
+- Deux projets ajoutés dans src/data/projets.ts avec leurs 14 images et textes alternatifs : pages /projets/iris et /projets/ditg, cartes dans le carrousel de la page Projets, ordre « projet suivant » : La Cimade → Iris VOD → Deep in the Grounds → TiK•TaK. Pas sur l'accueil (pas de résumé d'accueil).
+
+**À faire**
+- Écrire les textes marqués [À COMPLÉTER] (accroche, fiche, contexte, défi, solution, bilan) et vérifier domaines et sous-domaines, avant toute mise en ligne.

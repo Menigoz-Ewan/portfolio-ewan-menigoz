@@ -27,7 +27,9 @@ const {
   jsonLd,
 } = Astro.props;
 
-const titreComplet = titre === site.nom ? `${site.nom} — ${site.metier}` : `${titre} · ${site.nom}`;
+// Titre de l'onglet : « Ewan Menigoz - Portfolio » sur l'accueil ; ailleurs, le nom de la page devant
+// (chaque page garde un titre distinct, utile pour les onglets, l'historique et les lecteurs d'écran)
+const titreComplet = titre === site.nom ? 'Ewan Menigoz - Portfolio' : `${titre} · Ewan Menigoz - Portfolio`;
 const canonique = new URL(Astro.url.pathname, Astro.site);
 const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
 ---

@@ -503,3 +503,8 @@
 **Vérifié**
 - Les 12 pages du sitemap répondent (200), ainsi que le CV, le PDF de La Cimade, `robots.txt` et les sitemaps ; une adresse inconnue renvoie la page 404 ; HTTP redirige vers HTTPS ; certificat valide jusqu'au 14/02/2027.
 - Formulaire : PocketBase répond et accepte les envois venant du portfolio (CORS), vérifié sans écrire de message, puis j'ai envoyé un vrai message depuis le site en ligne : il est bien arrivé dans PocketBase.
+
+### 17/11 · Titre de l'onglet
+
+**Fait**
+- Accueil : « Ewan Menigoz - Portfolio » au lieu de « Ewan Menigoz — Designer UI/UX ». Autres pages : nom de la page devant, par exemple « Galerie · Ewan Menigoz - Portfolio », pour que chaque onglet reste reconnaissable.

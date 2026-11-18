@@ -27,11 +27,13 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      # 2. Installer Node.js (Astro 7 demande Node 22.22 ou plus récent)
+      # 2. Installer Node.js (Astro 7 demande Node 22.22 ou plus récent).
+      #    Node 24 apporte npm 11, la même version que sur mon ordinateur : avec npm 10 (Node 22),
+      #    npm ci refusait le package-lock.json créé par npm 11 (« Missing: @emnapi/core »).
       - name: Installer Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       # 3. Installer les dépendances, exactement celles du package-lock.json

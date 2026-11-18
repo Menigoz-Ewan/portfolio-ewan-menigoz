@@ -6,7 +6,6 @@
 // Aucun changement automatique. Avec « réduire les animations » : image affichée d'emblée, changement sans effet.
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import portrait from '../assets/images/portrait-ewan.png';
 import chateau from '../assets/images/affiche-chateau.png';
 import theatre from '../assets/images/galerie/affiche-theatre.png';
 import temple from '../assets/images/galerie/affiche-temple.png';
@@ -14,10 +13,9 @@ import exposition from '../assets/images/polaroid-exposition.png';
 import cimade from '../assets/images/polaroid-cimade.png';
 import tiktak from '../assets/images/vignette-tiktak.png';
 
-// Images, dans l'ordre d'apparition.
+// Images, dans l'ordre d'apparition (mes travaux uniquement : ma seule photo est sur la page À propos).
 // « affiche » : l'image est agrandie pour cacher les marges blanches de l'affiche (titre, logos).
 const reserve: { src: ImageMetadata; alt: string; affiche?: boolean }[] = [
-  { src: portrait, alt: 'Portrait d’Ewan Menigoz en noir et blanc' },
   { src: chateau, alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs', affiche: true },
   { src: tiktak, alt: 'Visuel de TiK•TaK : trois montres à bracelet en cuir sur fond vert sapin' },
   { src: theatre, alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel', affiche: true },

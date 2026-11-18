@@ -63,15 +63,6 @@ import irisGuide from '../assets/images/iris/04-guide-de-style-588x420@2x.png';
 import irisNotation from '../assets/images/iris/05-notation-588x420@2x.png';
 import irisCatalogue from '../assets/images/iris/06-catalogue-690x460@2x.png';
 
-// Deep in the Grounds
-import vignetteDitg from '../assets/images/vignette-ditg.png';
-import ditgInspirations from '../assets/images/ditg/01-inspirations-362x490@2x.png';
-import ditgMaquette from '../assets/images/ditg/02-maquette-interface-362x490@2x.png';
-import ditgJeu from '../assets/images/ditg/03-jeu-362x490@2x.png';
-import ditgEditeur from '../assets/images/ditg/04-editeur-godot-588x420@2x.png';
-import ditgCode from '../assets/images/ditg/05-code-gdscript-588x420@2x.png';
-import ditgSolution from '../assets/images/ditg/06-jeu-interface-690x460@2x.png';
-
 /* ========================================================================
  * 2. TYPES — le modèle que chaque projet doit respecter
  * ======================================================================== */
@@ -563,71 +554,6 @@ const iris: Projet = {
       'Structurer une base de données PocketBase et relier ses données à un site Astro.',
       'Trier les idées d’un brainstorming à trois pour ne garder que les fonctions les plus utiles.',
     ],
-    suivant: 'ditg',
-  },
-};
-
-// ─── Deep in the Grounds ───────────────────────────────────────────────────
-// [À COMPLÉTER] : textes à écrire par moi ; domaines et sous-domaines à vérifier.
-const ditg: Projet = {
-  slug: 'ditg',
-  titre: 'Deep in the Grounds',
-  categories: ['dev', 'crea'], // [À COMPLÉTER : à vérifier]
-  sousDomaines: ['Jeu vidéo', 'UI', 'GDScript'], // [À COMPLÉTER : à vérifier]
-  resume: 'Mon jeu vidéo de survie en monde ouvert, développé avec Godot. [À COMPLÉTER]',
-  vignette: {
-    src: vignetteDitg,
-    alt: 'Deep in the Grounds en jeu : le personnage, lance à la main, devant une cabane en bois et un feu de camp, dans une plaine au pied d’une montagne enneigée',
-  },
-  etude: {
-    accroche: '[À COMPLÉTER]',
-    fiche: {
-      role: '[À COMPLÉTER]',
-      contexte: 'Projet personnel · [À COMPLÉTER]',
-      outils: 'Godot 4.7 (GDScript), Figma, [À COMPLÉTER]',
-      livrables: '[À COMPLÉTER]',
-    },
-    visuelPrincipal: [
-      {
-        src: ditgInspirations,
-        alt: 'Planche d’inspirations : jeux de référence (Valheim, ARK, Dauntless, Minecraft) avec leurs visuels et leurs cartes',
-      },
-      {
-        src: ditgMaquette,
-        alt: 'Proposition de charte « Braise des profondeurs » : couleurs, typographies Cinzel et Alegreya Sans, et maquette du HUD en jeu',
-      },
-      {
-        src: ditgJeu,
-        alt: 'Le personnage combat un loup, dont la santé s’affiche (« Loup 36/50 »), au-dessus de la barre d’objets',
-      },
-    ],
-    contexte: {
-      titre: '[À COMPLÉTER]',
-      texte: '[À COMPLÉTER]',
-      contraintes: ['[À COMPLÉTER]'],
-    },
-    defi: {
-      enonce: '[À COMPLÉTER]',
-      visuels: [
-        {
-          src: ditgEditeur,
-          alt: 'Éditeur Godot 4.7 : arborescence de la scène « Partie », système de fichiers du projet, vue 3D et console de sortie',
-        },
-        {
-          src: ditgCode,
-          alt: 'Extrait du script GDScript recolte.gd : la fonction _ramasser ajoute l’objet ramassé à l’inventaire puis le retire du sol',
-        },
-      ],
-    },
-    solution: {
-      titre: '[À COMPLÉTER]',
-      texte: '[À COMPLÉTER]',
-      visuel: {
-        src: ditgSolution,
-        alt: 'Écran d’inventaire et liste des recettes de fabrication (couteau, hache, pioche, marteau, lance, livre des recettes), avec la barre de santé et la barre d’objets',
-      },
-    },
-    bilan: ['[À COMPLÉTER]'],
     suivant: 'tiktak',
   },
 };
@@ -643,7 +569,6 @@ export const projets: Projet[] = [
   affichesTouristiques,
   laCimade,
   iris,
-  ditg,
 ];
 
 /** Projets qui ont une page d'étude de cas */

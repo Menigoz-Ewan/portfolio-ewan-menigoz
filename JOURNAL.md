@@ -529,3 +529,11 @@
 
 **À faire**
 - Écrire les textes marqués [À COMPLÉTER] (accroche, fiche, contexte, défi, solution, bilan) et vérifier domaines et sous-domaines, avant toute mise en ligne.
+
+### 18/11 · Hero : plus de photo de moi
+
+**Fait**
+- Mon portrait est retiré des images du hero de l'accueil : le hero s'ouvre sur l'affiche du château et fait défiler 6 travaux. Ma seule photo sur le site reste celle de la page À propos. Le fichier portrait-ewan.png n'est plus utilisé (gardé dans le projet, il n'est plus publié).
+
+**Vérifié**
+- Site construit : aucune image du portrait dans les pages ; la suite des images du hero (bureau et mobile) compte 6 visuels.

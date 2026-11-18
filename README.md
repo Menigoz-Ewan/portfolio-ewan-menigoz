@@ -29,13 +29,15 @@ Le site présente mes projets en études de cas (contexte, défi, solution, bila
 
 **Pages** : accueil, projets (et une page par étude de cas), galerie, à propos, contact, mentions légales et confidentialité, usage de l'IA, page 404.
 
+**Langues** : tout le site existe en français (adresses sans préfixe, par exemple `/projets`) et en anglais (sous `/en/`, par exemple `/en/projects`). Le sélecteur « FR / EN » placé à côté du logo mène à la même page dans l'autre langue ; la langue affichée est soulignée.
+
 ## 2. Technologies et bibliothèques
 
 Aucun thème ni modèle prédéfini : toute l'interface est dessinée dans Figma puis codée à la main. Les bibliothèques ci-dessous fournissent des outils (compilation, classes utilitaires, polices), pas un design tout fait.
 
 | Bibliothèque | Version | Licence | Rôle dans le site | Adaptation à ma direction artistique |
 |---|---|---|---|---|
-| [Astro](https://astro.build) | 7 | MIT | Framework : pages, composants `.astro`, routes des études de cas (`/projets/[slug]`), optimisation des images (WebP, tailles adaptées) | Site statique, très peu de JavaScript envoyé au navigateur : seulement les scripts des composants interactifs |
+| [Astro](https://astro.build) | 7 | MIT | Framework : pages, composants `.astro`, routes des études de cas (`/projets/[slug]`), optimisation des images (WebP, tailles adaptées), routage bilingue (i18n intégré : français par défaut, anglais sous `/en/`) | Site statique, très peu de JavaScript envoyé au navigateur : seulement les scripts des composants interactifs |
 | [Tailwind CSS](https://tailwindcss.com) | 4 | MIT | Classes utilitaires pour la mise en page et le responsive | Palette, typographies, espacements et durées d'animation redéfinis dans `src/styles/global.css` (variables `--color-*`, `--font-*`) |
 | [daisyUI](https://daisyui.com) | 5 | MIT | Système de thèmes et contrôleur de thème clair / sombre | Thèmes d'origine désactivés (`themes: false`) ; deux thèmes créés sur mesure, `ewme-clair` et `ewme-sombre` ; aucun composant daisyUI utilisé tel quel |
 | [@astrojs/sitemap](https://docs.astro.build/fr/guides/integrations-guide/sitemap/) | 3 | MIT | Génère le plan du site (`sitemap-index.xml`) pour le référencement | — |
@@ -59,9 +61,9 @@ Plusieurs interactions s'inspirent de composants ou d'exemples publiés par d'au
 | Image du hero qui s'ouvre en cercle (« iris ») | `src/components/ImageIris.astro` | Exemple « iris » de Motion+ | [Motion](https://motion.dev) |
 | Icônes animées au survol (design, code, message, réseaux sociaux) | `src/components/IconeAnimee.astro` | Icônes animées Lottie | [useanimations](https://useanimations.com) |
 | Accueil : projets en accordéon | `src/components/AccordeonProjets.astro` | « Accordion Gallery » | [React Bits](https://reactbits.dev) |
-| Page Projets : carrousel | `src/pages/projets/index.astro` | « Flex Carousel » | [React Bits](https://reactbits.dev) |
+| Page Projets : carrousel | `src/vues/Projets.astro` | « Flex Carousel » | [React Bits](https://reactbits.dev) |
 | À propos : anneau 3D des passions | `src/components/HorsEcran.astro` | « Circular Carousel » | [React Bits](https://reactbits.dev) |
-| Galerie : champ infini en 3D | `src/pages/galerie.astro` | « Infinite Gallery » | [React Bits Pro](https://pro.reactbits.dev/docs/components/infinite-gallery) |
+| Galerie : champ infini en 3D | `src/vues/Galerie.astro` | « Infinite Gallery » | [React Bits Pro](https://pro.reactbits.dev/docs/components/infinite-gallery) |
 
 **Créations personnelles, sans modèle extérieur** :
 - l'écran de chargement « Les parenthèses » et l'animation du logo au survol (`EcranChargement.astro`, `Logo.astro`) ;
@@ -84,16 +86,27 @@ src/
   components/           composants réutilisables (boutons, en-tête, hero, cartes, galerie, accordéon…)
   data/
     projets.ts          contenu des projets : textes, images, études de cas (un bloc par projet)
+    projets-en.ts       textes anglais des projets (les images restent celles de projets.ts)
     site.ts             informations générales : nom, contact, réseaux, stage, hébergeur
+  i18n/
+    index.ts            langues, adresses des pages dans les deux langues, textes communs (menu, pied de page…)
   layouts/
-    Layout.astro        gabarit commun : <head>, SEO, en-tête, fond, pied de page
+    Layout.astro        gabarit commun : <head>, SEO, liens hreflang, en-tête, fond, pied de page
   pages/                une page = une route (index.astro = /, projets/[slug].astro = études de cas)
+    en/                 les mêmes routes en anglais (/en/, /en/projects, /en/about…)
+  vues/                 contenu de chaque page, commun aux deux langues (textes FR et EN côte à côte)
   scripts/              JavaScript partagé (écran de chargement)
   styles/
     global.css          charte : thèmes, couleurs, typographies, grille de fond, transitions
 ```
 
-**Ajouter un projet** : un bloc dans `src/data/projets.ts` (titre, domaines, résumé, images, étude de cas), puis l'ajouter à la liste `projets` en bas du fichier. La carte et la page `/projets/<slug>` sont générées automatiquement.
+**Comment marchent les deux langues** : chaque page de `src/pages/` (français) et de `src/pages/en/` (anglais) se contente d'appeler une vue de `src/vues/`. La vue lit la langue de l'adresse (`Astro.currentLocale`) et choisit ses textes dans un objet `T = { fr: {…}, en: {…} }`. Une seule mise en page sert donc les deux langues. Les scripts des composants interactifs reçoivent leurs textes par des attributs `data-…` posés par le serveur.
+
+**Modifier un texte** : il se trouve dans la vue de la page (`src/vues/`), dans `src/i18n/index.ts` s'il est commun à tout le site (menu, pied de page), ou dans `projets.ts` / `projets-en.ts` pour un projet. Il faut le changer dans les deux langues.
+
+**Ajouter un projet** : un bloc dans `src/data/projets.ts` (titre, domaines, résumé, images, étude de cas), puis l'ajouter à la liste `projets` en bas du fichier. La carte et les pages `/projets/<slug>` et `/en/projects/<slug>` sont générées automatiquement. Ses textes anglais vont dans `src/data/projets-en.ts` ; sans eux, la page anglaise reprend le texte français.
+
+**Tailles des images** : vignette d'un projet en 1600 × 1000 px (sujet au centre, car une bande repliée n'en montre que le milieu) ; image du carrousel du hero en 840 × 960 px.
 
 ## 5. Installer et lancer le projet
 
@@ -110,9 +123,9 @@ Le formulaire de contact lit l'adresse de PocketBase dans la variable d'environn
 
 ## 6. Formulaire de contact
 
-Le formulaire (`src/pages/contact.astro`) envoie les messages à une collection `messages` de PocketBase, avec `fetch`, sans bibliothèque.
+Le formulaire (`src/vues/Contact.astro`) envoie les messages à une collection `messages` de PocketBase, avec `fetch`, sans bibliothèque.
 
-- **Contrôle** : vérification des champs dans le navigateur, avec des erreurs annoncées aux lecteurs d'écran.
+- **Contrôle** : vérification des champs dans le navigateur, avec des erreurs annoncées aux lecteurs d'écran, dans la langue de la page.
 - **Anti-spam** : un champ piège invisible.
 - **Consentement** : une case à cocher, liée à la partie « données personnelles » des mentions légales.
 

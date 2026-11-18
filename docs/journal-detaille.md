@@ -23,6 +23,8 @@
 | 12/11 | Études de cas TiK•TaK, Climat Outre-Mer et La Cimade ; écran de chargement « Les parenthèses » |
 | 13/11 | Thème clair / sombre ; menu à onglets fantômes |
 | 16/11 | Formulaire PocketBase ; onglets « pilule », accueil en accordéon, bouton thème « éclipse » ; fusion dans `main` ; étiquettes des projets ; filtres animés et affiches finales ; mentions légales et RGPD ; animations du hero ; audit qualité ; responsive |
+| 17/11 | Mise en ligne (GitHub, portfolio.ewan-menigoz.fr) ; projet Iris VOD |
+| 18/11 | Note de positionnement, README, Figma rangé, fichiers de suivi ; version anglaise ; vignettes en haute définition |
 
 ---
 
@@ -561,4 +563,31 @@
 - Corrigé : nom des liens de l'accordéon, contraste du carrousel (seule l'image est estompée), cartes cachées de l'anneau retirées de la tabulation, images de la galerie et d'À propos à la bonne taille, image d'aperçu de partage (Open Graph), adresse du site dans les données structurées, crédit des photos Pexels dans les mentions légales, commentaire dépassé dans robots.txt. Remesuré en local : accessibilité 100, galerie 93.
 
 **Reste**
-- Cache des fichiers /_astro/ dans Apache, police Caveat sur mobile, lecteur d'écran et zoom à 200 %, liens LinkedIn et Instagram à renseigner dans site.ts.
+- Cache des fichiers /_astro/ dans Apache, police Caveat sur mobile, lecteur d'écran et zoom à 200 %, lien Instagram à renseigner dans site.ts (LinkedIn renseigné le 18/11).
+
+### 18/11 · Version anglaise du site
+
+**Fait**
+- Configuration i18n d'Astro : français par défaut (adresses inchangées), anglais sous `/en/` (`/en/projects`, `/en/gallery`, `/en/about`, `/en/contact`, `/en/legal`, `/en/ai`, et une page par étude de cas).
+- Contenu de chaque page déplacé dans `src/vues/`, commun aux deux langues ; les pages de `src/pages/` et `src/pages/en/` ne font que l'appeler. Textes communs (menu, pied de page, libellés d'accessibilité) et adresses des pages dans `src/i18n/index.ts` ; textes anglais des projets dans `src/data/projets-en.ts`.
+- Sélecteur « FR / EN » à côté du logo : il mène à la même page dans l'autre langue, la langue active est soulignée et signalée aux lecteurs d'écran.
+- Traduits aussi : textes alternatifs, libellés du menu mobile (« Menu » / « Close »), erreurs et messages du formulaire, annonces du carrousel et de l'image du hero, mentions légales (le texte français fait foi).
+- Référencement : `lang` sur chaque page, liens `hreflang` (fr, en, x-default), `og:locale` ; le plan du site liste 26 pages, dont 13 en anglais.
+- Vérifié : 27 pages générées, aucun lien interne cassé, aucun texte français oublié dans les pages anglaises, aucun débordement de 320 à 1440 px, thème sombre, menu mobile, formulaire.
+
+**Ce qui a coincé**
+- Entre 1024 et 1400 px, le sélecteur touchait le premier onglet du menu : le nom est masqué à ces largeurs.
+- Pendant le test du formulaire en local, un vrai message « Test » est parti dans PocketBase, car le fichier `.env` pointe vers le serveur en ligne : à supprimer dans l'administration.
+
+**Reste**
+- Relire l'anglais du site.
+
+### 18/11 · Vignettes des projets en haute définition
+
+**Fait**
+- Ulule retiré des outils du bloc Communication de l'accueil.
+- Vignettes de TiK•TaK, Climat Outre-Mer et La Cimade refaites en 1600 × 1000 px : les anciennes faisaient 362 à 724 px de large et devenaient floues dans la carte ouverte (740 × 480 px). TiK•TaK recomposée avec les dessins SVG des montres de la SAE 301 ; Climat Outre-Mer avec les contours des îles et les vraies courbes du site en ligne ; La Cimade avec le logo agrandi et les formes redessinées.
+- Image TiK•TaK du carrousel du hero en 840 × 960 px. Les cartes servent une version de 800 ou de 1600 px selon l'écran ; le carrousel génère ses images en 840 px.
+
+**Reste**
+- Affiche Cimade du carrousel en 470 px : un export en 840 × 960 px la rendrait nette sur écran haute densité.

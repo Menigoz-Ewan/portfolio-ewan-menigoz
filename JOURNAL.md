@@ -13,7 +13,7 @@
 | 19 → 25 octobre | Recherches pour un nouvel univers graphique |
 | 26 octobre → 8 novembre | Intégration de toute la maquette en Astro |
 | 9 → 15 novembre | Logo et header définitifs, écran de chargement, études de cas, thème sombre, menu |
-| 16 → 22 novembre | Formulaire, animations, qualité, mise en ligne, réseaux sociaux, documents finaux |
+| 16 → 22 novembre | Formulaire, animations, qualité, mise en ligne, réseaux sociaux, documents finaux, version anglaise |
 
 ---
 
@@ -77,15 +77,19 @@
   - **Contenus** : nouveau projet Iris VOD ; ma photo réservée à la page À propos.
   - **Communication** : bannière LinkedIn et carrousels Instagram.
   - **Documents** : note de positionnement mise à jour, README, maquette Figma rangée.
+  - **Version anglaise (18/11)** : tout le site traduit, sous `/en/`, avec un sélecteur « FR / EN » à côté du logo.
+  - **Vignettes (18/11)** : les trois cartes de l'accueil refaites en 1600 × 1000 px (celle de TiK•TaK était floue), et une image TiK•TaK nette pour le carrousel du hero.
 - **Ce qui a coincé.**
   - **La galerie** : plusieurs versions avant de trouver la bonne (bloc vert, boîte 3D, puis champ infini).
   - **La grille de fond** : elle tremblait au défilement, corrigée en la mettant sur un calque fixe.
   - **La mise en ligne** : port SSH particulier, erreur 403 due aux droits des fichiers, cache DNS.
   - **Les notifications par e-mail du formulaire** : abandonnées, car le serveur d'envoi refusait la connexion.
+  - **Le sélecteur de langue** : entre 1024 et 1400 px, il touchait le premier onglet du menu. Le nom « Ewan Menigoz » est masqué à ces largeurs, le logo reste.
 - **Décidé.**
   - Des animations discrètes, déclenchées par le visiteur et coupées si son système demande de réduire les animations.
   - Un bouton par rôle et par fond, au lieu d'une multitude de couleurs.
   - Consulter les messages directement dans PocketBase.
+  - Le sélecteur de langue à côté du logo, comme sur ma capture, la langue active soulignée.
 
 ---
 

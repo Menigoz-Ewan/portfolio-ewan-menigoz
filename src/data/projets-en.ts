@@ -124,7 +124,7 @@ export const traductionsEn: Record<string, TraductionProjet> = {
       visuelPrincipal: [
         'Scatter plot of the years 1970 to 2024 for three territories: the hottest years, circled in black, are almost all recent.',
         'Outlines of Martinique, Réunion and New Caledonia with their warming: +0.31, +0.19 and +0.23 °C per decade.',
-        'Average temperatures today, in 2050 and in 2100 for each territory, up to about +2 °C compared with 1991–2020.',
+        'Average temperature today and projection for 2100 in each territory: about +1.8 to +2.1 °C compared with 1991–2020.',
       ],
       contexte: {
         titre: 'One question, 55 years of data, three different regions.',

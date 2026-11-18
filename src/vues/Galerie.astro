@@ -18,22 +18,33 @@ import theatre from '../assets/images/galerie/affiche-theatre.png';
 import natureMorte from '../assets/images/galerie/nature-morte.png';
 import oeuvre from '../assets/images/galerie/oeuvre-exposee.png';
 import temple from '../assets/images/galerie/affiche-temple.png';
+import auTravail from '../assets/images/galerie/au-travail.png';
+import afficheFcsm from '../assets/images/galerie/affiche-fcsm.png';
+import surLePont from '../assets/images/galerie/sur-le-pont.png';
+import maillotRose from '../assets/images/galerie/maillot-rose.png';
+import graffiti from '../assets/images/galerie/graffiti-expose.png';
+import dessinBlueLock from '../assets/images/galerie/dessin-blue-lock.png';
+import dessinJujutsu from '../assets/images/galerie/dessin-jujutsu-kaisen.png';
+import dessinChainsaw from '../assets/images/galerie/dessin-chainsaw-man.png';
+import dessinDemonSlayer from '../assets/images/galerie/dessin-demon-slayer.png';
+import paysage from '../assets/images/galerie/paysage.png';
+import portraitFisheye from '../assets/images/galerie/portrait-fisheye.png';
 
 const lang = langue(Astro.currentLocale);
 const T = {
   fr: {
     titre: 'Galerie',
-    description: 'Galerie d’Ewan Menigoz : affiches, recherches d’identité visuelle et photographies.',
-    accroche: 'Affiches, identités et photographies.',
-    chapo: 'Les visuels qui complètent mes projets : recherches graphiques, affiches et regards photographiques.',
+    description: 'Galerie d’Ewan Menigoz : affiches, recherches d’identité visuelle, dessins et photographies.',
+    accroche: 'Affiches, dessins et photographies.',
+    chapo: 'Les visuels qui complètent mes projets : recherches graphiques, affiches, dessins à l’encre et regards photographiques.',
     visuels: 'Visuels',
     consigne: 'Faites défiler ou glissez pour avancer dans la galerie, cliquez sur un visuel pour vous en approcher.',
   },
   en: {
     titre: 'Gallery',
-    description: 'Gallery by Ewan Menigoz: posters, visual identity research and photographs.',
-    accroche: 'Posters, identities and photographs.',
-    chapo: 'The visuals that complete my projects: graphic research, posters and photographs.',
+    description: 'Gallery by Ewan Menigoz: posters, visual identity research, drawings and photographs.',
+    accroche: 'Posters, drawings and photographs.',
+    chapo: 'The visuals that complete my projects: graphic research, posters, ink drawings and photographs.',
     visuels: 'Visuals',
     consigne: 'Scroll or drag to move through the gallery, click a visual to get closer.',
   },
@@ -48,6 +59,17 @@ const en = [
   ['Photography', 'Still life', 'Still life: a shirt, yellow sneakers, books and objects on the floor'],
   ['Photography', 'Artwork on display', 'Colourful painting with plant shapes hanging on a white wall'],
   ['Illustration', 'Tourism poster · 3/3', 'Poster “L’élégance de la Renaissance” (The elegance of the Renaissance): Saint-Martin church and its bell tower'],
+  ['Photography', 'At work', 'Me from behind, working on a laptop in a room lit in orange'],
+  ['Poster', 'FCSM poster · Mathieu Peybernes', 'FC Sochaux-Montbéliard poster for defender number 14 Mathieu Peybernes, 2026-2027 season: two photos of the player on a blue stadium background'],
+  ['Drawing', 'Fan art · Blue Lock', 'Ink drawing: football players celebrating an equaliser, score 2-2, speech bubble “Le Manshine City est à égalité !!!”'],
+  ['Photography', 'On the bridge', 'Me on a bridge above a canal, in a brown T-shirt and grey shorts, in front of yellow houses'],
+  ['Photography', 'Landscape', 'Two white cows grazing in a meadow, wooded hills and a blue sky behind'],
+  ['Drawing', 'Fan art · Jujutsu Kaisen', 'Ink drawing: an injured character with spiky hair and a black jacket, speech bubble “I’m you.”'],
+  ['Photography', 'Graffiti on display', 'Framed graffiti sketches and handwritten pages hanging in an exhibition, artwork by another artist'],
+  ['Photography', 'Pink jersey', 'Close-up of me walking in a pink swirl-patterned football jersey and grey shorts'],
+  ['Drawing', 'Fan art · Chainsaw Man', 'Ink drawing: a character with a topknot and a sword on his back making a hand sign, speech bubble “Kon.”'],
+  ['Photography', 'Fisheye portrait', 'Fisheye portrait of me in a light grey jumper and tie, in front of a stone wall'],
+  ['Drawing', 'Fan art · Demon Slayer', 'Ink drawing: a character with a cracked face and a checked jacket, speech bubble “Tu es atrocement laid.”'],
 ];
 
 // x, y : place du visuel dans le champ, en fraction de la demi-largeur et de la demi-hauteur de la scène
@@ -60,6 +82,17 @@ const visuels = [
   { src: natureMorte, x: 0.2, y: -0.45, categorie: 'Photographie', titre: 'Nature morte', alt: 'Nature morte : chemise, baskets jaunes, livres et objets posés au sol' },
   { src: oeuvre, x: 0.35, y: 0.5, categorie: 'Photographie', titre: 'Œuvre exposée', alt: 'Tableau coloré aux formes végétales accroché à un mur blanc' },
   { src: temple, x: -0.05, y: -0.3, categorie: 'Illustration', titre: 'Affiche touristique · 3/3', alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher' },
+  { src: auTravail, x: 0.7, y: 0.1, categorie: 'Photographie', titre: 'Au travail', alt: 'Moi de dos, en train de travailler sur un ordinateur portable dans une pièce éclairée en orange' },
+  { src: afficheFcsm, x: -0.55, y: 0.05, categorie: 'Affiche', titre: 'Affiche FCSM · Mathieu Peybernes', alt: 'Affiche du FC Sochaux-Montbéliard pour le défenseur n° 14 Mathieu Peybernes, saison 2026-2027 : deux photos du joueur sur fond de stade bleu' },
+  { src: dessinBlueLock, x: 0.15, y: 0.5, categorie: 'Dessin', titre: 'Fan art · Blue Lock', alt: 'Dessin à l’encre : des footballeurs fêtent l’égalisation, score 2-2, bulle « Le Manshine City est à égalité !!! »' },
+  { src: surLePont, x: -0.3, y: -0.45, categorie: 'Photographie', titre: 'Sur le pont', alt: 'Moi sur un pont au-dessus d’un canal, en t-shirt marron et short gris, devant des maisons jaunes' },
+  { src: paysage, x: 0.45, y: -0.35, categorie: 'Photographie', titre: 'Paysage', alt: 'Deux vaches blanches broutent dans un pré, collines boisées et ciel bleu en arrière-plan' },
+  { src: dessinJujutsu, x: -0.7, y: -0.1, categorie: 'Dessin', titre: 'Fan art · Jujutsu Kaisen', alt: 'Dessin à l’encre : un personnage blessé aux cheveux en pics et à la veste noire, bulle « I’m you. »' },
+  { src: graffiti, x: 0.6, y: 0.45, categorie: 'Photographie', titre: 'Graffiti en exposition', alt: 'Esquisses de graffiti et pages manuscrites encadrées dans une exposition, œuvre d’un autre artiste' },
+  { src: maillotRose, x: -0.15, y: 0.35, categorie: 'Photographie', titre: 'Maillot rose', alt: 'Moi en marche, en maillot de football rose aux motifs ondulés et short gris, vu de près' },
+  { src: dessinChainsaw, x: 0.3, y: -0.5, categorie: 'Dessin', titre: 'Fan art · Chainsaw Man', alt: 'Dessin à l’encre : un personnage au chignon, sabre dans le dos, fait un signe des mains, bulle « Kon. »' },
+  { src: portraitFisheye, x: -0.45, y: 0.45, categorie: 'Photographie', titre: 'Portrait au fisheye', alt: 'Portrait de moi au fisheye, pull gris clair et cravate, devant un mur de pierres' },
+  { src: dessinDemonSlayer, x: 0.75, y: -0.2, categorie: 'Dessin', titre: 'Fan art · Demon Slayer', alt: 'Dessin à l’encre : un personnage au visage fissuré et à la veste à damier, bulle « Tu es atrocement laid. »' },
 ].map((v, i) => (lang === 'en' ? { ...v, categorie: en[i][0], titre: en[i][1], alt: en[i][2] } : v));
 ---
 
@@ -232,7 +265,9 @@ const visuels = [
 </style>
 
 <script>
-  const PROFONDEUR = 3200; // longueur de la boucle en profondeur (px) : les 8 visuels y sont répartis tous les 400 px
+  const ECART = 400; // distance en profondeur entre deux visuels (px)
+  // Longueur de la boucle en profondeur : elle grandit avec le nombre de visuels, l'écart reste le même
+  const PROFONDEUR = Math.max(3200, document.querySelectorAll('[data-galerie] .visuel').length * ECART);
   const DECALAGE = 600; // un visuel « juste devant nous » est à cette profondeur (perspective : 800 px)
   const PRES = 130; // distance où l'on s'arrête devant un visuel choisi : il apparaît environ 2,4 fois plus grand
 const RECUL = 300; // les autres visuels s'effacent quand ils approchent à moins de cette distance : ils restent petits

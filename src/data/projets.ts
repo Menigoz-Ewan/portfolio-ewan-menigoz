@@ -32,12 +32,12 @@ import afficheTheatreDetail from '../assets/images/affiches/affiche-theatre-deta
 
 // Climat Outre-Mer
 import vignetteClimat from '../assets/images/vignette-climat.png';
-import climatAnneesChaudes from '../assets/images/climat/01-annees-chaudes-362x490.png';
-import climatTerritoires from '../assets/images/climat/02-trois-territoires-362x490.png';
-import climatProjections from '../assets/images/climat/03-projections-362x490.png';
-import climatEvolution from '../assets/images/climat/04-evolution-588x420.png';
-import climatMethode from '../assets/images/climat/05-methode-588x420.png';
-import climatPluieChaleur from '../assets/images/climat/06-pluie-chaleur-690x460.png';
+import climatAnneesChaudes from '../assets/images/climat/01-annees-chaudes-362x490@2x.png';
+import climatTerritoires from '../assets/images/climat/02-trois-territoires-362x490@2x.png';
+import climatProjections from '../assets/images/climat/03-projections-362x490@2x.png';
+import climatEvolution from '../assets/images/climat/04-evolution-588x420@2x.png';
+import climatMethode from '../assets/images/climat/05-methode-588x420@2x.png';
+import climatPluieChaleur from '../assets/images/climat/06-pluie-chaleur-690x460@2x.png';
 
 // TiK•TaK
 import vignetteTiktak from '../assets/images/vignette-tiktak.png';
@@ -307,7 +307,7 @@ const climatOutreMer: Projet = {
       },
       {
         src: climatProjections,
-        alt: 'Températures moyennes d’aujourd’hui, de 2050 et de 2100 pour chaque territoire, jusqu’à environ +2 °C par rapport à 1991-2020.',
+        alt: 'Température moyenne d’aujourd’hui et projection pour 2100 dans chaque territoire : environ +1,8 à +2,1 °C par rapport à 1991-2020.',
       },
     ],
     contexte: {

@@ -143,7 +143,9 @@ const fiche = [
           <Image
             src={v.src}
             alt={v.alt}
-            width={1200}
+            width={1600}
+            widths={[800, 1600]}
+            sizes="(min-width: 768px) 580px, 100vw"
             class:list={[
               'h-[260px] w-full rounded-2xl md:h-[420px]',
               etude.defi.fondLavande ? 'bg-lavande object-contain' : 'bg-carte object-cover',
@@ -164,7 +166,9 @@ const fiche = [
     <Image
       src={etude.solution.visuel.src}
       alt={etude.solution.visuel.alt}
-      width={1380}
+      width={1600}
+      widths={[800, 1600]}
+      sizes="(min-width: 1024px) 690px, 100vw"
       class="h-[300px] w-full rounded-[20px] bg-carte object-cover md:h-[460px] lg:w-[690px]"
     />
   </section>
@@ -195,7 +199,7 @@ const fiche = [
           href={lienProjet(suivant.slug, lang)}
           class="group flex flex-col gap-6 rounded-[20px] border border-trait bg-carte p-4 transition-[border-color,box-shadow] duration-(--duree-carte) ease-(--ease-sortie) hover:border-vert-texte hover:shadow-[0_14px_28px_rgb(23_23_23/0.08)] sm:flex-row sm:items-center sm:pr-8"
         >
-          <Image src={suivant.vignette.src} alt="" width={440} height={276} class="h-[138px] w-full rounded-xl object-cover sm:w-[220px]" />
+          <Image src={suivant.vignette.src} alt="" width={880} height={552} widths={[440, 880]} sizes="(min-width: 640px) 220px, 100vw" class="h-[138px] w-full rounded-xl object-cover sm:w-[220px]" />
           <span class="flex flex-1 flex-col gap-2">
             <span class="text-label text-secondaire">{T.suivant}</span>
             <span class="text-h2 text-principal">{suivant.titre}</span>

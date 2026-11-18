@@ -9,12 +9,13 @@ import { langue } from '../i18n';
 import type { ImageMetadata } from 'astro';
 import chateau from '../assets/images/affiche-chateau.png';
 import theatre from '../assets/images/galerie/affiche-theatre.png';
-import temple from '../assets/images/galerie/affiche-temple.png';
+import pont from '../assets/images/iris-pont.png';
+import dessin from '../assets/images/iris-dessin.png';
 import exposition from '../assets/images/polaroid-exposition.png';
 import cimade from '../assets/images/iris-cimade.png';
 import tiktak from '../assets/images/iris-tiktak.png';
 
-// Images, dans l'ordre d'apparition (mes travaux uniquement : ma seule photo est sur la page À propos).
+// Images, dans l'ordre d'apparition : mes travaux, un de mes dessins et une photo de moi.
 // « affiche » : l'image est agrandie pour cacher les marges blanches de l'affiche (titre, logos).
 const lang = langue(Astro.currentLocale);
 const T = {
@@ -27,16 +28,18 @@ const altEn = [
   'TiK•TaK visual: three watches with leather straps on a fir-green background',
   'Poster “Un spectacle depuis 2000 ans” (A show for 2,000 years): the Gallo-Roman theatre of Mandeure seen from above',
   'Two large paintings with blue-green patterns hanging in an exhibition room',
-  'Poster “L’élégance de la Renaissance” (The elegance of the Renaissance): Saint-Martin church and its bell tower',
+  'Me on a bridge above a canal, in a brown T-shirt, in front of yellow houses',
   'La Cimade poster: a black raised fist veined with red, surrounded by red circles',
+  'My ink drawing (fan art): an injured character with spiky hair, speech bubble “I’m you.”',
 ];
 const reserve: { src: ImageMetadata; alt: string; affiche?: boolean }[] = [
   { src: chateau, alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs', affiche: true },
   { src: tiktak, alt: 'Visuel de TiK•TaK : trois montres à bracelet en cuir sur fond vert sapin' },
   { src: theatre, alt: 'Affiche « Un spectacle depuis 2000 ans » : le théâtre gallo-romain de Mandeure vu du ciel', affiche: true },
   { src: exposition, alt: 'Deux grandes toiles aux motifs bleu-vert accrochées dans une salle d’exposition' },
-  { src: temple, alt: 'Affiche « L’élégance de la Renaissance » : le temple Saint-Martin et son clocher', affiche: true },
+  { src: pont, alt: 'Moi sur un pont au-dessus d’un canal, en t-shirt marron, devant des maisons jaunes' },
   { src: cimade, alt: 'Affiche de La Cimade : poing levé noir veiné de rouge, entouré de cercles rouges' },
+  { src: dessin, alt: 'Mon dessin à l’encre (fan art) : un personnage blessé aux cheveux en pics, bulle « I’m you. »' },
 ];
 
 // Images optimisées par Astro (WebP, 840 px de large : le cadre de 420 px en double densité) : le script n'a plus qu'à changer l'adresse

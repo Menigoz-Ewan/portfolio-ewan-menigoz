@@ -605,3 +605,24 @@
 
 **Reste**
 - Appliquer les règles de cache sur le serveur ; écouter le site avec un lecteur d'écran.
+
+### 18/11 · Lighthouse en ligne et contrôle des images
+
+**Fait**
+- Règles de cache appliquées sur le serveur (vérifiées avec curl). Lighthouse en ligne sur 7 pages : accessibilité, bonnes pratiques et SEO à 100 partout ; performance de 97 à 100 en mobile, 100 sur ordinateur.
+- Contrôle de chaque image : taille affichée × densité de l'écran, comparée aux pixels du fichier, sur ordinateur (×2) et mobile (×3). Corrigé dans le code quand la source était assez grande : visuels du défi et de la solution des études de cas (1600 px), vignette du projet suivant, cartes de l'anneau des passions.
+
+**Reste**
+- Sources trop petites, à refaire : les 6 images de l'étude Climat Outre-Mer (exportées en simple densité), le détail de l'affiche du théâtre (483 px), le visuel principal d'OpenSigne (1245 px) et la photo d'À propos (1560 px).
+
+### 18/11 · Galerie enrichie, carrousel et cartes Climat nettes
+
+**Fait**
+- Galerie : 11 visuels ajoutés (19 au total) : affiche FCSM, quatre fans arts à l'encre, quatre photos de moi, un paysage et une photo d'œuvre graffiti en exposition. Dessins recadrés sur leur feuille. Catégories et textes alternatifs en français et en anglais ; profondeur du champ allongée pour garder le même écart entre les visuels.
+- Mentions légales : crédits des fans arts (personnages à leurs auteurs), de l'affiche FCSM (création non officielle, photos et logo au club) et de l'œuvre graffiti (à son artiste) ; les photos Pexels de la galerie sont désormais nommées.
+- Carrousel du hero : la photo du pont remplace l'affiche du temple, et un de mes dessins (« I'm you. ») est ajouté, recadrés en 840 × 960 px. Ma photo n'est donc plus réservée à la page À propos : c'est mon choix.
+- Les 6 cartes de l'étude Climat Outre-Mer refaites en double densité, avec les graphiques vectoriels du site en ligne (mêmes données). La carte des projections montre désormais 2100, comme son titre.
+
+**Reste**
+- Remesurer la galerie avec Lighthouse une fois en ligne (19 images au lieu de 8).
+- Détail de l'affiche du théâtre, visuel principal d'OpenSigne et photo d'À propos : sources encore trop petites.

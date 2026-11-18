@@ -55,7 +55,7 @@ const pas = 360 / cartes.length;
       cartesPage.map((c, i) => (
         <li class="emplacement" style={`--i: ${i}`}>
           <button type="button" class="polaroid" aria-pressed={i === 0 ? 'true' : 'false'} data-index={i}>
-            <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[4px] object-cover" />
+            <Image src={c.src} alt={c.alt} width={400} height={400} class="aspect-square w-full rounded-[4px] object-cover" />
             <span class="text-small text-principal">{c.titre}</span>
           </button>
         </li>

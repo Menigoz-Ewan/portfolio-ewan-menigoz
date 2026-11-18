@@ -15,7 +15,8 @@ export default defineConfig({
     defaultLocale: 'fr',
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [sitemap()],
+  // Plan du site sans la page 404 anglaise (elle ne doit pas être référencée)
+  integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
   vite: {
     plugins: [tailwindcss()],
   },

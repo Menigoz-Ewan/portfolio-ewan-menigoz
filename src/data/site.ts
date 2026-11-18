@@ -9,9 +9,9 @@ export const site = {
   description:
     'Portfolio d’Ewan Menigoz, étudiant en BUT MMI à Montbéliard : je conçois des interfaces claires, puis je les code. Recherche de stage en design UI/UX.',
   email: 'ewan.menigoz@edu.univ-fcomte.fr',
-  // Lien laissé vide (Instagram) : les boutons correspondants pointent vers la page Contact.
+  // Réseaux professionnels (pied de page, données structurées de l'accueil)
   linkedin: 'https://www.linkedin.com/in/ewan-menigoz-3b10a7385/',
-  instagram: '',
+  instagram: 'https://www.instagram.com/ewn_design/',
   // Déposer le CV dans public/ sous ce nom.
   cv: '/cv-ewan-menigoz.pdf',
   // Nom de domaine et hébergeur du VPS (mentions légales, QUALITE J1)

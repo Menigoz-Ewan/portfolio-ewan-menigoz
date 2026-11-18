@@ -1,9 +1,8 @@
 ---
-// Logo + filet + nom, lien vers l'accueil (nom accessible « EWME, accueil » : QUALITE A8),
-// puis le sélecteur de langue « FR / EN » : il mène à la même page dans l'autre langue.
-// Le nom est masqué sous 400 px et entre 1024 et 1400 px, où le menu complet laisse trop peu de place.
+// Logo, lien vers l'accueil (nom accessible « EWME, accueil » : QUALITE A8), puis un filet
+// et le sélecteur de langue « FR / EN » : il mène à la même page dans l'autre langue.
+// Le sélecteur prend la place du nom, pour rester visible à toutes les largeurs.
 import Logo from './Logo.astro';
-import { site } from '../data/site';
 import { langue, t, lien, autreLangue } from '../i18n';
 
 const lang = langue(Astro.currentLocale);
@@ -17,10 +16,8 @@ const choix = [
 ---
 
 <div class="flex items-center gap-3">
-  <a href={lien('accueil', lang)} class="flex items-center gap-3 rounded">
+  <a href={lien('accueil', lang)} class="flex items-center rounded">
     <Logo lien class="h-[30px] w-auto text-principal" />
-    <span aria-hidden="true" class="hidden h-4 w-px bg-principal/35 min-[400px]:block lg:hidden min-[1400px]:block"></span>
-    <span class="hidden text-ui text-principal min-[400px]:inline lg:hidden min-[1400px]:inline">{site.nom}</span>
   </a>
   <span aria-hidden="true" class="h-4 w-px bg-principal/35"></span>
   <nav aria-label={ui.choixLangue}>

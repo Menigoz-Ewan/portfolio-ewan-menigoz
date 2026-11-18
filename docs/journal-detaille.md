@@ -563,7 +563,7 @@
 - Corrigé : nom des liens de l'accordéon, contraste du carrousel (seule l'image est estompée), cartes cachées de l'anneau retirées de la tabulation, images de la galerie et d'À propos à la bonne taille, image d'aperçu de partage (Open Graph), adresse du site dans les données structurées, crédit des photos Pexels dans les mentions légales, commentaire dépassé dans robots.txt. Remesuré en local : accessibilité 100, galerie 93.
 
 **Reste**
-- Cache des fichiers /_astro/ dans Apache, police Caveat sur mobile, lecteur d'écran et zoom à 200 %, lien Instagram à renseigner dans site.ts (LinkedIn renseigné le 18/11).
+- Cache dans Apache et lecteur d'écran (les autres points sont réglés plus bas).
 
 ### 18/11 · Version anglaise du site
 
@@ -590,4 +590,18 @@
 - Image TiK•TaK du carrousel du hero en 840 × 960 px. Les cartes servent une version de 800 ou de 1600 px selon l'écran ; le carrousel génère ses images en 840 px.
 
 **Reste**
-- Affiche Cimade du carrousel en 470 px : un export en 840 × 960 px la rendrait nette sur écran haute densité.
+- Affiche Cimade du carrousel en 470 px : réglé dans l'entrée suivante.
+
+### 18/11 · Corrections après la mise en ligne
+
+**Fait**
+- Sur le site en ligne, j'ai vu une image cassée dans le carrousel, des vignettes floues et le nom à la place du sélecteur de langue. Vérifié dans un navigateur neuf : le site en ligne était bien à jour. Mon navigateur affichait une ancienne version gardée en cache, dont certaines images avaient été supprimées pendant l'envoi. Cause : Apache n'envoie aucune règle de cache. Règles préparées : pages toujours revérifiées, fichiers `/_astro/` gardés un an.
+- Le nom « Ewan Menigoz » à côté du logo est remplacé par le sélecteur FR / EN, visible à toutes les largeurs.
+- Lien Instagram professionnel ajouté (pied de page et données structurées).
+- Affiche Cimade du carrousel et de la galerie en 840 × 960 px, agrandie avec des contours resserrés (aplats rouges et noirs).
+- Page 404 en anglais pour les adresses en `/en/`, retirée du plan du site.
+- Police Caveat sur mobile : elle sert à « touchez l'image ! », elle reste.
+- Relecture de l'anglais et zoom à 200 % : faits par moi.
+
+**Reste**
+- Appliquer les règles de cache sur le serveur ; écouter le site avec un lecteur d'écran.

@@ -1,0 +1,47 @@
+---
+// Page 404 personnalisée (QUALITE R7), commune aux deux langues : src/pages/404.astro et src/pages/en/404.astro.
+// Même charte que le reste du site, panneau sans onglet.
+// Apache affiche /404.html pour une adresse inconnue, et /en/404.html si elle commence par /en/.
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import Button from '../components/Button.astro';
+import { langue, lien } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: {
+    titre: 'Page introuvable',
+    description: 'Cette page n’existe pas ou a été déplacée.',
+    accroche: 'Vous vous êtes égaré ! Cette page n’existe pas.',
+    chapo: 'Le lien est peut-être cassé, ou la page a été déplacée.',
+    accueil: 'Retour à l’accueil',
+    projets: 'Voir les projets',
+    // Lien vers l'autre langue, écrit dans cette autre langue
+    autre: { texte: 'Page not found.', lien: 'Go to the English home page', code: 'en' },
+  },
+  en: {
+    titre: 'Page not found',
+    description: 'This page does not exist or has been moved.',
+    accroche: 'You seem lost! This page does not exist.',
+    chapo: 'The link may be broken, or the page may have been moved.',
+    accueil: 'Back to the home page',
+    projets: 'See my projects',
+    autre: { texte: 'Page introuvable.', lien: 'Aller à l’accueil en français', code: 'fr' },
+  },
+}[lang];
+const autreLangue = lang === 'en' ? 'fr' : 'en';
+---
+
+<Layout titre={T.titre} description={T.description}>
+  <IntroPage slot="panneau" titre={T.accroche} chapo={T.chapo}>
+    <div class="flex flex-wrap gap-3">
+      <Button href={lien('accueil', lang)} variante="light">{T.accueil}</Button>
+      <Button href={lien('projets', lang)} variante="contour">{T.projets}</Button>
+    </div>
+    <p class="text-small text-creme/80" lang={T.autre.code}>
+      {T.autre.texte}
+      <a href={lien('accueil', autreLangue)} class="underline underline-offset-4 hover:text-creme" hreflang={T.autre.code}>{T.autre.lien}</a>.
+    </p>
+  </IntroPage>
+  <div class="pb-24"></div>
+</Layout>

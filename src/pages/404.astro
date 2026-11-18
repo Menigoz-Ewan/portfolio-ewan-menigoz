@@ -1,21 +1,6 @@
 ---
-// Page 404 personnalisée (QUALITE R7) : même charte que le reste du site, panneau sans onglet.
-// Une seule page pour les deux langues (le serveur affiche /404.html pour toute adresse inconnue) :
-// le texte principal est en français, avec une ligne et un lien en anglais.
-import Layout from '../layouts/Layout.astro';
-import IntroPage from '../components/IntroPage.astro';
-import Button from '../components/Button.astro';
+// Page 404 en français : le contenu est dans src/vues/Erreur404.astro (commun aux deux langues).
+import Erreur404 from '../vues/Erreur404.astro';
 ---
 
-<Layout titre="Page introuvable" description="Cette page n’existe pas ou a été déplacée.">
-  <IntroPage slot="panneau" titre="Vous vous êtes égaré ! Cette page n’existe pas." chapo="Le lien est peut-être cassé, ou la page a été déplacée.">
-    <div class="flex flex-wrap gap-3">
-      <Button href="/" variante="light">Retour à l’accueil</Button>
-      <Button href="/projets" variante="contour">Voir les projets</Button>
-    </div>
-    <p class="text-small text-creme/80" lang="en">
-      Page not found. <a href="/en/" class="underline underline-offset-4 hover:text-creme" hreflang="en">Go to the English home page</a>.
-    </p>
-  </IntroPage>
-  <div class="pb-24"></div>
-</Layout>
+<Erreur404 />

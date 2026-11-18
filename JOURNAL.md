@@ -84,6 +84,7 @@
   - **La grille de fond** : elle tremblait au défilement, corrigée en la mettant sur un calque fixe.
   - **La mise en ligne** : port SSH particulier, erreur 403 due aux droits des fichiers, cache DNS.
   - **Les notifications par e-mail du formulaire** : abandonnées, car le serveur d'envoi refusait la connexion.
+  - **Le cache du navigateur** : après la mise en ligne, mon navigateur affichait encore l'ancienne version, avec une image cassée. Réglé par des règles de cache dans Apache.
   - **Le sélecteur de langue** : entre 1024 et 1400 px, il touchait le premier onglet du menu. Le nom « Ewan Menigoz » est masqué à ces largeurs, le logo reste.
 - **Décidé.**
   - Des animations discrètes, déclenchées par le visiteur et coupées si son système demande de réduire les animations.

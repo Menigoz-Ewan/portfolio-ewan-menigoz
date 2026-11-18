@@ -72,6 +72,6 @@ jobs:
           # Droits de lecture pour Apache (sinon erreur 403), puis échange des dossiers
           $SSH "$UTILISATEUR@$HOTE" "chmod -R a+rX /var/www/portfolio/dist-nouveau \
             && rm -rf /var/www/portfolio/dist-ancien \
-            && mv /var/www/portfolio/dist /var/www/portfolio/dist-ancien \
+            && { [ ! -d /var/www/portfolio/dist ] || mv /var/www/portfolio/dist /var/www/portfolio/dist-ancien; } \
             && mv /var/www/portfolio/dist-nouveau /var/www/portfolio/dist \
             && rm -rf /var/www/portfolio/dist-ancien"

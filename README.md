@@ -140,7 +140,12 @@ Le site est hébergé sur mon serveur privé virtuel (VPS), à côté de PocketB
 - **Serveur web** : Apache, qui sert les fichiers statiques de `dist/`, avec une page 404 personnalisée.
 - **HTTPS** : certificat Let's Encrypt (Certbot), renouvelé automatiquement ; le HTTP redirige vers le HTTPS.
 
-Mise à jour du site depuis mon poste :
+**Mise à jour automatique (déploiement continu)** : à chaque `git push` sur `main`, GitHub Actions lance le fichier [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Il installe les dépendances, construit le site (`npm run build`), l'envoie sur le serveur dans un dossier à côté, puis échange les dossiers : le site ne se coupe pas pendant l'envoi. Le suivi de chaque mise en ligne se trouve dans l'onglet **Actions** du dépôt.
+
+- **Secrets du dépôt** (Settings > Secrets and variables > Actions) : `SSH_PRIVATE_KEY` (clé réservée au déploiement), `SSH_KNOWN_HOSTS` (empreinte du serveur), `SSH_HOST`, `SSH_USER`, `SSH_PORT` et `PUBLIC_POCKETBASE_URL`. Rien de sensible n'est écrit dans le code.
+- **Cache** : Apache renvoie les pages en `no-cache` (toujours revérifiées) et garde un an les fichiers `/_astro/`, dont le nom change à chaque version.
+
+**Mise à jour manuelle** (si besoin, depuis mon poste) :
 
 ```bash
 npm run build

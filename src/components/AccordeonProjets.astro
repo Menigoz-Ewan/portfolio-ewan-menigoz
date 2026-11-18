@@ -39,7 +39,7 @@ const voirEtude = lang === 'en' ? 'see the case study' : 'voir l’étude de cas
           <span class="panneau-titre-replie" aria-hidden="true">{p.titre}</span>
           <!-- Fiche du projet ouvert -->
           <span class="panneau-fiche">
-            <PastillesDomaines categories={p.categories} />
+            <PastillesDomaines categories={p.accueil ? [p.accueil.domaine] : p.categories} />
             <span class="flex items-center gap-3">
               <span class="flex-1 text-h3 text-principal">{p.titre}</span>
               <span class="panneau-fleche text-secondaire" aria-hidden="true"><Icon nom="arrow-up-right" taille={20} /></span>

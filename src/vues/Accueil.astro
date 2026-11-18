@@ -13,7 +13,10 @@ import { langue, t, lien } from '../i18n';
 
 const lang = langue(Astro.currentLocale);
 const ui = t(lang);
-const selection = projetsPour(lang).filter((p) => p.accueil);
+// Projets de l'accueil : un par domaine, dans l'ordre choisi (rang)
+const selection = projetsPour(lang)
+  .filter((p) => p.accueil)
+  .sort((a, b) => a.accueil!.rang - b.accueil!.rang);
 
 const T = {
   fr: {

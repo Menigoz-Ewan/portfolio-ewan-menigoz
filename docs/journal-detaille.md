@@ -626,3 +626,9 @@
 **Reste**
 - Remesurer la galerie avec Lighthouse une fois en ligne (19 images au lieu de 8).
 - Détail de l'affiche du théâtre, visuel principal d'OpenSigne et photo d'À propos : sources encore trop petites.
+
+### 19/11 · Accueil : trois projets, trois domaines
+
+**Fait**
+- Projets de l'accueil : TiK•TaK (Dev), La Cimade (Créa) et Affiches touristiques (Com), dans cet ordre ; Climat Outre-Mer reste sur la page Projets. Chaque carte n'affiche que le domaine mis en avant ; les filtres de la page Projets gardent tous les domaines.
+- Nouvelle vignette des affiches touristiques en 1600 × 1000 px (les trois affiches côte à côte) : l'affiche seule, en portrait, était coupée dans la carte en paysage.

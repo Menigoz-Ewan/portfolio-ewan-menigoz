@@ -1,0 +1,77 @@
+# Mise en ligne automatique du portfolio.
+# À chaque push sur la branche main, GitHub construit le site (npm run build)
+# puis l'envoie sur mon serveur, à la place de l'ancienne version.
+# Ce sont les 4 commandes que je tapais à la main, lancées par GitHub.
+#
+# Les informations sensibles (clé SSH, adresse du serveur, PocketBase) ne sont pas
+# écrites ici : elles sont dans les « secrets » du dépôt (Settings > Secrets and variables > Actions).
+
+name: Mise en ligne
+
+on:
+  push:
+    branches: [main]
+  # Bouton « Run workflow » dans l'onglet Actions, pour relancer à la main
+  workflow_dispatch:
+
+# Deux mises en ligne ne tournent jamais en même temps : la seconde attend la première
+concurrency:
+  group: mise-en-ligne
+  cancel-in-progress: false
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Récupérer le code du dépôt
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # 2. Installer Node.js (Astro 7 demande Node 22.22 ou plus récent)
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Installer les dépendances, exactement celles du package-lock.json
+      - name: Installer les dépendances
+        run: npm ci
+
+      # 4. Construire le site dans dist/ (comme npm run build sur mon ordinateur)
+      - name: Construire le site
+        run: npm run build
+        env:
+          PUBLIC_POCKETBASE_URL: ${{ secrets.PUBLIC_POCKETBASE_URL }}
+
+      # 5. Préparer la connexion SSH avec la clé réservée au déploiement
+      - name: Préparer la connexion au serveur
+        env:
+          CLE: ${{ secrets.SSH_PRIVATE_KEY }}
+          EMPREINTE: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$CLE" | tr -d '\r' > ~/.ssh/deploiement
+          chmod 600 ~/.ssh/deploiement
+          # Empreinte du serveur : on vérifie qu'on parle bien à mon serveur
+          printf '%s\n' "$EMPREINTE" | tr -d '\r' > ~/.ssh/known_hosts
+
+      # 6. Envoyer le site : d'abord dans un dossier à côté, puis échange des dossiers.
+      #    Le site reste en ligne pendant l'envoi (pas de coupure entre le rm et le scp).
+      - name: Envoyer le site sur le serveur
+        env:
+          HOTE: ${{ secrets.SSH_HOST }}
+          UTILISATEUR: ${{ secrets.SSH_USER }}
+          PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          SSH="ssh -i $HOME/.ssh/deploiement -p $PORT"
+          # Dossier temporaire vide sur le serveur
+          $SSH "$UTILISATEUR@$HOTE" "rm -rf /var/www/portfolio/dist-nouveau"
+          # Copie du site construit
+          scp -i ~/.ssh/deploiement -P "$PORT" -r dist "$UTILISATEUR@$HOTE:/var/www/portfolio/dist-nouveau"
+          # Droits de lecture pour Apache (sinon erreur 403), puis échange des dossiers
+          $SSH "$UTILISATEUR@$HOTE" "chmod -R a+rX /var/www/portfolio/dist-nouveau \
+            && rm -rf /var/www/portfolio/dist-ancien \
+            && mv /var/www/portfolio/dist /var/www/portfolio/dist-ancien \
+            && mv /var/www/portfolio/dist-nouveau /var/www/portfolio/dist \
+            && rm -rf /var/www/portfolio/dist-ancien"

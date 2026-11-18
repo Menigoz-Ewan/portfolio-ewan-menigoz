@@ -64,8 +64,9 @@ export const traductionsEn: Record<string, TraductionProjet> = {
   'affiches-touristiques': {
     titre: 'Tourism posters',
     sousDomaines: ['Art direction'],
+    accueil: 'Three vector posters that make you want to visit the Pays de Montbéliard.',
     resume: 'Three vector posters that make you want to visit the Pays de Montbéliard.',
-    vignetteAlt: 'Poster “Au sommet de l’Histoire” (At the top of History): the castle of the Dukes of Württemberg in Montbéliard, in flat colours',
+    vignetteAlt: 'The three tourism posters side by side: the castle of the Dukes of Württemberg, the Gallo-Roman theatre of Mandeure and Saint-Martin church, in flat colours',
     etude: {
       accroche: 'Three fictional vector posters that make you want to visit the heritage of the Pays de Montbéliard.',
       fiche: {
@@ -108,7 +109,6 @@ export const traductionsEn: Record<string, TraductionProjet> = {
 
   'climat-outre-mer': {
     sousDomaines: ['Data visualisation', 'Front-end'],
-    accueil: 'A data-driven website comparing global warming in three French overseas territories, based on Météo-France data.',
     resume: 'A data-driven website comparing global warming in three French overseas territories, based on Météo-France data.',
     vignetteAlt: 'Climat Outre-Mer card: temperature curves for Martinique, New Caledonia and Réunion from 1970 to 2024',
     etude: {

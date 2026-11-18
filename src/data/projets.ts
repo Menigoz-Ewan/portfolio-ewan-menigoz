@@ -22,7 +22,7 @@ import osCharte from '../assets/images/opensigne/charte-graphique.png';
 import osExperience from '../assets/images/opensigne/experience-apprentissage.png';
 
 // Affiches touristiques
-import vignetteAffiches from '../assets/images/affiche-chateau.png';
+import vignetteAffiches from '../assets/images/vignette-affiches.png';
 import afficheChateau from '../assets/images/affiche-chateau.png';
 import afficheTheatre from '../assets/images/galerie/affiche-theatre.png';
 import afficheTemple from '../assets/images/galerie/affiche-temple.png';
@@ -103,8 +103,11 @@ export interface Projet {
   categories: Categorie[];
   /** Sous-domaines (UX, UI, Branding…), affichés en mots-clés sous les pastilles */
   sousDomaines: string[];
-  /** Résumé affiché sur l'accueil (seuls les projets qui en ont un y apparaissent) */
-  accueil?: { resume: string };
+  /**
+   * Accueil (seuls les projets qui en ont un y apparaissent) : résumé, domaine mis en avant (une pastille,
+   * pour « trois projets, trois domaines ») et rang d'affichage
+   */
+  accueil?: { resume: string; domaine: Categorie; rang: number };
   /** Résumé affiché sur la page Projets */
   resume: string;
   vignette: Visuel;
@@ -216,11 +219,16 @@ const affichesTouristiques: Projet = {
   slug: 'affiches-touristiques',
   titre: 'Affiches touristiques',
   categories: ['crea', 'com'],
+  accueil: {
+    resume: 'Trois affiches vectorielles qui donnent envie de visiter le Pays de Montbéliard.',
+    domaine: 'com',
+    rang: 3,
+  },
   sousDomaines: ['Direction artistique'],
   resume: 'Trois affiches vectorielles qui donnent envie de visiter le Pays de Montbéliard.',
   vignette: {
     src: vignetteAffiches,
-    alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg à Montbéliard, en aplats de couleurs',
+    alt: 'Les trois affiches touristiques côte à côte : le château des ducs de Wurtemberg, le théâtre gallo-romain de Mandeure et le temple Saint-Martin, en aplats de couleurs',
   },
   etude: {
     accroche: 'Trois affiches vectorielles fictives pour donner envie de visiter le patrimoine du Pays de Montbéliard.',
@@ -277,9 +285,6 @@ const climatOutreMer: Projet = {
   slug: 'climat-outre-mer',
   titre: 'Climat Outre-Mer',
   categories: ['dev', 'crea'],
-  accueil: {
-    resume: 'Un site d’enquête qui compare le réchauffement de trois territoires d’outre-mer, à partir des données de Météo-France.',
-  },
   sousDomaines: ['Datavisualisation', 'Front-end'],
   resume: 'Un site d’enquête qui compare le réchauffement de trois territoires d’outre-mer, à partir des données de Météo-France.',
   vignette: {
@@ -352,6 +357,8 @@ const tiktak: Projet = {
   categories: ['dev', 'crea'],
   accueil: {
     resume: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
+    domaine: 'dev',
+    rang: 1,
   },
   sousDomaines: ['UX', 'UI', 'Front-end'],
   resume: 'Un configurateur en ligne pour composer, enregistrer et commander sa propre montre, assemblée à la main.',
@@ -427,6 +434,8 @@ const laCimade: Projet = {
   accueil: {
     resume:
       'Refonte de l’identité visuelle d’une association de défense des droits des personnes exilées : logo, charte graphique et déclinaisons.',
+    domaine: 'crea',
+    rang: 2,
   },
   sousDomaines: ['Branding', 'Identité visuelle'],
   resume:
@@ -604,7 +613,7 @@ function traduire(p: Projet): Projet {
     ...p,
     titre: tr.titre ?? p.titre,
     sousDomaines: tr.sousDomaines,
-    accueil: p.accueil && tr.accueil ? { resume: tr.accueil } : p.accueil,
+    accueil: p.accueil && tr.accueil ? { ...p.accueil, resume: tr.accueil } : p.accueil,
     resume: tr.resume,
     vignette: avecAlt(p.vignette, tr.vignetteAlt),
     etude:

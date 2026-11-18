@@ -5,16 +5,31 @@
 //   pendant que le cadre rebondit et change d'inclinaison.
 // Aucun changement automatique. Avec « réduire les animations » : image affichée d'emblée, changement sans effet.
 import { getImage } from 'astro:assets';
+import { langue } from '../i18n';
 import type { ImageMetadata } from 'astro';
 import chateau from '../assets/images/affiche-chateau.png';
 import theatre from '../assets/images/galerie/affiche-theatre.png';
 import temple from '../assets/images/galerie/affiche-temple.png';
 import exposition from '../assets/images/polaroid-exposition.png';
 import cimade from '../assets/images/polaroid-cimade.png';
-import tiktak from '../assets/images/vignette-tiktak.png';
+import tiktak from '../assets/images/iris-tiktak.png';
 
 // Images, dans l'ordre d'apparition (mes travaux uniquement : ma seule photo est sur la page À propos).
 // « affiche » : l'image est agrandie pour cacher les marges blanches de l'affiche (titre, logos).
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: { suivante: 'Afficher l’image suivante', cliquez: 'cliquez sur la photo !', touchez: 'touchez l’image !', image: 'Image', sur: 'sur', deuxPoints: ' :' },
+  en: { suivante: 'Show the next image', cliquez: 'click the picture!', touchez: 'tap the picture!', image: 'Image', sur: 'of', deuxPoints: ':' },
+}[lang];
+// Textes alternatifs en anglais, dans le même ordre que la réserve
+const altEn = [
+  'Poster “Au sommet de l’Histoire” (At the top of History): the castle of the Dukes of Württemberg in flat colours',
+  'TiK•TaK visual: three watches with leather straps on a fir-green background',
+  'Poster “Un spectacle depuis 2000 ans” (A show for 2,000 years): the Gallo-Roman theatre of Mandeure seen from above',
+  'Two large paintings with blue-green patterns hanging in an exhibition room',
+  'Poster “L’élégance de la Renaissance” (The elegance of the Renaissance): Saint-Martin church and its bell tower',
+  'La Cimade poster: a black raised fist veined with red, surrounded by red circles',
+];
 const reserve: { src: ImageMetadata; alt: string; affiche?: boolean }[] = [
   { src: chateau, alt: 'Affiche « Au sommet de l’Histoire » : le château des ducs de Wurtemberg en aplats de couleurs', affiche: true },
   { src: tiktak, alt: 'Visuel de TiK•TaK : trois montres à bracelet en cuir sur fond vert sapin' },
@@ -24,11 +39,11 @@ const reserve: { src: ImageMetadata; alt: string; affiche?: boolean }[] = [
   { src: cimade, alt: 'Affiche de La Cimade : poing levé noir veiné de rouge, entouré de cercles rouges' },
 ];
 
-// Images optimisées par Astro (WebP, 680 px de large) : le script n'a plus qu'à changer l'adresse
+// Images optimisées par Astro (WebP, 840 px de large : le cadre de 420 px en double densité) : le script n'a plus qu'à changer l'adresse
 const images = await Promise.all(
-  reserve.map(async (r) => ({
-    url: (await getImage({ src: r.src, width: 680, format: 'webp' })).src,
-    alt: r.alt,
+  reserve.map(async (r, i) => ({
+    url: (await getImage({ src: r.src, width: 840, format: 'webp' })).src,
+    alt: lang === 'en' ? altEn[i] : r.alt,
     affiche: Boolean(r.affiche),
   })),
 );
@@ -47,22 +62,22 @@ const { compact = false } = Astro.props;
       'cadre-iris arrivee absolute overflow-hidden rounded-2xl bg-creme/10 shadow-[0_24px_48px_rgb(0_0_0/0.3)]',
       compact ? 'left-[15px] top-[10px] h-[290px] w-[230px]' : 'left-[45px] top-[22px] h-[420px] w-[330px]',
     ]}
-    aria-label="Afficher l’image suivante"
+    aria-label={T.suivante}
     data-cadre
   >
     <img
       src={images[0].url}
       alt={images[0].alt}
-      width="680"
-      height="860"
+      width="840"
+      height="960"
       class:list={['entree absolute inset-0 size-full object-cover', images[0].affiche && 'recadre']}
       loading={compact ? 'lazy' : 'eager'}
       data-dessous
     />
-    <img src={images[0].url} alt="" aria-hidden="true" width="680" height="860" class="absolute inset-0 size-full object-cover opacity-0" decoding="async" data-dessus />
+    <img src={images[0].url} alt="" aria-hidden="true" width="840" height="960" class="absolute inset-0 size-full object-cover opacity-0" decoding="async" data-dessus />
   </button>
   <!-- Annonce pour les lecteurs d'écran : l'image qui vient d'apparaître -->
-  <p class="sr-only" aria-live="polite" data-iris-annonce></p>
+  <p class="sr-only" aria-live="polite" data-iris-annonce data-image={T.image} data-sur={T.sur} data-deux-points={T.deuxPoints}></p>
   <!-- Indication manuscrite (décorative : l'image est un bouton nommé) -->
   <p
     aria-hidden="true"
@@ -71,7 +86,7 @@ const { compact = false } = Astro.props;
       compact ? 'bottom-0 left-[60px] text-[22px]' : '-bottom-7 left-[150px] text-[24px]',
     ]}
   >
-    {compact ? 'touchez l\'image !' : 'cliquez sur la photo !'}
+    {compact ? T.touchez : T.cliquez}
   </p>
 </div>
 
@@ -206,7 +221,8 @@ const { compact = false } = Astro.props;
         dessus.addEventListener('animationend', terminer, { once: true });
       }
 
-      annonce.textContent = `Image ${actuelle + 1} sur ${images.length} : ${image.alt}`;
+      // « Image 2 sur 6 » / « Image 2 of 6 » : mots posés par le serveur dans la langue de la page
+      annonce.textContent = `${annonce.dataset.image} ${actuelle + 1} ${annonce.dataset.sur} ${images.length}${annonce.dataset.deuxPoints} ${image.alt}`;
     });
   }
 </script>

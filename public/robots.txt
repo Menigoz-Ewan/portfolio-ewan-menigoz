@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# À mettre à jour avec le nom de domaine définitif
 Sitemap: https://portfolio.ewan-menigoz.fr/sitemap-index.xml

@@ -4,19 +4,43 @@
 import filaireHero from '../assets/svg/ewme-filaire-hero.svg?raw';
 import Button from './Button.astro';
 import ImageIris from './ImageIris.astro';
-import { site } from '../data/site';
+import { textesSite } from '../data/site';
+import { langue, lien } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: {
+    debut: 'Je conçois des interfaces claires,',
+    fin: 'puis je les code.',
+    intro: 'Ewan Menigoz, étudiant en 2e année de BUT MMI à Montbéliard. Je cherche un stage pour concevoir et intégrer des interfaces au sein d’une équipe.',
+    proposer: 'Me proposer un stage',
+    note: 'écrivez-moi !',
+    voirProjets: 'Voir les projets',
+    stage: 'Stage recherché',
+  },
+  en: {
+    debut: 'I design clear interfaces,',
+    fin: 'then I code them.',
+    intro: 'Ewan Menigoz, 2nd-year BUT MMI student in Montbéliard, France. I am looking for an internship to design and build interfaces within a team.',
+    proposer: 'Offer me an internship',
+    note: 'write to me!',
+    voirProjets: 'See my projects',
+    stage: 'Internship wanted',
+  },
+}[lang];
+const stage = textesSite(lang).stage;
 
 // Titre animé : la 1re moitié apparaît mot par mot, la 2e « se tape » lettre par lettre (variante B).
 // Chaque morceau reçoit son rang (--i) ; le CSS en déduit le délai de son animation.
-const titreDebut = 'Je conçois des interfaces claires,'.split(' ');
-const titreFin = [...'puis je les code.'];
+const titreDebut = T.debut.split(' ');
+const titreFin = [...T.fin];
 
 const svgFilaire = filaireHero
   .replace(/\s(width|height)="[^"]*"/g, '')
   .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
 
 // Phrase du statut de stage, construite à partir des données (pas en dur).
-const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.periode} · ${site.stage.lieu}`;
+const statutStage = `${T.stage} · ${stage.duree} · ${stage.periode} · ${stage.lieu}`;
 ---
 
 <div class="relative lg:min-h-[560px]">
@@ -31,22 +55,19 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
         qui sert seulement à l'animation, leur est cachée (aria-hidden) pour éviter une lecture lettre par lettre.
       -->
       <h1 class="text-hero text-creme">
-        <span class="sr-only">Je conçois des interfaces claires, puis je les code.</span>
+        <span class="sr-only">{T.debut} {T.fin}</span>
         <span aria-hidden="true" class="titre-anime">
           {titreDebut.map((mot, i) => <><span class="titre-mot" style={`--i: ${i}`}>{mot}</span>{' '}</>)}
           <span class="text-creme/60">{titreFin.map((lettre, i) => <span class="titre-lettre" style={`--i: ${i}`}>{lettre}</span>)}</span>
         </span>
       </h1>
 
-      <p class="text-lead text-creme">
-        Ewan Menigoz, étudiant en 2e année de BUT MMI à Montbéliard. Je cherche un stage pour concevoir et intégrer des
-        interfaces au sein d’une équipe.
-      </p>
+      <p class="text-lead text-creme">{T.intro}</p>
 
       <div class="flex flex-wrap gap-3 pt-1">
         <!-- Conteneur relatif : la note se place sous le bouton sans pousser la mise en page -->
         <div class="relative">
-          <Button href="/contact" variante="light">Me proposer un stage</Button>
+          <Button href={lien('contact', lang)} variante="light">{T.proposer}</Button>
           <!--
             Note au crayon (décorative : le bouton dit déjà la même chose).
             Affichée à partir de 1280 px : entre 1024 et 1280 px, les deux boutons passent sur deux lignes
@@ -64,11 +85,11 @@ const statutStage = `Stage recherché · ${site.stage.duree} · ${site.stage.per
             </svg>
             <!-- Texte écrit lettre par lettre, avec un petit rebond (variante C) -->
             <p class="note-texte absolute left-[170px] top-[72px] -rotate-4 whitespace-nowrap font-note text-[30px] font-bold leading-[38px] text-creme">
-              {[...'écrivez-moi !'].map((lettre, i) => <span class="note-lettre" style={`--i: ${i}`}>{lettre}</span>)}
+              {[...T.note].map((lettre, i) => <span class="note-lettre" style={`--i: ${i}`}>{lettre}</span>)}
             </p>
           </div>
         </div>
-        <Button href="/projets" variante="contour">Voir les projets</Button>
+        <Button href={lien('projets', lang)} variante="contour">{T.voirProjets}</Button>
       </div>
 
       <!-- Écrans étroits : le statut devient une simple ligne de texte sous les boutons -->

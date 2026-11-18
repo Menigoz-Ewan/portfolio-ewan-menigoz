@@ -1,0 +1,174 @@
+---
+// Page À propos (commune aux deux langues : src/pages/a-propos.astro et src/pages/en/about.astro).
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import HorsEcran from '../components/HorsEcran.astro';
+import atelier from '../assets/images/apropos-atelier.png';
+import { site } from '../data/site';
+import { langue, lien } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: {
+    titre: 'À propos',
+    description: 'Ewan Menigoz, étudiant en BUT MMI à Montbéliard : parcours, formation, expérience et centres d’intérêt.',
+    accroche: 'Rigueur technique, soin visuel.',
+    chapo: 'Je conçois une interface, puis je l’intègre : c’est ce va-et-vient entre design et code qui m’intéresse.',
+    cv: 'Télécharger mon CV',
+    enBref: 'En bref',
+    photoAlt: 'Ewan Menigoz au travail devant son ordinateur portable',
+    chiffres: [
+      { libelle: 'BUT MMI', valeur: '2e année' },
+      { libelle: 'Spécialité', valeur: 'Création numérique' },
+      { libelle: 'Doubs (25)', valeur: 'Montbéliard' },
+      { libelle: 'Recherché', valeur: 'Stage UI/UX' },
+    ],
+    parcours: 'Mon parcours',
+    formationTitre: 'Formation', formationSous: 'Parcours scolaire',
+    experienceTitre: 'Expérience professionnelle', experienceSous: 'Emplois et stages',
+    formation: [
+      { date: 'Aujourd’hui', titre: 'BUT MMI — 2e année', texte: 'Spécialité Création numérique, Montbéliard.' },
+      { date: '2024', titre: 'Baccalauréat général', texte: 'Spécialités Cinéma-audiovisuel et HGGSP.' },
+    ],
+    experience: [
+      { date: 'Juillet 2025 et juillet 2026', titre: 'Employé polyvalent — Beck Technologies', texte: 'Respect d’un cahier des charges, préparation et expédition de commandes.' },
+    ],
+    regard: 'Ce qui nourrit mon regard',
+    regardAide: 'Tournez l’anneau avec les flèches ou choisissez une carte',
+    ia: 'IA',
+    iaTitre: 'Et l’IA dans tout ça ?',
+    iaTexte: 'J’utilise l’IA comme un outil de travail, à presque toutes les étapes sauf l’inspiration : planning, recherche de failles, test des parcours, relecture. Les choix et la validation restent les miens, et je détaille tout sur une page dédiée.',
+    iaBouton: 'Ma façon de travailler avec l’IA',
+  },
+  en: {
+    titre: 'About',
+    description: 'Ewan Menigoz, BUT MMI student in Montbéliard, France: background, education, experience and interests.',
+    accroche: 'Technical rigour, visual care.',
+    chapo: 'I design an interface, then I build it: it is this back-and-forth between design and code that interests me.',
+    cv: 'Download my CV (in French)',
+    enBref: 'At a glance',
+    photoAlt: 'Ewan Menigoz working on his laptop',
+    chiffres: [
+      { libelle: 'BUT MMI', valeur: '2nd year' },
+      { libelle: 'Specialisation', valeur: 'Digital design' },
+      { libelle: 'Doubs, France', valeur: 'Montbéliard' },
+      { libelle: 'Looking for', valeur: 'UI/UX internship' },
+    ],
+    parcours: 'My background',
+    formationTitre: 'Education', formationSous: 'Studies',
+    experienceTitre: 'Work experience', experienceSous: 'Jobs and internships',
+    formation: [
+      { date: 'Today', titre: 'BUT MMI — 2nd year', texte: 'Bachelor’s in multimedia and internet (BUT MMI), Digital design specialisation, Montbéliard.' },
+      { date: '2024', titre: 'French baccalaureate', texte: 'Majors in Film and audiovisual studies and in History, geopolitics and political science (HGGSP).' },
+    ],
+    experience: [
+      { date: 'July 2025 and July 2026', titre: 'General operative — Beck Technologies', texte: 'Following specifications, preparing and shipping orders.' },
+    ],
+    regard: 'What feeds my eye',
+    regardAide: 'Turn the ring with the arrows or pick a card',
+    ia: 'AI',
+    iaTitre: 'What about AI?',
+    iaTexte: 'I use AI as a working tool at almost every stage except inspiration: planning, finding flaws, testing user journeys, proofreading. The choices and the final say remain mine, and I explain everything on a dedicated page.',
+    iaBouton: 'How I work with AI',
+  },
+}[lang];
+
+const { chiffres, formation, experience } = T;
+---
+
+<Layout
+  titre={T.titre}
+  description={T.description}
+  active="a-propos"
+  filaire="gauche"
+>
+  <IntroPage
+    slot="panneau"
+    titre={T.accroche}
+    chapo={T.chapo}
+  >
+    <Button href={site.cv} variante="contour" icone="download" telecharger class="mt-1 self-start">{T.cv}</Button>
+  </IntroPage>
+
+  <!-- Photo + chiffres clés -->
+  <section aria-label={T.enBref} class="conteneur pb-[72px]">
+    <Image
+      src={atelier}
+      alt={T.photoAlt}
+      width={2400}
+      widths={[800, 1600, 2400]}
+      sizes="(max-width: 1280px) 100vw, 1200px"
+      loading="eager"
+      class="h-[220px] w-full rounded-[20px] object-cover md:h-[300px]"
+    />
+    <!-- Une colonne sous 375 px : à deux colonnes, « Montbéliard » ne tiendrait pas dans sa carte -->
+    <dl class="relative -mt-[50px] grid grid-cols-1 gap-3 min-[375px]:grid-cols-2 px-3 md:gap-6 md:px-6 lg:grid-cols-4">
+      {
+        chiffres.map((c) => (
+          <div class="flex h-[120px] flex-col justify-end gap-1.5 rounded-[14px] border border-trait bg-carte p-3 shadow-[0_8px_20px_rgb(23_23_23/0.06)] sm:p-5">
+            <dt class="text-label text-secondaire">{c.libelle}</dt>
+            <dd class="text-h3 text-principal">{c.valeur}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Parcours : formation et expérience professionnelle bien distinctes -->
+  <section aria-labelledby="titre-parcours" class="conteneur flex flex-col gap-7 pb-20">
+    <h2 id="titre-parcours" class="text-h2">{T.parcours}</h2>
+    <div class="grid gap-12 lg:grid-cols-2">
+      {
+        [
+          { titre: T.formationTitre, sousTitre: T.formationSous, icone: 'formation' as const, ligne: 'border-vert-texte', date: 'text-vert-texte', etapes: formation },
+          { titre: T.experienceTitre, sousTitre: T.experienceSous, icone: 'experience' as const, ligne: 'border-principal', date: 'text-secondaire', etapes: experience },
+        ].map((col) => (
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <span class="rounded-[10px] bg-surface p-[9px] text-principal">
+                <Icon nom={col.icone} taille={20} />
+              </span>
+              <div class="flex flex-col gap-0.5">
+                <h3 class="text-h3">{col.titre}</h3>
+                <p class="text-small text-secondaire">{col.sousTitre}</p>
+              </div>
+            </div>
+            <ol class:list={['flex flex-col gap-3 border-l-2 pl-[22px]', col.ligne]}>
+              {col.etapes.map((e) => (
+                <li class="flex flex-col gap-2.5 rounded-2xl border border-trait bg-carte px-6 pb-7 pt-6">
+                  <p class:list={['text-label', col.date]}>{e.date}</p>
+                  <h4 class="text-h3">{e.titre}</h4>
+                  <p class="text-small text-secondaire">{e.texte}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Hors écran -->
+  <section aria-labelledby="titre-regard" class="conteneur flex flex-col gap-4 pb-6">
+    <div class="flex flex-wrap items-end justify-between gap-2">
+      <h2 id="titre-regard" class="text-h2">{T.regard}</h2>
+      <p class="text-small text-secondaire">{T.regardAide}</p>
+    </div>
+    <HorsEcran />
+  </section>
+
+  <!-- Renvoi vers la page sur l'IA -->
+  <section aria-labelledby="titre-ia" class="conteneur pb-[72px]">
+    <div class="flex flex-col items-start gap-4 rounded-2xl border border-trait bg-carte p-7">
+      <div class="flex items-center gap-3">
+        <span class="rounded bg-vert px-2 py-1 text-label text-white">{T.ia}</span>
+        <h2 id="titre-ia" class="text-h3">{T.iaTitre}</h2>
+      </div>
+      <p class="text-body text-secondaire">{T.iaTexte}</p>
+      <Button href={lien('ia', lang)} variante="secondary">{T.iaBouton}</Button>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,264 @@
+---
+// Mentions légales, données personnelles (RGPD) et confidentialité : une seule page, en sections.
+// Commune aux deux langues : src/pages/mentions-legales.astro (français) et src/pages/en/legal.astro (anglais).
+// Les ancres #donnees et #cookies sont utilisées par le pied de page et le formulaire de contact.
+// Les valeurs propres au VPS (hébergeur, domaine, durée de conservation) sont dans src/data/site.ts.
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import PageDocument from '../components/PageDocument.astro';
+import SectionDocument from '../components/SectionDocument.astro';
+import { site, textesSite } from '../data/site';
+import { langue, lien as adresse } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const st = textesSite(lang);
+
+const T = {
+  fr: {
+    titre: 'Mentions légales',
+    description: 'Mentions légales du portfolio d’Ewan Menigoz : éditeur, hébergement, propriété intellectuelle, données personnelles et cookies.',
+    chapo: `Portfolio étudiant d’Ewan Menigoz · ${site.domaine} · Mise à jour le 18 novembre 2026`,
+    note: '',
+    sections: ['Éditeur du site', 'Hébergement', 'Propriété intellectuelle et crédits', 'Données personnelles (RGPD)', 'Cookies et stockage local'],
+    editeur: 'Éditeur', directeur: 'Directeur de la publication', statut: 'Statut', etablissement: 'Établissement', contact: 'Contact',
+    statutValeur: 'Étudiant en BUT Métiers du multimédia et de l’internet (MMI), site personnel non professionnel',
+    etablissementValeur: 'IUT Nord Franche-Comté, site de Montbéliard (Université de Franche-Comté), 4 place Tharradin, 25200 Montbéliard, France',
+    editeurTexte: 'Ce site est édité à titre personnel et non professionnel. Conformément à l’article 6, III, 2 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN), l’adresse personnelle de l’éditeur n’est pas publiée : elle a été communiquée à l’hébergeur.',
+    hebergeur: 'Hébergeur', adresseLib: 'Adresse', telephone: 'Téléphone', siteLib: 'Site', domaine: 'Nom de domaine',
+    hebergementTexte: `Le site et la base de données du formulaire de contact (PocketBase) sont hébergés sur un serveur privé virtuel (VPS) loué par l’éditeur auprès de cet hébergeur, dans un centre de données situé en ${site.hebergeur.pays}.`,
+    proprieteTexte: 'Ce site relève de la législation française et internationale sur le droit d’auteur et la propriété intellectuelle. Sauf mention contraire, les textes, maquettes, illustrations, visuels et codes sources présentés sont la propriété d’Ewan Menigoz. Toute reproduction ou représentation, totale ou partielle, sur quelque support que ce soit, est interdite sans son autorisation écrite.',
+    projetsTitre: 'Projets académiques et collectifs',
+    projets: [
+      'Climat Outre-Mer : projet réalisé en binôme avec Enzo Loddo (SAE 303, BUT MMI).',
+      'OpenSigne : projet collectif, réalisé par Ewan Menigoz, Enzo Hillairet et Lilian Maitre.',
+      'Iris VOD : projet de groupe, réalisé par Ewan Menigoz, Enzo Hillairet et Matthis Carnicer.',
+      'Affiches touristiques et La Cimade : projets étudiants fictifs, sans lien commercial avec les organismes cités.',
+    ],
+    tiersTitre: 'Marques, logos et données de tiers',
+    tiers: [
+      'Les noms et logos de La Cimade, de Pays de Montbéliard Tourisme et d’Offices de Tourisme de France appartiennent à leurs titulaires respectifs. Ils apparaissent uniquement dans le cadre d’exercices pédagogiques.',
+      'Les graphiques de Climat Outre-Mer reposent sur les données publiques de Météo-France.',
+      'Les photographies des passions (page À propos) et les photographies de la galerie proviennent de Pexels (pexels.com), sous la licence Pexels, qui autorise leur utilisation gratuite. Aucune personne n’y est reconnaissable.',
+      'Les affiches et visuels de films montrés dans le projet Iris VOD appartiennent à leurs ayants droit ; ils apparaissent uniquement dans le cadre d’un exercice pédagogique, sans but commercial.',
+    ],
+    outilsTitre: 'Polices et outils',
+    outils: [
+      'Polices League Spartan, DM Sans, Geist Mono et Caveat, sous licence SIL Open Font License 1.1, hébergées sur ce site.',
+      'Site construit avec Astro, Tailwind CSS et daisyUI (licence MIT) ; formulaire de contact relié à PocketBase (licence MIT).',
+    ],
+    liensTitre: 'Liens externes',
+    liensTexte: 'Ce site contient des liens vers d’autres sites (projets en ligne, réseaux sociaux). L’éditeur n’est pas responsable de leur contenu ni de leur politique de confidentialité.',
+    donneesIntro: 'Ce site ne collecte des données personnelles que lorsque vous m’écrivez par le formulaire de contact. Aucune mesure d’audience, aucune publicité et aucun suivi ne sont utilisés.',
+    donnees: [
+      ['Responsable du traitement', null],
+      ['Données collectées', 'Nom, adresse e-mail, objet et message, ainsi que la date d’envoi et votre accord (case cochée).'],
+      ['Finalité', 'Répondre à votre message (proposition de stage, question, collaboration).'],
+      ['Base légale', 'Votre consentement, donné en cochant la case avant l’envoi (article 6.1.a du RGPD).'],
+      ['Destinataire', 'Ewan Menigoz uniquement. Vos données ne sont ni vendues, ni cédées, ni utilisées à des fins commerciales.'],
+      ['Hébergement', 'Base PocketBase sur le serveur de l’éditeur chez Infomaniak, en Suisse (voir « Hébergement »), accessible uniquement par lui, avec une connexion chiffrée (HTTPS). La Suisse bénéficie d’une décision d’adéquation de la Commission européenne : vos données y sont protégées à un niveau équivalent à celui de l’Union européenne.'],
+      ['Durée de conservation', `${st.conservationMessages}, puis suppression.`],
+    ],
+    droitsTitre: 'Vos droits',
+    droitsAvant: 'Vous pouvez à tout moment accéder à vos données, les faire rectifier ou effacer, limiter leur traitement, vous y opposer, demander leur portabilité et retirer votre consentement. Pour cela, écrivez à',
+    droitsApres: ' : je vous réponds dans un délai d’un mois au plus.',
+    cnilAvant: 'Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL',
+    cookiesIntro: 'Ce site ne dépose aucun cookie. Il enregistre seulement deux informations techniques dans votre navigateur, qui ne servent ni à vous identifier ni à vous suivre, et ne quittent jamais votre appareil. Elles sont nécessaires au fonctionnement demandé : aucun bandeau de consentement n’est donc affiché.',
+    stockage: [
+      { nom: 'ewme-theme', lieu: 'Stockage local (localStorage)', role: 'Retenir le thème clair ou sombre que vous avez choisi.', duree: 'Jusqu’à ce que vous effaciez les données du site dans votre navigateur.' },
+      { nom: 'ewme-chargement-vu', lieu: 'Stockage de session (sessionStorage)', role: 'N’afficher l’écran de chargement qu’une fois par visite.', duree: 'Effacé à la fermeture de l’onglet.' },
+    ],
+    cookiesFin: `Les polices sont hébergées sur ce site : aucune requête n’est envoyée à un service tiers comme Google Fonts. Le serveur peut conserver des journaux techniques (adresse IP, page demandée, date) pour sa sécurité, pendant ${st.conservationJournaux}.`,
+  },
+  en: {
+    titre: 'Legal notice',
+    description: 'Legal notice of Ewan Menigoz’s portfolio: publisher, hosting, intellectual property, personal data and cookies.',
+    chapo: `Student portfolio of Ewan Menigoz · ${site.domaine} · Updated on 18 November 2026`,
+    note: 'This English version is provided for convenience. The French version is the reference text.',
+    sections: ['Publisher', 'Hosting', 'Intellectual property and credits', 'Personal data (GDPR)', 'Cookies and local storage'],
+    editeur: 'Publisher', directeur: 'Publication director', statut: 'Status', etablissement: 'School', contact: 'Contact',
+    statutValeur: 'Student in a BUT MMI (Bachelor in multimedia and internet), personal non-professional website',
+    etablissementValeur: 'IUT Nord Franche-Comté, Montbéliard campus (Université de Franche-Comté), 4 place Tharradin, 25200 Montbéliard, France',
+    editeurTexte: 'This website is published on a personal, non-professional basis. In accordance with article 6, III, 2 of French law no. 2004-575 of 21 June 2004 on confidence in the digital economy (LCEN), the publisher’s personal address is not published: it has been provided to the hosting provider.',
+    hebergeur: 'Hosting provider', adresseLib: 'Address', telephone: 'Phone', siteLib: 'Website', domaine: 'Domain name',
+    hebergementTexte: 'The website and the contact form database (PocketBase) are hosted on a virtual private server (VPS) rented by the publisher from this provider, in a data centre located in Switzerland.',
+    proprieteTexte: 'This website is subject to French and international copyright and intellectual property law. Unless otherwise stated, the texts, mock-ups, illustrations, visuals and source code presented are the property of Ewan Menigoz. Any full or partial reproduction or representation, on any medium, is forbidden without his written permission.',
+    projetsTitre: 'Academic and team projects',
+    projets: [
+      'Climat Outre-Mer: project carried out in a pair with Enzo Loddo (SAE 303, BUT MMI).',
+      'OpenSigne: team project, by Ewan Menigoz, Enzo Hillairet and Lilian Maitre.',
+      'Iris VOD: group project, by Ewan Menigoz, Enzo Hillairet and Matthis Carnicer.',
+      'Tourism posters and La Cimade: fictional student projects, with no commercial link to the organisations mentioned.',
+    ],
+    tiersTitre: 'Third-party brands, logos and data',
+    tiers: [
+      'The names and logos of La Cimade, Pays de Montbéliard Tourisme and Offices de Tourisme de France belong to their respective owners. They appear only as part of teaching exercises.',
+      'The Climat Outre-Mer charts are based on public data from Météo-France.',
+      'The photographs of my interests (About page) and the photographs in the gallery come from Pexels (pexels.com), under the Pexels licence, which allows free use. No person can be recognised in them.',
+      'The film posters and visuals shown in the Iris VOD project belong to their rights holders; they appear only as part of a teaching exercise, with no commercial purpose.',
+    ],
+    outilsTitre: 'Fonts and tools',
+    outils: [
+      'League Spartan, DM Sans, Geist Mono and Caveat fonts, under the SIL Open Font License 1.1, hosted on this website.',
+      'Website built with Astro, Tailwind CSS and daisyUI (MIT licence); contact form connected to PocketBase (MIT licence).',
+    ],
+    liensTitre: 'External links',
+    liensTexte: 'This website contains links to other websites (online projects, social networks). The publisher is not responsible for their content or their privacy policy.',
+    donneesIntro: 'This website only collects personal data when you write to me through the contact form. No audience measurement, advertising or tracking is used.',
+    donnees: [
+      ['Data controller', null],
+      ['Data collected', 'Name, email address, subject and message, as well as the date sent and your consent (ticked box).'],
+      ['Purpose', 'Replying to your message (internship offer, question, collaboration).'],
+      ['Legal basis', 'Your consent, given by ticking the box before sending (article 6.1.a of the GDPR).'],
+      ['Recipient', 'Ewan Menigoz only. Your data is never sold, transferred or used for commercial purposes.'],
+      ['Hosting', 'PocketBase database on the publisher’s server at Infomaniak, in Switzerland (see “Hosting”), accessible only by him, over an encrypted connection (HTTPS). Switzerland benefits from an adequacy decision of the European Commission: your data is protected there at a level equivalent to that of the European Union.'],
+      ['Retention period', `${st.conservationMessages}, then deleted.`],
+    ],
+    droitsTitre: 'Your rights',
+    droitsAvant: 'You can at any time access your data, have it corrected or erased, restrict its processing, object to it, request its portability and withdraw your consent. To do so, write to',
+    droitsApres: ': I will reply within one month at most.',
+    cnilAvant: 'If you believe your rights are not respected, you can file a complaint with the CNIL, the French data protection authority',
+    cookiesIntro: 'This website sets no cookies. It only stores two technical pieces of information in your browser, which are not used to identify or track you and never leave your device. They are necessary for the features you use: no consent banner is therefore displayed.',
+    stockage: [
+      { nom: 'ewme-theme', lieu: 'Local storage (localStorage)', role: 'Remembering the light or dark theme you chose.', duree: 'Until you clear the website’s data in your browser.' },
+      { nom: 'ewme-chargement-vu', lieu: 'Session storage (sessionStorage)', role: 'Showing the loading screen only once per visit.', duree: 'Deleted when the tab is closed.' },
+    ],
+    cookiesFin: `The fonts are hosted on this website: no request is sent to a third-party service such as Google Fonts. The server may keep technical logs (IP address, requested page, date) for security purposes, for ${st.conservationJournaux}.`,
+  },
+}[lang];
+
+const ids = ['editeur', 'hebergement', 'propriete', 'donnees', 'cookies'];
+const sections = ids.map((id, i) => ({ id, titre: T.sections[i] }));
+
+const editeur = [
+  { libelle: T.editeur, valeur: site.nom },
+  { libelle: T.directeur, valeur: site.nom },
+  { libelle: T.statut, valeur: T.statutValeur },
+  { libelle: T.etablissement, valeur: T.etablissementValeur },
+  { libelle: T.contact, valeur: site.email, email: true },
+];
+
+const hebergement = [
+  { libelle: T.hebergeur, valeur: site.hebergeur.nom },
+  { libelle: T.adresseLib, valeur: site.hebergeur.adresse },
+  { libelle: T.telephone, valeur: site.hebergeur.telephone },
+  { libelle: T.siteLib, valeur: site.hebergeur.site.replace('https://', '') },
+  { libelle: T.domaine, valeur: site.domaine },
+];
+
+const ligne = 'flex flex-col gap-1 border-t border-trait py-3 sm:flex-row sm:gap-6';
+const titreLigne = 'text-label sm:w-48 sm:shrink-0';
+const sousTitre = 'text-ui text-principal';
+const liste = 'flex list-disc flex-col gap-2 pl-5';
+const lien = 'text-principal underline underline-offset-4 hover:text-vert-texte';
+// Plainte CNIL : page en français ou en anglais selon la langue
+const cnil = lang === 'en' ? { href: 'https://www.cnil.fr/en/complaints', texte: 'cnil.fr/en/complaints' } : { href: 'https://www.cnil.fr/fr/plaintes', texte: 'cnil.fr/fr/plaintes' };
+---
+
+<Layout titre={T.titre} description={T.description} filaire="gauche">
+  <IntroPage slot="panneau" titre={T.titre} chapo={T.chapo} />
+
+  <PageDocument sections={sections}>
+    {T.note && <p class="text-small text-secondaire" lang="en">{T.note} <a href={adresse('mentions', 'fr')} class={lien} lang="fr" hreflang="fr">Version française</a></p>}
+
+    <!-- 1. Éditeur : obligations de la LCEN (loi pour la confiance dans l'économie numérique) -->
+    <SectionDocument id="editeur" numero={1} titre={T.sections[0]}>
+      <dl>
+        {
+          editeur.map((l) => (
+            <div class={ligne}>
+              <dt class={titreLigne}>{l.libelle}</dt>
+              <dd class="text-principal">{l.email ? <a href={`mailto:${l.valeur}`} class={lien}>{l.valeur}</a> : l.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p>{T.editeurTexte}</p>
+    </SectionDocument>
+
+    <!-- 2. Hébergement : nom, adresse et téléphone de l'hébergeur sont obligatoires -->
+    <SectionDocument id="hebergement" numero={2} titre={T.sections[1]}>
+      <dl>
+        {
+          hebergement.map((l) => (
+            <div class={ligne}>
+              <dt class={titreLigne}>{l.libelle}</dt>
+              <dd class="text-principal">{l.valeur}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p>{T.hebergementTexte}</p>
+    </SectionDocument>
+
+    <!-- 3. Propriété intellectuelle, puis crédits (co-auteurs, marques, données, polices, outils) -->
+    <SectionDocument id="propriete" numero={3} titre={T.sections[2]}>
+      <p>{T.proprieteTexte}</p>
+      <div class="flex flex-col gap-2">
+        <h3 class={sousTitre}>{T.projetsTitre}</h3>
+        <ul class={liste}>{T.projets.map((p) => <li>{p}</li>)}</ul>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h3 class={sousTitre}>{T.tiersTitre}</h3>
+        <ul class={liste}>{T.tiers.map((p) => <li>{p}</li>)}</ul>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h3 class={sousTitre}>{T.outilsTitre}</h3>
+        <ul class={liste}>{T.outils.map((p) => <li>{p}</li>)}</ul>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h3 class={sousTitre}>{T.liensTitre}</h3>
+        <p>{T.liensTexte}</p>
+      </div>
+    </SectionDocument>
+
+    <!-- 4. Données personnelles : informations exigées par le RGPD (articles 13 et 14) -->
+    <SectionDocument id="donnees" numero={4} titre={T.sections[3]}>
+      <p>{T.donneesIntro}</p>
+      <dl>
+        {
+          T.donnees.map(([libelle, valeur]) => (
+            <div class={ligne}>
+              <dt class={titreLigne}>{libelle}</dt>
+              <dd class="text-principal">
+                {valeur ?? (
+                  <>
+                    {site.nom}, <a href={`mailto:${site.email}`} class={lien}>{site.email}</a>
+                  </>
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="flex flex-col gap-2">
+        <h3 class={sousTitre}>{T.droitsTitre}</h3>
+        <p>
+          {T.droitsAvant}{' '}
+          <a href={`mailto:${site.email}`} class={lien}>{site.email}</a>{T.droitsApres}
+        </p>
+        <p>
+          {T.cnilAvant} (<a href={cnil.href} class={lien}>{cnil.texte}</a>).
+        </p>
+      </div>
+    </SectionDocument>
+
+    <!-- 5. Cookies : inventaire réel (aucun cookie), donc aucun bandeau de consentement -->
+    <SectionDocument id="cookies" numero={5} titre={T.sections[4]}>
+      <p>{T.cookiesIntro}</p>
+      <dl>
+        {
+          T.stockage.map((s) => (
+            <div class={ligne}>
+              <dt class={titreLigne}>{s.nom}</dt>
+              <dd class="flex flex-col gap-1">
+                <span class="text-principal">{s.role}</span>
+                <span class="text-small">{s.lieu} · {s.duree}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p>{T.cookiesFin}</p>
+    </SectionDocument>
+  </PageDocument>
+</Layout>

@@ -5,6 +5,7 @@
 // Avec « réduire les animations » : l'anneau change de position sans mouvement.
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import { langue } from '../i18n';
 import photographie from '../assets/images/hors-ecran/photographie.png';
 import musique from '../assets/images/hors-ecran/musique.png';
 import cinema from '../assets/images/hors-ecran/cinema.png';
@@ -26,6 +27,24 @@ const cartes = [
   { titre: 'Dessin', src: dessin, alt: 'Carnet de croquis ouvert sur des portraits dessinés au crayon' },
   { titre: 'Mode', src: mode, alt: 'Vêtements violets, turquoise et gris suspendus côte à côte' },
 ];
+const lang = langue(Astro.currentLocale);
+// Titres et textes alternatifs en anglais, dans le même ordre que les cartes
+const en = [
+  ['Photography', 'Black camera and its strap on a light table'],
+  ['Music', 'Drum kit and cymbals on a rug, in a dark room'],
+  ['Cinema', 'Old reel-to-reel film projector'],
+  ['Video games', 'Red game controller on a desk mat'],
+  ['Manga', 'Wooden bookcase full of manga'],
+  ['Architecture', 'Two curved metal façades seen from below, with a cloudy sky between them'],
+  ['Nature', 'Autumn undergrowth seen from the ground: dead leaves in the foreground, trees and light above'],
+  ['Drawing', 'Open sketchbook with pencil portraits'],
+  ['Fashion', 'Purple, turquoise and grey clothes hanging side by side'],
+];
+const cartesPage = lang === 'en' ? cartes.map((c, i) => ({ ...c, titre: en[i][0], alt: en[i][1] })) : cartes;
+const T = {
+  fr: { precedente: 'Passion précédente', suivante: 'Passion suivante' },
+  en: { precedente: 'Previous interest', suivante: 'Next interest' },
+}[lang];
 // Angle entre deux cartes sur le cercle
 const pas = 360 / cartes.length;
 ---
@@ -33,7 +52,7 @@ const pas = 360 / cartes.length;
 <div class="scene" data-anneau style={`--pas: ${pas}deg`}>
   <ul class="anneau" data-piste>
     {
-      cartes.map((c, i) => (
+      cartesPage.map((c, i) => (
         <li class="emplacement" style={`--i: ${i}`}>
           <button type="button" class="polaroid" aria-pressed={i === 0 ? 'true' : 'false'} data-index={i}>
             <Image src={c.src} alt={c.alt} width={300} height={300} class="aspect-square w-full rounded-[4px] object-cover" />
@@ -44,11 +63,11 @@ const pas = 360 / cartes.length;
     }
   </ul>
   <div class="commandes">
-    <button type="button" class="fleche" aria-label="Passion précédente" data-precedent>
+    <button type="button" class="fleche" aria-label={T.precedente} data-precedent>
       <span class="inline-flex rotate-180"><Icon nom="arrow-right" taille={18} /></span>
     </button>
-    <p class="titre-courant text-label text-vert-texte" aria-live="polite" data-titre>{cartes[0].titre}</p>
-    <button type="button" class="fleche" aria-label="Passion suivante" data-suivant>
+    <p class="titre-courant text-label text-vert-texte" aria-live="polite" data-titre>{cartesPage[0].titre}</p>
+    <button type="button" class="fleche" aria-label={T.suivante} data-suivant>
       <Icon nom="arrow-right" taille={18} />
     </button>
   </div>
@@ -180,7 +199,14 @@ const pas = 360 / cartes.length;
       if (ecart < -cartes.length / 2) ecart += cartes.length;
       tour += ecart;
       anneau.style.setProperty('--rotation', `${-tour * pas}deg`);
-      cartes.forEach((c, i) => c.setAttribute('aria-pressed', String(i === index)));
+      cartes.forEach((c, i) => {
+        c.setAttribute('aria-pressed', String(i === index));
+        // Distance (en cartes) à la carte de devant. Au-delà de 2, la carte tourne le dos (déjà invisible) : elle est
+        // retirée de la tabulation ; à 2, elle est en partie cachée : plus cliquable. Les flèches atteignent toutes les cartes.
+        const d = Math.min(Math.abs(i - index), cartes.length - Math.abs(i - index));
+        c.style.visibility = d > 2 ? 'hidden' : '';
+        c.style.pointerEvents = d <= 1 ? '' : 'none';
+      });
       titre.textContent = cartes[index].querySelector('span')?.textContent ?? '';
     };
     const courant = () => ((tour % cartes.length) + cartes.length) % cartes.length;
@@ -191,5 +217,6 @@ const pas = 360 / cartes.length;
       c.addEventListener('click', () => montrer(i));
       c.addEventListener('focus', () => montrer(i));
     });
+    montrer(0); // état de départ : cartes cliquables autour de la première
   }
 </script>

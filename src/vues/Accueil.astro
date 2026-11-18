@@ -1,0 +1,171 @@
+---
+// Page d'accueil (contenu commun aux deux langues : src/pages/index.astro et src/pages/en/index.astro).
+// La langue vient de l'adresse de la page (Astro.currentLocale) ; les textes sont dans l'objet T.
+import Layout from '../layouts/Layout.astro';
+import HeroAccueil from '../components/HeroAccueil.astro';
+import AccordeonProjets from '../components/AccordeonProjets.astro';
+import Button from '../components/Button.astro';
+import IconeAnimee from '../components/IconeAnimee.astro';
+import decoEwme from '../assets/svg/deco-ewme.svg?raw';
+import { projetsPour } from '../data/projets';
+import { site, textesSite } from '../data/site';
+import { langue, t, lien } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const ui = t(lang);
+const selection = projetsPour(lang).filter((p) => p.accueil);
+
+const T = {
+  fr: {
+    competences: 'Ce que je sais faire',
+    outilsDe: 'Outils :',
+    domaines: [
+      { icone: 'design' as const, titre: 'Design d’interface', texte: 'UI/UX, prototypage et design system : des parcours clairs, testés avant d’être codés.' },
+      { icone: 'code' as const, titre: 'Développement front-end', texte: 'Intégration responsive et accessible, fidèle à la maquette validée.' },
+      { icone: 'message' as const, titre: 'Communication', texte: 'Faire connaître un projet : stratégie de lancement, référencement et supports print.' },
+    ],
+    projets: 'Trois projets, trois domaines',
+    tousProjets: 'Tous les projets',
+    methode: 'Ma méthode de travail',
+    methodeIntro: 'Je suis la même démarche sur chaque projet : comprendre, concevoir, puis intégrer moi-même ce que j’ai dessiné.',
+    outils: 'Outils',
+    etapes: [
+      { phase: 'Comprendre', titre: 'Cerner le besoin', texte: 'Qui va utiliser l’interface, et pour quoi faire ? J’analyse le contexte et les parcours avant de dessiner quoi que ce soit.' },
+      { phase: 'Concevoir', titre: 'Maquetter et prototyper', texte: 'Wireframes, maquettes puis prototypes interactifs dans Figma, ajustés à chaque retour jusqu’à la bonne solution.' },
+      { phase: 'Intégrer', titre: 'Coder l’interface', texte: 'Je transforme la maquette en composants responsive et accessibles, au plus près du design validé.' },
+    ],
+    stage: 'Un stage UI/UX à pourvoir ?',
+    stageTexte: 'Parlons de votre équipe et de vos projets.',
+  },
+  en: {
+    competences: 'What I can do',
+    outilsDe: 'Tools:',
+    domaines: [
+      { icone: 'design' as const, titre: 'Interface design', texte: 'UI/UX, prototyping and design systems: clear user journeys, tested before they are coded.' },
+      { icone: 'code' as const, titre: 'Front-end development', texte: 'Responsive, accessible integration, faithful to the approved mock-up.' },
+      { icone: 'message' as const, titre: 'Communication', texte: 'Getting a project known: launch strategy, search engine optimisation and print materials.' },
+    ],
+    projets: 'Three projects, three fields',
+    tousProjets: 'All projects',
+    methode: 'How I work',
+    methodeIntro: 'I follow the same process on every project: understand, design, then build what I have drawn myself.',
+    outils: 'Tools',
+    etapes: [
+      { phase: 'Understand', titre: 'Pin down the need', texte: 'Who will use the interface, and what for? I analyse the context and the user journeys before drawing anything.' },
+      { phase: 'Design', titre: 'Mock up and prototype', texte: 'Wireframes, mock-ups, then interactive prototypes in Figma, adjusted after each round of feedback until the right solution.' },
+      { phase: 'Build', titre: 'Code the interface', texte: 'I turn the mock-up into responsive, accessible components, as close as possible to the approved design.' },
+    ],
+    stage: 'A UI/UX internship to fill?',
+    stageTexte: 'Let’s talk about your team and your projects.',
+  },
+}[lang];
+
+// Outils (noms propres : identiques dans les deux langues)
+const outilsDomaines = [
+  ['Figma', 'Notion', 'Gemini'],
+  ['Astro', 'Tailwind CSS', 'DaisyUI', 'CSS', 'Observable Plot'],
+  ['SEO', 'Canva', 'Affinity Designer'],
+];
+const outilsEtapes = ['Notion · Gemini', 'Figma · Affinity', 'Astro · Tailwind · DaisyUI'];
+
+const svgDeco = decoEwme
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
+
+const personne = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.nom,
+  jobTitle: textesSite(lang).metier,
+  email: `mailto:${site.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: site.ville, addressCountry: 'FR' },
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'IUT de Montbéliard (Université de Franche-Comté)' },
+  url: Astro.site?.href,
+  // Profils publics reliés à la personne (renseignés dans src/data/site.ts)
+  sameAs: [site.linkedin, site.instagram].filter(Boolean),
+};
+---
+
+<Layout titre={site.nom} active="accueil" variantePanneau="libre" filaire="droite" jsonLd={personne}>
+  <HeroAccueil slot="panneau" />
+
+  <!-- Compétences : panneau fixe, compétences et outils regroupés par domaine -->
+  <section aria-labelledby="titre-competences" class="conteneur pb-6 pt-7">
+    <h2 id="titre-competences" class="sr-only">{T.competences}</h2>
+    <ul class="grid overflow-hidden rounded-3xl border border-trait bg-carte md:grid-cols-3">
+      {
+        T.domaines.map((d, i) => (
+          <li class:list={['declencheur-icone flex flex-col gap-3 p-8', i > 0 && 'border-t border-trait md:border-l md:border-t-0']}>
+            <span class="self-start rounded-xl bg-vert/8 p-2.5 text-vert-texte">
+              <IconeAnimee nom={d.icone} taille={22} />
+            </span>
+            <h3 class="text-h3">{d.titre}</h3>
+            <p class="text-small text-secondaire">{d.texte}</p>
+            <ul class="flex flex-wrap gap-1.5" aria-label={`${T.outilsDe} ${d.titre}`}>
+              {outilsDomaines[i].map((o) => (
+                <li class="rounded-full bg-surface px-2.5 py-[5px] text-ui">{o}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Sélection de projets -->
+  <section aria-labelledby="titre-projets" class="conteneur flex flex-col gap-9 pb-24 pt-11">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="titre-projets" class="text-h1">{T.projets}</h2>
+      <Button href={lien('projets', lang)} variante="secondary">{T.tousProjets}</Button>
+    </div>
+    <!-- Galerie en accordéon : survol ou focus pour ouvrir un projet ; « Tous les projets » mène au reste -->
+    <AccordeonProjets projets={selection} />
+  </section>
+
+  <!-- Méthode de travail : panneau blanc arrondi qui fait écho au panneau vert du hero -->
+  <section aria-labelledby="titre-methode" class="mx-auto max-w-[1440px] px-3 pb-24 pt-8 md:px-6">
+    <div class="flex flex-col gap-10 rounded-[28px] border border-trait bg-carte px-6 py-12 md:rounded-[40px] md:px-24 md:py-[72px]">
+      <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+        <h2 id="titre-methode" class="text-h1">{T.methode}</h2>
+        <p class="max-w-[420px] text-body text-secondaire">{T.methodeIntro}</p>
+      </div>
+      <ol class="grid gap-6 lg:grid-cols-3">
+        {
+          T.etapes.map((e, i) => (
+            <li class="flex flex-col gap-3 rounded-2xl border border-trait bg-fond p-7">
+              <p class="flex items-center gap-2.5">
+                <span class="rounded bg-vert px-2 py-1 text-label text-white">{String(i + 1).padStart(2, '0')}</span>
+                <span class="text-label text-vert-texte">{e.phase}</span>
+              </p>
+              <h3 class="text-h3">{e.titre}</h3>
+              <p class="text-small text-secondaire">{e.texte}</p>
+              <hr class="border-trait" />
+              <p class="text-label text-secondaire">{T.outils} · {outilsEtapes[i]}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Appel au contact -->
+  <section aria-labelledby="titre-contact" class="conteneur pb-24">
+    <div class="relative flex flex-col gap-8 overflow-hidden rounded-[20px] bg-vert-fonce p-8 md:p-14 lg:flex-row lg:items-center lg:justify-between">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-[30px] left-[640px] hidden h-[280px] w-[615px] lg:block" set:html={svgDeco} />
+      <div class="relative flex flex-col gap-2.5 text-white">
+        <h2 id="titre-contact" class="text-h1">{T.stage}</h2>
+        <p class="text-lead">{T.stageTexte}</p>
+      </div>
+      <div class="relative flex flex-wrap gap-3">
+        <Button href={lien('contact', lang)} variante="light">{ui.meContacter}</Button>
+        {
+          site.linkedin ? (
+            <Button href={site.linkedin} variante="contour" externe>LinkedIn</Button>
+          ) : (
+            <Button href={lien('contact', lang)} variante="contour">LinkedIn</Button>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

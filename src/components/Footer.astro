@@ -1,7 +1,8 @@
 ---
 import Logo from './Logo.astro';
 import IconeAnimee from './IconeAnimee.astro';
-import { site, type PageId } from '../data/site';
+import { site, textesSite, type PageId } from '../data/site';
+import { langue, t, lien } from '../i18n';
 
 interface Props {
   active?: PageId | null;
@@ -9,35 +10,37 @@ interface Props {
 
 const { active = null } = Astro.props;
 
+const lang = langue(Astro.currentLocale);
+const ui = t(lang);
 const liens: { id: PageId; libelle: string; href: string }[] = [
-  { id: 'projets', libelle: 'Projets', href: '/projets' },
-  { id: 'galerie', libelle: 'Galerie', href: '/galerie' },
-  { id: 'a-propos', libelle: 'À propos', href: '/a-propos' },
-  { id: 'contact', libelle: 'Contact', href: '/contact' },
+  { id: 'projets', libelle: ui.nav.projets, href: lien('projets', lang) },
+  { id: 'galerie', libelle: ui.nav.galerie, href: lien('galerie', lang) },
+  { id: 'a-propos', libelle: ui.nav['a-propos'], href: lien('a-propos', lang) },
+  { id: 'contact', libelle: ui.contact, href: lien('contact', lang) },
 ];
 const legal = [
-  { libelle: 'Mentions légales', href: '/mentions-legales' },
-  { libelle: 'Usage de l’IA', href: '/usage-ia' },
-  { libelle: 'Confidentialité', href: '/mentions-legales#donnees' },
+  { libelle: ui.mentions, href: lien('mentions', lang) },
+  { libelle: ui.usageIa, href: lien('ia', lang) },
+  { libelle: ui.confidentialite, href: `${lien('mentions', lang)}#donnees` },
 ];
 const reseaux = [
   { libelle: 'E-mail', href: `mailto:${site.email}`, icone: 'mail' as const },
-  { libelle: 'LinkedIn', href: site.linkedin || '/contact', icone: 'linkedin' as const },
-  { libelle: 'Instagram', href: site.instagram || '/contact', icone: 'instagram' as const },
+  { libelle: 'LinkedIn', href: site.linkedin || lien('contact', lang), icone: 'linkedin' as const },
+  { libelle: 'Instagram', href: site.instagram || lien('contact', lang), icone: 'instagram' as const },
 ];
 ---
 
 <footer class="relative z-10 border-t border-trait bg-fond">
   <div class="conteneur flex flex-col gap-8 pb-8 pt-12">
     <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-      <a href="/" class="flex items-center gap-4 rounded">
+      <a href={lien('accueil', lang)} class="flex items-center gap-4 rounded">
         <Logo lien class="h-[30px] w-auto text-principal" />
         <span class="flex flex-col text-small">
           <span class="font-medium text-principal">{site.nom}</span>
-          <span class="text-secondaire">{site.metier} · {site.ville}</span>
+          <span class="text-secondaire">{textesSite(lang).metier} · {site.ville}</span>
         </span>
       </a>
-      <nav aria-label="Pied de page">
+      <nav aria-label={ui.piedDePage}>
         <ul class="flex flex-wrap gap-x-6 gap-y-2 text-small text-secondaire">
           {
             liens.map((l) => (

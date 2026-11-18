@@ -8,20 +8,32 @@ import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import PastillesDomaines from './PastillesDomaines.astro';
 import { lienProjet, type Projet } from '../data/projets';
+import { langue } from '../i18n';
 
 interface Props {
   projets: Projet[];
 }
 
 const { projets } = Astro.props;
+const lang = langue(Astro.currentLocale);
+const voirEtude = lang === 'en' ? 'see the case study' : 'voir l’étude de cas';
 ---
 
 <ul class="accordeon" data-accordeon>
   {
     projets.map((p, i) => (
       <li class="panneau" data-ouvert={i === 0 ? '' : undefined}>
-        <a href={lienProjet(p)} class="panneau-lien declencheur-icone">
-          <Image src={p.vignette.src} alt="" width={1100} height={690} class="panneau-image" loading="lazy" />
+        <a href={lienProjet(p, lang)} class="panneau-lien declencheur-icone" aria-label={`${p.titre} : ${voirEtude}`}>
+          <Image
+            src={p.vignette.src}
+            alt=""
+            width={1600}
+            height={1000}
+            widths={[800, 1600]}
+            sizes="(min-width: 1024px) 740px, 100vw"
+            class="panneau-image"
+            loading="lazy"
+          />
           <span class="panneau-voile" aria-hidden="true" />
           <!-- Titre de la bande repliée (décoratif : le titre complet est dans la fiche) -->
           <span class="panneau-titre-replie" aria-hidden="true">{p.titre}</span>

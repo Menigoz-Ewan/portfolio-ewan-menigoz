@@ -1,4 +1,6 @@
 // Informations générales du site, centralisées ici pour être modifiées en un seul endroit.
+// Les textes qui changent selon la langue sont dans textesSite (plus bas).
+import { lien, t, type Langue } from '../i18n';
 
 export const site = {
   nom: 'Ewan Menigoz',
@@ -7,8 +9,8 @@ export const site = {
   description:
     'Portfolio d’Ewan Menigoz, étudiant en BUT MMI à Montbéliard : je conçois des interfaces claires, puis je les code. Recherche de stage en design UI/UX.',
   email: 'ewan.menigoz@edu.univ-fcomte.fr',
-  // Liens à compléter : laissés vides, les boutons correspondants pointent vers la page Contact.
-  linkedin: '',
+  // Lien laissé vide (Instagram) : les boutons correspondants pointent vers la page Contact.
+  linkedin: 'https://www.linkedin.com/in/ewan-menigoz-3b10a7385/',
   instagram: '',
   // Déposer le CV dans public/ sous ce nom.
   cv: '/cv-ewan-menigoz.pdf',
@@ -39,9 +41,25 @@ export const site = {
 /** Identifiant de page : sert à placer l'onglet du header et à marquer le lien actif */
 export type PageId = 'accueil' | 'projets' | 'galerie' | 'a-propos' | 'contact';
 
-export const navigation: { id: PageId; libelle: string; href: string }[] = [
-  { id: 'accueil', libelle: 'Accueil', href: '/' },
-  { id: 'projets', libelle: 'Projets', href: '/projets' },
-  { id: 'galerie', libelle: 'Galerie', href: '/galerie' },
-  { id: 'a-propos', libelle: 'À propos', href: '/a-propos' },
-];
+/** Liens du menu, dans la langue de la page */
+export const navigation = (lang: Langue): { id: PageId; libelle: string; href: string }[] =>
+  (['accueil', 'projets', 'galerie', 'a-propos'] as const).map((id) => ({ id, libelle: t(lang).nav[id], href: lien(id, lang) }));
+
+/** Textes du site qui changent selon la langue */
+export const textesSite = (lang: Langue) =>
+  lang === 'en'
+    ? {
+        metier: 'UI/UX Designer',
+        description:
+          'Portfolio of Ewan Menigoz, a BUT MMI student in Montbéliard, France: I design clear interfaces, then I code them. Looking for a UI/UX design internship.',
+        stage: { duree: '8–10 weeks', periode: 'March–June', lieu: 'Montbéliard area' },
+        conservationMessages: '12 months after the message is received',
+        conservationJournaux: '12 months at most',
+      }
+    : {
+        metier: site.metier,
+        description: site.description,
+        stage: site.stage,
+        conservationMessages: site.conservationMessages,
+        conservationJournaux: site.conservationJournaux,
+      };

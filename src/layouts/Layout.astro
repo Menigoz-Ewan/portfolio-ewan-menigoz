@@ -4,7 +4,8 @@ import filaire from '../assets/svg/ewme-filaire-large.svg?raw';
 import HeaderPanneau from '../components/HeaderPanneau.astro';
 import Footer from '../components/Footer.astro';
 import EcranChargement from '../components/EcranChargement.astro';
-import { site, type PageId } from '../data/site';
+import { site, textesSite, type PageId } from '../data/site';
+import { langue, t, autreLangue } from '../i18n';
 
 interface Props {
   titre: string;
@@ -20,22 +21,27 @@ interface Props {
 
 const {
   titre,
-  description = site.description,
+  description,
   active = null,
   variantePanneau = 'page',
   filaire: coteFilaire = 'droite',
   jsonLd,
 } = Astro.props;
 
+const lang = langue(Astro.currentLocale);
+const ui = t(lang);
+const descriptionPage = description ?? textesSite(lang).description;
+// Adresses de cette page en français et en anglais (balises hreflang)
+const versions = autreLangue(Astro.url.pathname);
 // Titre de l'onglet : « Ewan Menigoz - Portfolio » sur l'accueil ; ailleurs, le nom de la page devant
 // (chaque page garde un titre distinct, utile pour les onglets, l'historique et les lecteurs d'écran)
-const titreComplet = titre === site.nom ? 'Ewan Menigoz - Portfolio' : `${titre} · Ewan Menigoz - Portfolio`;
+const titreComplet = titre === site.nom ? ui.titreSite : `${titre} · ${ui.titreSite}`;
 const canonique = new URL(Astro.url.pathname, Astro.site);
 const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<svg', '<svg aria-hidden="true" class="h-full w-full"');
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,19 +57,29 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
       }
     </script>
     <title>{titreComplet}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={descriptionPage} />
     <link rel="canonical" href={canonique} />
+    <!-- Même page dans l'autre langue (moteurs de recherche) -->
+    <link rel="alternate" hreflang="fr" href={new URL(versions.fr, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(versions.en, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(versions.fr, Astro.site)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#1e4d3b" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'fr_FR'} />
     <meta property="og:title" content={titreComplet} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={descriptionPage} />
     <meta property="og:url" content={canonique} />
     <meta property="og:site_name" content={site.nom} />
+    <!-- Image d'aperçu quand un lien du site est partagé (LinkedIn, messageries…) : 1200 × 630 px -->
+    <meta property="og:image" content={new URL('/og-image.png', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ui.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <!--
       Écran de chargement : décidé avant le premier affichage pour éviter tout flash.
@@ -85,7 +101,7 @@ const svgFilaire = filaire.replace(/\s(width|height)="[^"]*"/g, '').replace('<sv
       href="#contenu"
       class="sr-only z-50 rounded-lg bg-vert px-4 py-3 text-ui text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
     >
-      Aller au contenu
+      {ui.allerAuContenu}
     </a>
 
     <div class="fond-page relative overflow-x-clip">

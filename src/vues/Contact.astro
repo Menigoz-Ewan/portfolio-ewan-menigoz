@@ -1,0 +1,293 @@
+---
+// Page Contact (commune aux deux langues : src/pages/contact.astro et src/pages/en/contact.astro).
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { langue, lien } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: {
+    titre: 'Contact',
+    description: 'Contacter Ewan Menigoz pour un stage en design UI/UX ou en front-end : formulaire, e-mail ou LinkedIn.',
+    accroche: 'Un projet, un stage ? Parlons-en.',
+    chapo: 'Stage en design UI/UX ou en front-end : écrivez-moi via le formulaire, par e-mail ou sur LinkedIn.',
+    coordonnees: 'Coordonnées',
+    voirProfil: 'Voir le profil',
+    cv: 'Télécharger (PDF)',
+    lieu: 'Lieu',
+    lienAVenir: '(lien à venir)',
+    pourStage: 'Pour une proposition de stage',
+    aide: ['Du 29 mars au 6 juin', 'Les missions : UI, UX, intégration front-end…', 'L’équipe et les outils que vous utilisez'],
+    formulaire: 'Formulaire de contact',
+    nom: 'Nom', nomExemple: 'Prénom Nom', nomErreur: 'Indiquez votre nom.',
+    email: 'E-mail', emailExemple: 'vous@entreprise.fr', emailErreur: 'Indiquez une adresse e-mail valide.',
+    objet: 'Objet', objetExemple: 'Proposition de stage, Refonte charte graphique...', objetErreur: 'Indiquez l’objet de votre message.',
+    message: 'Message', messageExemple: 'Votre message…', messageErreur: 'Écrivez votre message.',
+    consentementAvant: 'J’accepte que mes données (nom, adresse e-mail, objet et message) servent uniquement à me répondre. Détails dans les',
+    consentementLien: 'mentions légales',
+    consentementErreur: 'Cochez cette case pour envoyer votre message.',
+    siteWeb: 'Site web',
+    requis: 'Tous les champs sont requis.',
+    envoyer: 'Envoyer',
+    merci: 'Merci, votre message est bien envoyé. Je vous réponds rapidement.',
+    nonRelie: 'Le formulaire n’est pas encore relié. Écrivez-moi directement par e-mail, merci !',
+    echec: 'L’envoi n’a pas fonctionné. Réessayez dans un instant ou écrivez-moi par e-mail.',
+  },
+  en: {
+    titre: 'Contact',
+    description: 'Contact Ewan Menigoz for a UI/UX design or front-end internship: form, email or LinkedIn.',
+    accroche: 'A project, an internship? Let’s talk.',
+    chapo: 'UI/UX design or front-end internship: write to me through the form, by email or on LinkedIn.',
+    coordonnees: 'Contact details',
+    voirProfil: 'View profile',
+    cv: 'Download (PDF, in French)',
+    lieu: 'Location',
+    lienAVenir: '(link coming soon)',
+    pourStage: 'For an internship offer',
+    aide: ['From 29 March to 6 June', 'The tasks: UI, UX, front-end development…', 'Your team and the tools you use'],
+    formulaire: 'Contact form',
+    nom: 'Name', nomExemple: 'First and last name', nomErreur: 'Please enter your name.',
+    email: 'Email', emailExemple: 'you@company.com', emailErreur: 'Please enter a valid email address.',
+    objet: 'Subject', objetExemple: 'Internship offer, brand redesign...', objetErreur: 'Please enter the subject of your message.',
+    message: 'Message', messageExemple: 'Your message…', messageErreur: 'Please write your message.',
+    consentementAvant: 'I agree that my data (name, email address, subject and message) will only be used to reply to me. Details in the',
+    consentementLien: 'legal notice',
+    consentementErreur: 'Please tick this box to send your message.',
+    siteWeb: 'Website',
+    requis: 'All fields are required.',
+    envoyer: 'Send',
+    merci: 'Thank you, your message has been sent. I will get back to you soon.',
+    nonRelie: 'The form is not connected yet. Please email me directly, thank you!',
+    echec: 'Sending failed. Please try again in a moment or email me.',
+  },
+}[lang];
+
+const liens = [
+  { libelle: 'E-mail', valeur: site.email, href: `mailto:${site.email}`, icone: 'arrow-up-right' as const },
+  { libelle: 'LinkedIn', valeur: T.voirProfil, href: site.linkedin, icone: 'arrow-up-right' as const, externe: true },
+  { libelle: 'CV', valeur: T.cv, href: site.cv, icone: 'download' as const, telecharger: true },
+  { libelle: T.lieu, valeur: 'Montbéliard, Doubs' },
+];
+const aide = T.aide;
+
+// Bordure à 75 % du gris secondaire : contraste ≥ 3:1 sur le crème (QUALITE A10).
+const champ =
+  'w-full rounded-md border border-secondaire/75 bg-fond px-3 py-2.5 text-small text-principal placeholder:text-secondaire transition-colors focus:border-vert-texte focus:outline-2 focus:outline-offset-1 focus:outline-vert-texte aria-[invalid=true]:border-rouge';
+---
+
+<Layout
+  titre={T.titre}
+  description={T.description}
+  active="contact"
+>
+  <IntroPage
+    slot="panneau"
+    titre={T.accroche}
+    chapo={T.chapo}
+  />
+
+  <div class="conteneur flex flex-col gap-12 pb-24 pt-12 lg:flex-row lg:items-start lg:justify-between">
+    <!-- Informations -->
+    <section aria-label={T.coordonnees} class="flex flex-col gap-4 lg:w-[486px]">
+      <dl class="flex flex-col">
+        {
+          liens.map((l) => (
+            <div class="flex items-center justify-between gap-4 border-t border-trait py-3.5">
+              <dt class="text-label text-secondaire">{l.libelle}</dt>
+              <dd class="text-ui text-principal">
+                {l.href ? (
+                  <a
+                    href={l.href}
+                    class="flex items-center gap-2 rounded transition-colors hover:text-vert-texte"
+                    {...(l.telecharger ? { download: '' } : {})}
+                    {...(l.externe ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    {l.valeur}
+                    <Icon nom={l.icone!} />
+                  </a>
+                ) : l.icone ? (
+                  <span class="flex items-center gap-2 text-secondaire">
+                    {l.valeur} <span class="text-small">{T.lienAVenir}</span>
+                  </span>
+                ) : (
+                  l.valeur
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="flex flex-col gap-2.5 rounded-xl border border-vert-texte/18 bg-vert/6 p-5">
+        <h2 class="text-label text-vert-texte">{T.pourStage}</h2>
+        <ul class="flex flex-col gap-2.5">
+          {
+            aide.map((a) => (
+              <li class="flex items-center gap-2.5 text-small">
+                <span aria-hidden="true" class="size-1.5 shrink-0 rounded-full bg-vert" />
+                {a}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Formulaire (PocketBase) -->
+    <section aria-label={T.formulaire} class="w-full lg:w-[588px]">
+      <form
+        class="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-trait bg-carte p-6 md:p-8"
+        novalidate
+        data-formulaire
+        data-pocketbase={site.pocketbase}
+        data-merci={T.merci}
+        data-non-relie={T.nonRelie}
+        data-echec={T.echec}
+      >
+        <span aria-hidden="true" class="absolute inset-x-0 top-0 h-1 bg-vert"></span>
+
+        <div class="grid gap-5 sm:grid-cols-2 sm:gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="nom" class="text-ui">{T.nom}</label>
+            <input id="nom" name="nom" type="text" autocomplete="name" required placeholder={T.nomExemple} class={champ} aria-describedby="erreur-nom" />
+            <p id="erreur-nom" class="hidden text-small text-rouge" data-erreur>{T.nomErreur}</p>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="email" class="text-ui">{T.email}</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder={T.emailExemple} class={champ} aria-describedby="erreur-email" />
+            <p id="erreur-email" class="hidden text-small text-rouge" data-erreur>{T.emailErreur}</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="objet" class="text-ui">{T.objet}</label>
+          <input id="objet" name="objet" type="text" required maxlength="150" placeholder={T.objetExemple} class={champ} aria-describedby="erreur-objet" />
+          <p id="erreur-objet" class="hidden text-small text-rouge" data-erreur>{T.objetErreur}</p>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="message" class="text-ui">{T.message}</label>
+          <textarea id="message" name="message" rows="5" required placeholder={T.messageExemple} class:list={[champ, 'h-32 resize-y']} aria-describedby="erreur-message"></textarea>
+          <p id="erreur-message" class="hidden text-small text-rouge" data-erreur>{T.messageErreur}</p>
+        </div>
+
+        <!-- Consentement RGPD : obligatoire pour envoyer -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-start gap-3">
+            <input
+              id="consentement"
+              name="consentement"
+              type="checkbox"
+              required
+              class="checkbox checkbox-secondary checkbox-sm mt-0.5 rounded-[5px] border-secondaire/75"
+              aria-describedby="erreur-consentement"
+            />
+            <label for="consentement" class="text-small text-secondaire">
+              {T.consentementAvant}{' '}
+              <a href={`${lien('mentions', lang)}#donnees`} class="underline hover:text-principal">{T.consentementLien}</a>.
+            </label>
+          </div>
+          <p id="erreur-consentement" class="hidden text-small text-rouge" data-erreur>{T.consentementErreur}</p>
+        </div>
+
+        <!--
+          Champ piège anti-spam : invisible à l'écran et pour les lecteurs d'écran, hors du parcours clavier.
+          Un humain le laisse vide ; un robot qui remplit tout le remplit.
+        -->
+        <div aria-hidden="true" class="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label for="site_web">{T.siteWeb}</label>
+          <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <p class="text-small text-secondaire">{T.requis}</p>
+          <Button type="submit">{T.envoyer}</Button>
+        </div>
+        <p role="status" aria-live="polite" class="hidden rounded-lg px-4 py-3 text-small" data-statut></p>
+      </form>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // Messages dans la langue de la page : posés par le serveur sur le formulaire (data-merci, data-echec…).
+  // Validation accessible (erreurs liées au champ) puis envoi vers PocketBase (collection « messages »),
+  // avec fetch, sans dépendance. Adresse de l'instance : PUBLIC_POCKETBASE_URL dans .env (site.pocketbase).
+  const formulaire = document.querySelector<HTMLFormElement>('[data-formulaire]')!;
+  const statut = formulaire.querySelector<HTMLElement>('[data-statut]')!;
+  const bouton = formulaire.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+  const piege = formulaire.querySelector<HTMLInputElement>('#site_web')!;
+  // Champs à vérifier : tous sauf le champ piège
+  const champs = [...formulaire.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')].filter((c) => c !== piege);
+  const valeur = (nom: string) => (formulaire.elements.namedItem(nom) as HTMLInputElement | HTMLTextAreaElement).value.trim();
+
+  const afficherStatut = (texte: string, succes: boolean) => {
+    statut.textContent = texte;
+    statut.classList.remove('hidden', 'bg-vert/10', 'text-vert-texte', 'bg-rouge/10', 'text-rouge');
+    statut.classList.add(...(succes ? ['bg-vert/10', 'text-vert-texte'] : ['bg-rouge/10', 'text-rouge']));
+  };
+
+  const verifier = (champ: HTMLInputElement | HTMLTextAreaElement) => {
+    const valide = champ.type === 'checkbox' ? (champ as HTMLInputElement).checked : champ.checkValidity() && champ.value.trim() !== '';
+    champ.setAttribute('aria-invalid', String(!valide));
+    document.getElementById(`erreur-${champ.id}`)?.classList.toggle('hidden', valide);
+    return valide;
+  };
+
+  for (const champ of champs) champ.addEventListener(champ.type === 'checkbox' ? 'change' : 'blur', () => verifier(champ));
+
+  const reussite = () => {
+    formulaire.reset();
+    for (const c of champs) c.removeAttribute('aria-invalid');
+    afficherStatut(formulaire.dataset.merci ?? '', true);
+  };
+
+  formulaire.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const invalides = champs.filter((c) => !verifier(c));
+    if (invalides.length) {
+      invalides[0].focus();
+      return;
+    }
+
+    // Champ piège rempli : c'est un robot. On affiche une réussite sans rien envoyer.
+    if (piege.value !== '') {
+      reussite();
+      return;
+    }
+
+    const url = formulaire.dataset.pocketbase;
+    if (!url) {
+      afficherStatut(formulaire.dataset.nonRelie ?? '', false);
+      return;
+    }
+
+    const donnees = {
+      nom: valeur('nom'),
+      email: valeur('email'),
+      objet: valeur('objet'),
+      message: valeur('message'),
+      consentement: true,
+      site_web: '',
+    };
+
+    bouton.disabled = true;
+    bouton.setAttribute('aria-busy', 'true');
+    statut.classList.add('hidden');
+    try {
+      const reponse = await fetch(`${url.replace(/\/$/, '')}/api/collections/messages/records`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(donnees),
+      });
+      if (!reponse.ok) throw new Error(String(reponse.status));
+      reussite();
+    } catch {
+      afficherStatut(formulaire.dataset.echec ?? '', false);
+    } finally {
+      bouton.disabled = false;
+      bouton.removeAttribute('aria-busy');
+    }
+  });
+</script>

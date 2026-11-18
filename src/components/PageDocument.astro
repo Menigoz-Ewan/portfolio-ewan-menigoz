@@ -1,4 +1,5 @@
 ---
+import { langue } from '../i18n';
 // Mise en page des pages « document » (Mentions légales, Usage de l'IA) :
 // sommaire collant à gauche, sections en cartes numérotées à droite.
 interface Props {
@@ -10,7 +11,7 @@ const { sections } = Astro.props;
 
 <div class="conteneur flex flex-col gap-6 pb-24 lg:flex-row lg:items-start">
   <nav
-    aria-label="Sommaire"
+    aria-label={langue(Astro.currentLocale) === 'en' ? 'Contents' : 'Sommaire'}
     class="flex flex-col gap-1 rounded-2xl border border-trait bg-carte p-5 lg:sticky lg:top-6 lg:w-[282px] lg:shrink-0"
     data-sommaire
   >

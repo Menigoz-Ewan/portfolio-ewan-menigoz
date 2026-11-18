@@ -1,4 +1,5 @@
 ---
+import { langue, t } from '../i18n';
 // Bouton rond du thème (44 × 44 px) — variante A du canvas Claude Design : « page qui se tourne »,
 // avec un morphing soleil → lune (inspiré des icônes météo animées de Jitter).
 // - Icône : en thème clair, un soleil ; au passage en sombre, ses rayons rentrent un à un
@@ -20,7 +21,7 @@ const { class: classe = '' } = Astro.props;
     classe,
   ]}
 >
-  <input type="checkbox" class="theme-controller sr-only" value="ewme-sombre" aria-label="Thème sombre" data-bouton-theme />
+  <input type="checkbox" class="theme-controller sr-only" value="ewme-sombre" aria-label={t(langue(Astro.currentLocale)).themeSombre} data-bouton-theme />
   <svg class="icone-theme size-[22px] overflow-visible" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <!-- Astre : le disque du soleil, dont le tracé se déforme en croissant de lune (même nombre de points) -->
     <path class="astre" d="M16.46 13.13C15.55 16.71 11.01 17.81 8.56 15.06C6.11 12.3 7.74 7.92 11.4 7.44C12.91 7.24 14.42 7.8 15.44 8.94C16.45 10.08 16.83 11.65 16.46 13.13Z" fill="currentColor"></path>

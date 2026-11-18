@@ -1,0 +1,98 @@
+---
+// Page « Ma façon de travailler avec l'IA » (commune aux deux langues : src/pages/usage-ia.astro et src/pages/en/ai.astro).
+import Layout from '../layouts/Layout.astro';
+import IntroPage from '../components/IntroPage.astro';
+import PageDocument from '../components/PageDocument.astro';
+import SectionDocument from '../components/SectionDocument.astro';
+import { langue } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const T = {
+  fr: {
+    titre: 'Ma façon de travailler avec l’IA',
+    description: 'Déclaration d’usage de l’IA d’Ewan Menigoz : outils utilisés, ce qui est délégué, ce qui reste de son fait, et ses règles.',
+    chapo: 'Déclaration d’usage · le détail outil par outil est dans le fichier IA.md de mon dépôt GitHub',
+    sections: [
+      {
+        id: 'pourquoi',
+        titre: 'Pourquoi cette page',
+        paragraphes: [
+          'L’IA générative fait partie de mes outils de travail, au même titre que Figma ou mon éditeur de code. Je préfère le dire clairement : un recruteur doit savoir comment je travaille, et je dois pouvoir expliquer chaque choix présent sur ce site.',
+        ],
+      },
+      {
+        id: 'outils',
+        titre: 'Les outils que j’utilise',
+        paragraphes: [
+          'Claude (offre Pro) : conception et révision de la maquette Figma, planification, recherche de failles, relecture et aide au développement. Ses extensions et ses skills me permettent de travailler directement dans mes fichiers.',
+          'Gemini : mon premier outil, utilisé surtout comme moteur de recherche conversationnel pour me documenter et structurer mes projets.',
+        ],
+      },
+      {
+        id: 'delegation',
+        titre: 'Ce que je délègue, ce que je garde',
+        paragraphes: [
+          'L’IA intervient à presque toutes les étapes : planning, propositions de pistes graphiques, recherche de failles, test des parcours utilisateurs, relecture et aide au code. L’inspiration reste ma part : les références, l’intention de départ et la direction artistique viennent de moi. Je trie ensuite chaque proposition : j’en garde, j’en modifie, j’en rejette.',
+        ],
+      },
+      {
+        id: 'regles',
+        titre: 'Mes règles',
+        paragraphes: [
+          'Je ne publie rien que je ne sache expliquer et modifier moi-même. Chaque proposition est vérifiée : orthographe, accessibilité, cohérence avec ma charte graphique. Le fichier IA.md de mon dépôt GitHub précise, pour chaque outil, à quelle étape je l’ai utilisé, pour quoi faire, et ce que j’ai corrigé ou écarté.',
+        ],
+      },
+    ],
+  },
+  en: {
+    titre: 'How I work with AI',
+    description: 'Ewan Menigoz’s AI use statement: tools used, what is delegated, what remains his own work, and his rules.',
+    chapo: 'Use statement · the tool-by-tool detail is in the IA.md file of my GitHub repository (in French)',
+    sections: [
+      {
+        id: 'pourquoi',
+        titre: 'Why this page',
+        paragraphes: [
+          'Generative AI is one of my working tools, just like Figma or my code editor. I prefer to say so clearly: a recruiter should know how I work, and I must be able to explain every choice on this website.',
+        ],
+      },
+      {
+        id: 'outils',
+        titre: 'The tools I use',
+        paragraphes: [
+          'Claude (Pro plan): designing and reviewing the Figma mock-up, planning, finding flaws, proofreading and help with development. Its extensions and skills let me work directly in my files.',
+          'Gemini: my first tool, used mostly as a conversational search engine to research and structure my projects.',
+        ],
+      },
+      {
+        id: 'delegation',
+        titre: 'What I delegate, what I keep',
+        paragraphes: [
+          'AI is involved in almost every stage: planning, suggesting graphic directions, finding flaws, testing user journeys, proofreading and help with code. Inspiration remains my part: the references, the initial intention and the art direction come from me. I then sort every suggestion: I keep some, change some and reject some.',
+        ],
+      },
+      {
+        id: 'regles',
+        titre: 'My rules',
+        paragraphes: [
+          'I publish nothing that I cannot explain and change myself. Every suggestion is checked: spelling, accessibility, consistency with my brand guidelines. The IA.md file of my GitHub repository details, for each tool, at which stage I used it, what for, and what I corrected or discarded.',
+        ],
+      },
+    ],
+  },
+}[lang];
+---
+
+<Layout titre={T.titre} description={T.description} filaire="gauche">
+  <IntroPage slot="panneau" titre={T.titre} chapo={T.chapo} />
+
+  <PageDocument sections={T.sections.map(({ id, titre }) => ({ id, titre }))}>
+    {
+      T.sections.map((s, i) => (
+        <SectionDocument id={s.id} numero={i + 1} titre={s.titre}>
+          {s.paragraphes.map((p) => <p>{p}</p>)}
+        </SectionDocument>
+      ))
+    }
+  </PageDocument>
+</Layout>

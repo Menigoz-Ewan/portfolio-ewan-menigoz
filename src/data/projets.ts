@@ -7,6 +7,9 @@
 //   4. Projets : un bloc par projet
 //   5. Liste des projets (ordre d'affichage) et fonctions utiles
 import type { ImageMetadata } from 'astro';
+import type { Langue } from '../i18n';
+import { lienProjet as adresseProjet } from '../i18n';
+import { traductionsEn } from './projets-en';
 
 /* ========================================================================
  * 1. IMAGES — vignette (carte) puis images de la page, une rubrique par projet
@@ -28,7 +31,7 @@ import affinityTheatreGradins from '../assets/images/affiches/affinity-theatre-g
 import afficheTheatreDetail from '../assets/images/affiches/affiche-theatre-detail.png';
 
 // Climat Outre-Mer
-import vignetteClimat from '../assets/images/vignette-climat@2x.png';
+import vignetteClimat from '../assets/images/vignette-climat.png';
 import climatAnneesChaudes from '../assets/images/climat/01-annees-chaudes-362x490.png';
 import climatTerritoires from '../assets/images/climat/02-trois-territoires-362x490.png';
 import climatProjections from '../assets/images/climat/03-projections-362x490.png';
@@ -46,7 +49,7 @@ import tiktakPanier from '../assets/images/tiktak/05_panier_588x420@2x.png';
 import tiktakAccueil from '../assets/images/tiktak/06_accueil_690x460@2x.png';
 
 // La Cimade
-import vignetteCimade from '../assets/images/cimade/07-card-362x228@2x.png';
+import vignetteCimade from '../assets/images/vignette-cimade-carte.png';
 import cimadeIterations from '../assets/images/cimade/01-iterations-logo-362x490@2x.png';
 import cimadeUnivers from '../assets/images/cimade/02-univers-graphique-362x490@2x.png';
 import cimadeFlyer from '../assets/images/cimade/03-flyer-362x490@2x.png';
@@ -118,6 +121,19 @@ export const domaines: Record<Categorie, { court: string; long: string; icone: '
   crea: { court: 'Créa', long: 'Création numérique', icone: 'design' },
   com: { court: 'Com', long: 'Communication', icone: 'message' },
 };
+
+/** Noms des domaines en anglais */
+const domainesEn: Record<Categorie, { court: string; long: string }> = {
+  dev: { court: 'Dev', long: 'Development' },
+  crea: { court: 'Design', long: 'Digital design' },
+  com: { court: 'Comms', long: 'Communication' },
+};
+
+/** Domaines dans la langue de la page */
+export const domainesPour = (lang: Langue) =>
+  lang === 'en'
+    ? (Object.fromEntries(Object.entries(domaines).map(([id, d]) => [id, { ...d, ...domainesEn[id as Categorie] }])) as typeof domaines)
+    : domaines;
 
 /** Ordre d'affichage des domaines (filtres et pastilles) */
 export const ordreDomaines: Categorie[] = ['dev', 'crea', 'com'];
@@ -574,6 +590,39 @@ export const projets: Projet[] = [
 /** Projets qui ont une page d'étude de cas */
 export const projetsAvecEtude = projets.filter((p) => p.etude);
 
-export function lienProjet(projet: Projet) {
-  return projet.etude ? `/projets/${projet.slug}` : undefined;
+/** Adresse de l'étude de cas d'un projet (undefined s'il n'en a pas), dans la langue demandée */
+export function lienProjet(projet: Projet, lang: Langue = 'fr') {
+  return projet.etude ? adresseProjet(projet.slug, lang) : undefined;
 }
+
+/** Remplace les textes d'un projet par leur version anglaise (les images ne changent pas) */
+function traduire(p: Projet): Projet {
+  const tr = traductionsEn[p.slug];
+  if (!tr) return p;
+  const avecAlt = (v: Visuel, alt?: string): Visuel => ({ src: v.src, alt: alt ?? v.alt });
+  return {
+    ...p,
+    titre: tr.titre ?? p.titre,
+    sousDomaines: tr.sousDomaines,
+    accueil: p.accueil && tr.accueil ? { resume: tr.accueil } : p.accueil,
+    resume: tr.resume,
+    vignette: avecAlt(p.vignette, tr.vignetteAlt),
+    etude:
+      p.etude && tr.etude
+        ? {
+            ...p.etude,
+            accroche: tr.etude.accroche,
+            lien: p.etude.lien ? { href: p.etude.lien.href, libelle: tr.etude.lienLibelle ?? p.etude.lien.libelle } : undefined,
+            fiche: tr.etude.fiche,
+            visuelPrincipal: p.etude.visuelPrincipal.map((v, i) => avecAlt(v, tr.etude!.visuelPrincipal[i])),
+            contexte: tr.etude.contexte,
+            defi: { ...p.etude.defi, enonce: tr.etude.defi.enonce, visuels: p.etude.defi.visuels.map((v, i) => avecAlt(v, tr.etude!.defi.visuels[i])) },
+            solution: { titre: tr.etude.solution.titre, texte: tr.etude.solution.texte, visuel: avecAlt(p.etude.solution.visuel, tr.etude.solution.visuel) },
+            bilan: tr.etude.bilan,
+          }
+        : p.etude,
+  };
+}
+
+/** Liste des projets dans la langue de la page */
+export const projetsPour = (lang: Langue): Projet[] => (lang === 'en' ? projets.map(traduire) : projets);

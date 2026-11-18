@@ -2,7 +2,8 @@
 // Pastilles des domaines MMI (Dev, Créa, Com) : une pastille par domaine, avec son pictogramme.
 // « carte » : vert plein, nom court (cartes projet). « entete » : crème sur le panneau vert, nom complet (étude de cas).
 import IconeAnimee from './IconeAnimee.astro';
-import { domaines, trierDomaines, type Categorie } from '../data/projets';
+import { domainesPour, trierDomaines, type Categorie } from '../data/projets';
+import { langue } from '../i18n';
 
 interface Props {
   categories: Categorie[];
@@ -11,9 +12,11 @@ interface Props {
 
 const { categories, variante = 'carte' } = Astro.props;
 const enTete = variante === 'entete';
+const lang = langue(Astro.currentLocale);
+const domaines = domainesPour(lang);
 ---
 
-<ul aria-label="Domaines" class="flex flex-wrap gap-1.5">
+<ul aria-label={lang === 'en' ? 'Fields' : 'Domaines'} class="flex flex-wrap gap-1.5">
   {
     trierDomaines(categories).map((id) => (
       <li

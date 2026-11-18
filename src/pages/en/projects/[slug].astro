@@ -1,0 +1,11 @@
+---
+// One case study per project, in English: same content as the French page (src/vues/EtudeDeCas.astro).
+import EtudeDeCas from '../../../vues/EtudeDeCas.astro';
+import { projetsAvecEtude } from '../../../data/projets';
+
+export function getStaticPaths() {
+  return projetsAvecEtude.map((projet) => ({ params: { slug: projet.slug } }));
+}
+---
+
+<EtudeDeCas slug={Astro.params.slug} />

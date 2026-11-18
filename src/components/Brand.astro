@@ -1,11 +1,81 @@
 ---
-// Logo + filet + nom, lien vers l'accueil (nom accessible « EWME, accueil » : QUALITE A8).
+// Logo + filet + nom, lien vers l'accueil (nom accessible « EWME, accueil » : QUALITE A8),
+// puis le sélecteur de langue « FR / EN » : il mène à la même page dans l'autre langue.
+// Le nom est masqué sous 400 px et entre 1024 et 1400 px, où le menu complet laisse trop peu de place.
 import Logo from './Logo.astro';
 import { site } from '../data/site';
+import { langue, t, lien, autreLangue } from '../i18n';
+
+const lang = langue(Astro.currentLocale);
+const ui = t(lang);
+// Adresses de la page en cours dans les deux langues
+const versions = autreLangue(Astro.url.pathname);
+const choix = [
+  { code: 'fr', libelle: 'FR', nom: ui.langueFr, href: versions.fr },
+  { code: 'en', libelle: 'EN', nom: ui.langueEn, href: versions.en },
+] as const;
 ---
 
-<a href="/" class="flex items-center gap-3 rounded">
-  <Logo lien class="h-[30px] w-auto text-principal" />
+<div class="flex items-center gap-3">
+  <a href={lien('accueil', lang)} class="flex items-center gap-3 rounded">
+    <Logo lien class="h-[30px] w-auto text-principal" />
+    <span aria-hidden="true" class="hidden h-4 w-px bg-principal/35 min-[400px]:block lg:hidden min-[1400px]:block"></span>
+    <span class="hidden text-ui text-principal min-[400px]:inline lg:hidden min-[1400px]:inline">{site.nom}</span>
+  </a>
   <span aria-hidden="true" class="h-4 w-px bg-principal/35"></span>
-  <span class="text-ui text-principal">{site.nom}</span>
-</a>
+  <nav aria-label={ui.choixLangue}>
+    <ul class="langues text-label">
+      {
+        choix.map((c, i) => (
+          <li class="flex items-center">
+            {i > 0 && <span aria-hidden="true" class="separateur">/</span>}
+            <a
+              href={c.href}
+              hreflang={c.code}
+              lang={c.code}
+              aria-label={c.nom}
+              aria-current={c.code === lang ? 'true' : undefined}
+              class="langue"
+            >
+              {c.libelle}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
+<style>
+  .langues {
+    display: flex;
+    align-items: center;
+  }
+  .separateur {
+    padding: 0 6px;
+    color: var(--color-secondaire);
+  }
+  /* Zone cliquable de 32 px de haut autour de deux lettres */
+  .langue {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 2px;
+    border-radius: 4px;
+    color: var(--color-secondaire);
+    transition: color var(--duree-lien);
+  }
+  .langue:hover {
+    color: var(--color-principal);
+  }
+  /* Langue de la page : soulignée et en couleur principale */
+  .langue[aria-current='true'] {
+    color: var(--color-principal);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .langue:focus-visible {
+    outline: 2.5px solid var(--color-vert-texte);
+    outline-offset: 2px;
+  }
+</style>

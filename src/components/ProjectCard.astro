@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import PastillesDomaines from './PastillesDomaines.astro';
 import type { Categorie, Visuel } from '../data/projets';
+import { langue } from '../i18n';
 
 interface Props {
   titre: string;
@@ -17,6 +18,7 @@ interface Props {
 
 const { titre, categories, sousDomaines, resume, vignette, href, class: classe = '' } = Astro.props;
 const Balise = href ? 'a' : 'article';
+const voirPlus = langue(Astro.currentLocale) === 'en' ? 'See more' : 'Voir plus';
 ---
 
 <Balise
@@ -39,7 +41,7 @@ const Balise = href ? 'a' : 'article';
             aria-hidden="true"
             class="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 translate-y-[-30%] items-center gap-2 rounded-lg bg-rouge px-5 py-3 text-button text-white opacity-0 shadow-[0_4px_12px_rgb(206_26_27/0.25)] transition-[opacity,translate] duration-(--duree-carte) ease-(--ease-sortie) group-hover:-translate-y-1/2 group-hover:opacity-100"
           >
-            Voir plus
+            {voirPlus}
             <Icon nom="arrow-right" />
           </span>
         </>

@@ -8,6 +8,7 @@ import Button from './Button.astro';
 import MenuMobile from './MenuMobile.astro';
 import BoutonTheme from './BoutonTheme.astro';
 import { navigation, type PageId } from '../data/site';
+import { langue, t, lien } from '../i18n';
 
 interface Props {
   /** Page dont le lien porte l'onglet ; null = panneau sans onglet (Contact, Mentions, Usage de l'IA, 404) */
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const { active = null, variante = 'page' } = Astro.props;
+const lang = langue(Astro.currentLocale);
+const ui = t(lang);
 ---
 
 <div class="relative z-20 mx-auto max-w-[1440px] px-3 pb-5 pt-4 lg:px-6 lg:pt-8">
@@ -31,10 +34,10 @@ const { active = null, variante = 'page' } = Astro.props;
       Entre 1024 et 1280 px, cases de 128 px pour que tout tienne (non dessiné dans la maquette).
     -->
     <div class="hidden items-center lg:flex">
-      <nav aria-label="Navigation principale">
+      <nav aria-label={ui.navigationPrincipale}>
         <ul class="flex items-center">
           {
-            navigation.map((lien) => (
+            navigation(lang).map((lien) => (
               <li class="relative flex h-16 w-32 items-center justify-center xl:w-[152px]">
                 {lien.id === active && <span class="onglet" aria-hidden="true" />}
                 <NavLink href={lien.href} actif={lien.id === active}>
@@ -46,7 +49,7 @@ const { active = null, variante = 'page' } = Astro.props;
         </ul>
       </nav>
       <BoutonTheme class="ml-3 mr-4" />
-      <Button href="/contact">Me contacter</Button>
+      <Button href={lien('contact', lang)}>{ui.meContacter}</Button>
     </div>
 
     <MenuMobile active={active} />
@@ -59,7 +62,7 @@ const { active = null, variante = 'page' } = Astro.props;
   <section
     id="contenu"
     tabindex="-1"
-    aria-label="Présentation de la page"
+    aria-label={ui.presentationPage}
     class:list={[
       'relative z-[2] rounded-[28px] bg-vert outline-none lg:rounded-[40px]', // z 2 : devant les pieds des fantômes du menu
       variante === 'page' && 'min-h-[244px] px-6 pb-10 pt-10 lg:px-20 lg:pb-14 lg:pt-[72px]',

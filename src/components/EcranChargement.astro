@@ -7,6 +7,8 @@
 // Le script en ligne du <head> (Layout.astro) pose html[data-chargement] avant le premier affichage
 // quand l'écran doit apparaître : première page de la session et animations autorisées.
 // Sans cet attribut, l'écran reste masqué (aucun flash sur les pages suivantes).
+import { langue, t } from '../i18n';
+const ui = t(langue(Astro.currentLocale));
 ---
 
 <div data-ecran-chargement class="chg fond-trame" role="status" aria-live="polite">
@@ -25,10 +27,10 @@
     </div>
     <div class="chg-textes">
       <p class="font-display text-[28px] font-semibold leading-8 text-principal">Ewan Menigoz</p>
-      <p class="text-label text-vert-texte">Portfolio · Design UI/UX</p>
+      <p class="text-label text-vert-texte">{ui.chargementSousTitre}</p>
     </div>
   </div>
-  <span class="sr-only">Chargement du portfolio</span>
+  <span class="sr-only">{ui.chargement}</span>
 </div>
 
 <style>

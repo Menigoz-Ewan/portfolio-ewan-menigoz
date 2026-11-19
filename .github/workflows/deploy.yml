@@ -36,9 +36,12 @@ jobs:
           node-version: 24
           cache: npm
 
-      # 3. Installer les dépendances, exactement celles du package-lock.json
+      # 3. Installer les dépendances, aux versions du package-lock.json.
+      #    npm install plutôt que npm ci : le package-lock créé sous Windows oublie des paquets
+      #    facultatifs utilisés sous Linux (bug connu de npm, « Missing: @emnapi/core ») ;
+      #    npm install les ajoute, sans changer les versions déjà fixées.
       - name: Installer les dépendances
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       # 4. Construire le site dans dist/ (comme npm run build sur mon ordinateur)
       - name: Construire le site
